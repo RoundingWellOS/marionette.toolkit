@@ -46,7 +46,7 @@ npm install
 ### Running Tests
 
 ```
-npm test
+gulp test
 ```
 
 ===
