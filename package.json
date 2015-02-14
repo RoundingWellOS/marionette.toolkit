@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paulfalgout/backbone.toolkit.git"
+    "url": "https://github.com/RoundingWellOS/backbone.toolkit.git"
   },
   "keywords": [
     "boilerplate",
@@ -25,9 +25,9 @@
   "author": "Paul Falgout <paul@otterball.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/paulfalgout/backbone.toolkit/issues"
+    "url": "https://github.com/RoundingWellOS/backbone.toolkit/issues"
   },
-  "homepage": "https://github.com/paulfalgout/backbone.toolkit",
+  "homepage": "https://github.com/RoundingWellOS/backbone.toolkit",
   "devDependencies": {
     "6to5": "^3.3.3",
     "browserify": "^8.1.1",
