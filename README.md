@@ -9,6 +9,14 @@ Subapp, StateClass, and more.
 
 ## Usage
 
+### StateClass
+
+Describe the StateClass
+
+```js
+
+```
+
 ### Subapp
 
 Describe the Subapp
@@ -17,13 +25,14 @@ Describe the Subapp
 
 ```
 
-### StateClass
+### Component
 
-Describe the StateClass
+Describe the Component
 
 ```js
 
 ```
+
 
 ## Contibuting
 
