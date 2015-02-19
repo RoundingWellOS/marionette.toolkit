@@ -329,9 +329,9 @@
 
   Toolkit.Component = Component;
 
-  var backbone_toolkit = Toolkit;
+  var marionette_toolkit = Toolkit;
 
-  return backbone_toolkit;
+  return marionette_toolkit;
 });
-//# sourceMappingURL=./backbone.toolkit.js.map
+//# sourceMappingURL=./marionette.toolkit.js.map
 //on subapp destroy delete from _apps
