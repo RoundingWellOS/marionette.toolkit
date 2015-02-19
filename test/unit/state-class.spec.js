@@ -1,3 +1,5 @@
+import Toolkit from '../../src/marionette.toolkit';
+
 describe('State Class', function() {
   beforeEach(function () {
     this.MyModel = Backbone.Model.extend({

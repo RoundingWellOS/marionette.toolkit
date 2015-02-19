@@ -1,6 +1,6 @@
 (function (global, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("backbone"), require("jquery"), require("backbone.marionette"), require("underscore")) : typeof define === "function" && define.amd ? define(["backbone", "jquery", "backbone.marionette", "underscore"], factory) : global.Toolkit = factory(global.Backbone, global.$, global.Marionette, global._);
-})(this, function (Backbone, $, Marionette, _) {
+  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("backbone.marionette"), require("backbone"), require("underscore")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "backbone", "underscore"], factory) : global.Toolkit = factory(global.Marionette, global.Backbone, global._);
+})(this, function (Marionette, Backbone, _) {
   "use strict";
 
   var StateClass = Marionette.Object.extend({
@@ -320,7 +320,6 @@
     }
   });
 
-  Backbone.$ = $;
   var Toolkit = Marionette.Toolkit = {};
 
   Toolkit.StateClass = StateClass;

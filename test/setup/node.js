@@ -1,6 +1,3 @@
-var setup = require('./setup');
-var config = require('../../package.json').to5BoilerplateOptions;
-
 if (!global.document || !global.window) {
 
   var jsdom = require('jsdom').jsdom;
@@ -19,9 +16,9 @@ if (!global.document || !global.window) {
 
 global.$ = global.jQuery = require('jquery');
 
-
-global[config.exportVarName] = require('../../src/' + config.entryFileName);
 global.chai = require('chai');
 global.sinon = require('sinon');
 global.chai.use(require('sinon-chai'));
-setup();
+
+require('babel/register');
+require('./setup')();
