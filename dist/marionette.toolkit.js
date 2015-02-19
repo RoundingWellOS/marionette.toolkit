@@ -1,3 +1,9 @@
+/**
+ * marionette.toolkit - StateClass, Subapp, and more.
+ * @version v0.1.0
+ * @link https://github.com/RoundingWellOS/marionette.toolkit
+ * @license MIT
+ */
 (function (global, factory) {
   typeof exports === "object" && typeof module !== "undefined" ? factory(require("backbone.marionette"), require("backbone"), require("underscore")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "backbone", "underscore"], factory) : factory(global.Marionette, global.Backbone, global._);
 })(this, function (Marionette, Backbone, _) {
