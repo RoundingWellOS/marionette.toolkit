@@ -62,14 +62,14 @@
   },
   "babelBoilerplateOptions": {
     "entryFileName": "marionette.toolkit",
-    "exportVarName": "Toolkit",
+    "exportVarName": "null",
     "mochaGlobals": [
-        "stub",
-        "spy",
-        "expect",
-        "_",
-        "Backbone",
-        "Marionette"
+      "stub",
+      "spy",
+      "expect",
+      "_",
+      "Backbone",
+      "Marionette"
     ]
   },
   "dependencies": {

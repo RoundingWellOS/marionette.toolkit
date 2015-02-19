@@ -1,11 +1,11 @@
-import Toolkit from '../../src/marionette.toolkit';
+import '../../src/marionette.toolkit';
 
 describe('State Class', function() {
   beforeEach(function () {
     this.MyModel = Backbone.Model.extend({
       foo : 'bar'
     });
-    this.MyStateClass = Toolkit.StateClass.extend({
+    this.MyStateClass = Marionette.Toolkit.StateClass.extend({
       StateModel : this.MyModel
     });
   });
@@ -13,7 +13,7 @@ describe('State Class', function() {
   describe('when instantiating a new state object', function () {
 
    it('should have the default StateModel if none was defined', function () {
-     this.myStateClass = new Toolkit.StateClass();
+     this.myStateClass = new Marionette.Toolkit.StateClass();
      expect(this.myStateClass._stateModel).to.be.an.instanceof(Backbone.Model);
    });
 
