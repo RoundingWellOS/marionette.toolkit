@@ -23,4 +23,4 @@ module.exports = function() {
     delete global.spy;
     this.sinon.restore();
   });
-}
+};
