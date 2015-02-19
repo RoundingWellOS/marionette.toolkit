@@ -1,5 +1,5 @@
 (function (global, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("backbone.marionette"), require("backbone"), require("underscore")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "backbone", "underscore"], factory) : global.Toolkit = factory(global.Marionette, global.Backbone, global._);
+  typeof exports === "object" && typeof module !== "undefined" ? factory(require("backbone.marionette"), require("backbone"), require("underscore")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "backbone", "underscore"], factory) : factory(global.Marionette, global.Backbone, global._);
 })(this, function (Marionette, Backbone, _) {
   "use strict";
 
@@ -327,10 +327,6 @@
   Toolkit.Subapp = Subapp;
 
   Toolkit.Component = Component;
-
-  var marionette_toolkit = Toolkit;
-
-  return marionette_toolkit;
 });
 //# sourceMappingURL=./marionette.toolkit.js.map
 //on subapp destroy delete from _apps

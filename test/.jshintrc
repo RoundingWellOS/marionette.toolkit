@@ -55,7 +55,6 @@
   "wsh"           : false,
   "yui"           : false,
   "globals": {
-    "Toolkit": true,
     "_": true,
     "Backbone": true,
     "Marionette": true,

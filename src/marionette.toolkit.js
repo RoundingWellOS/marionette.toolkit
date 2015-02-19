@@ -14,5 +14,3 @@ Toolkit.StateClass = StateClass;
 Toolkit.Subapp = Subapp;
 
 Toolkit.Component = Component;
-
-export default Toolkit;
