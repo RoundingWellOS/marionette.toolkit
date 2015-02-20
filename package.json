@@ -1,7 +1,7 @@
 {
   "name": "marionette.toolkit",
   "version": "0.1.0",
-  "description": "StateClass, Subapp, and more.",
+  "description": "StateClass, App, and Component.",
   "main": "./dist/marionette.toolkit.js",
   "scripts": {
     "test": "gulp",
@@ -17,6 +17,7 @@
     "marionette",
     "backbone",
     "toolkit",
+    "app",
     "subapp",
     "component"
   ],

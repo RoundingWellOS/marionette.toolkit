@@ -1,7 +1,7 @@
 import Marionette from 'backbone.marionette';
 
 import StateClass from './state-class';
-import Subapp from './subapp';
+import App from './app';
 import Component from './component';
 
 /**
@@ -11,6 +11,6 @@ var Toolkit = Marionette.Toolkit = {};
 
 Toolkit.StateClass = StateClass;
 
-Toolkit.Subapp = Subapp;
+Toolkit.App = App;
 
 Toolkit.Component = Component;
