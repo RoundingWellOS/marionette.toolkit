@@ -1,60 +1,65 @@
-Marionette Toolkit
+Marionette.Toolkit
 ==================
-
-Open Source of libraries used internally by [RoundingWell.com](http://roundingwell.com).
 
 [![Travis Status](http://img.shields.io/travis/RoundingWellOS/marionette.toolkit/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/RoundingWellOS/marionette.toolkit) [![Code Climate Score](http://img.shields.io/codeclimate/github/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://codeclimate.com/github/RoundingWellOS/marionette.toolkit) [![Coverage](http://img.shields.io/codeclimate/coverage/github/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://codeclimate.com/github/RoundingWellOS/marionette.toolkit) [![Dependency Status](http://img.shields.io/david/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://david-dm.org/RoundingWellOS/marionette.toolkit)
 
-## Usage
 
-### StateClass
+Open Source of libraries used internally by [RoundingWell.com](http://roundingwell.com).
 
-Describe the StateClass
+## About Marionette.Toolkit
 
-```js
+Marionette.Toolkit is a collection of opinionated extensions for
+[Marionette](http://marionette.js) Each element helps to reduce boilerplate
+for complex large scale application problems.  This toolkit was
+built from scripts open sourced from [RoundingWell.com](http://roundingwell.com).
 
-```
+## Documentation
+  [StateClass](./docs/state-class.md) - An Object including model for storing state
+  [Component](./docs/component.md) - Reusable StateClass with View management boilerplate
+  [App](./docs/app.md) - Object including a start/stop lifecycle and child apps.
 
-### App
+## Getting Help
 
-Describe the App
+If you have questions or concerns please feel free to open an issue.
+Additionally join us on the [Marionette Gitter](https://gitter.im/marionettejs/backbone.marionette) to have a chat.
+Everyone there is happy to discuss design patterns.
 
-```js
+## Source Code and Downloads
 
-```
+You can download the latest builds directly from the "lib" folder above.
 
-### Component
+### Available Packages
 
-Describe the Component
+Marionette.Toolkit is not yet available via package manager, but will
+soon be released via npm.  If you would like another channel, please
+open an issue.
 
-```js
+## Release Notes
 
-```
+**Changelog**: For change logs and release notes, see the
+[changelog](CHANGELOG.md) file.
 
+## Compatibility and Requirements
 
-## Contibuting
+Marionette.Toolkit currently requires Marionette 2.3.2+
 
-### Getting Started
+Marionette.Toolkit has not been tested against any other versions of
+Marionette.  It will likely work fine with other versions if you shim
+in [`Marionette._getValue`](https://github.com/marionettejs/backbone.marionette/blob/v2.3.2/src/helpers.js#L44)
 
-[Fork](https://help.github.com/articles/fork-a-repo/) and
-[clone](http://git-scm.com/docs/git-clone) this repo.
+## How to Contribute
 
-```
-git clone git@github.com:RoundingWellOS/marionette.toolkit.git && cd marionette.toolkit
-```
+If you would like to contribute to Marionette.Toolkit's source code, please read
+the [guidelines for pull requests and contributions](CONTRIBUTING.md).
+Following these guidelines will help make your contributions easier to
+bring into the next release.
 
-Make sure [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.org/) are
-[installed](http://nodejs.org/download/).
+### [Github Issues](//github.com/RoundingWellOS/marionette.toolkit/issues)
 
-```
-npm install
-```
+Report issues with Marionette.Toolkit, submit pull requests to fix problems, or to
+create summarized and documented feature requests (preferably with pull
+requests that implement the feature).
 
-### Running Tests
-
-```
-gulp test
-```
 
 ===
 
