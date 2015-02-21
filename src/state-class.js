@@ -14,6 +14,7 @@ var StateClass = Marionette.Object.extend({
   /**
    * The model class for _stateModel.
    * @type {Backbone.Model}
+   * @default Backbone.Model
    */
   StateModel: Backbone.Model,
 
