@@ -2,58 +2,83 @@ import _ from 'underscore';
 import Marionette from 'backbone.marionette';
 import StateClass from './state-class';
 
-// var MyComponent = Toolkit.Component.extend({
-//     state model defaults
-//     defaults: {
-//         pressed: true
-//     },
-//     viewEventPrefix: 'mine',
-//     viewOptions: {
-//         className: 'button--light-gradient faux-select w-100',
-//         templateHelpers: { }
-//     },
-//     stateEvents: {
-//         'change:state_attribute': 'onNameChange'
-//     },
-//     onNameChange: function(){
-//         // do stuff ...
-//     }
-// });
-
-// var test_component = new MyComponent({},{
-//     viewClass: MyView
-//     viewEventPrefix: 'special:mine'
-//     viewOptions: {}
-//     region: this.layout.my_region
-// });
-
-// test_component.showIn(this.layout.region);
-
-
+/**
+ * Reusable StateClass with View management boilerplate
+ *
+ * @public
+ * @class StateClass
+ * @memberOf Toolkit
+ * @memberOf Marionette
+ */
 var Component = StateClass.extend({
+
+  /**
+   * The view class to be managed.
+   * @type {Marionette.ItemView|Marionette.CollectionView|Marionette.CompositeView|Marionette.LayoutView}
+   * @default Marionette.ItemView
+   */
+  ViewClass: Marionette.ItemView,
+
+  /**
+   * Used as the prefix for events forwarded from
+   * the component's view to the component
+   * @type {String}
+   * @default 'view'
+   */
+  viewEventPrefix: 'view',
+
+  /**
+   * Options hash passed to the view when built.
+   * @type {Object|Function}
+   * @default '{}'
+   */
+  viewOptions: {},
+
+  /**
+   * @public
+   * @constructs Component
+   * @param {Object} [stateAttrs] - Attributes to set on the state model.
+   * @param {Object} [options] - Settings for the component.
+   * @param {Marionette.ItemView|Marionette.CollectionView|Marionette.CompositeView|Marionette.LayoutView} [options.ViewClass] - The view class to be managed.
+   * @param {String} [options.viewEventPrefix] - Used as the prefix for events forwarded from the component's view to the component
+   * @param {Object} [options.viewOptions] - The view class to be managed.
+   * @param {Marionette.Region=} [options.region] - The region to show the component in.
+   */
   constructor: function(stateAttrs, options){
     options = options || {};
-    // Make defaults available to this
-    _.extend(this, _.pick(options, ['viewEventPrefix', 'viewClass', 'viewOptions', 'region']));
 
-    Marionette.StateObject.call(this, options);
+    // Make defaults available to this
+    _.extend(this, _.pick(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']));
+
+    StateClass.call(this, options);
 
     this._setStateDefaults(stateAttrs);
   },
 
+  /**
+   * Internal flag to determine if the component should destroy.
+   * Set to false while showing the component's view in the component's region.
+   *
+   * @private
+   * @type {Boolean}
+   * @default true
+   */
   _shouldDestroy: true,
 
+  /**
+   * Set the state model attributes to the initial
+   * passed in attributes or any defaults set
+   *
+   * @private
+   * @method _setStateDefaults
+   * @memberOf Component
+   * @param {Object=} stateAttrs - Attributes to set on the state model
+   */
   _setStateDefaults: function(stateAttrs){
     _.defaults(stateAttrs, _.result(this, 'defaults'));
 
     this.setState(stateAttrs, { silent: true });
   },
-
-  viewEventPrefix: 'view',
-
-  viewClass: Marionette.ItemView,
-
-  viewOptions: {},
 
   showIn: function(region) {
     if(region) {
@@ -110,7 +135,7 @@ var Component = StateClass.extend({
   },
 
   _proxyViewEvents: function(){
-    // Proxies the viewClass's viewEvents to the Component itself
+    // Proxies the ViewClass's viewEvents to the Component itself
     // similar to CollectionView childEvents
     // (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
 
@@ -133,7 +158,7 @@ var Component = StateClass.extend({
   },
 
   buildView: function() {
-    return new this.viewClass(this.mixinOptions());
+    return new this.ViewClass(this.mixinOptions());
   },
 
   _destroy: function(){
