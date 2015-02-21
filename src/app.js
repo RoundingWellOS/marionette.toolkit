@@ -9,12 +9,14 @@ var App = StateClass.extend({
 
     _.bindAll(this, 'start', 'stop');
 
-    this._apps = {};
+    this._childApps = {};
 
-    _.extend(this, _.pick(options, ['startWithParent', 'stopWithParent', 'apps']));
+    _.extend(this, _.pick(options, ['startWithParent', 'stopWithParent', 'childApps']));
+
+    var childApps = Marionette._getValue(this.childApps);
 
     // Initialize apps
-    this.addApps(this.getOption('apps'));
+    this.addChildApps(childApps);
 
     StateClass.call(this, options);
   },
@@ -46,7 +48,7 @@ var App = StateClass.extend({
     this.triggerMethod('before:start', options);
 
     this._isRunning = true;
-    this.startApps();
+    this.startChildApps();
 
     this.triggerMethod('start', options);
   },
@@ -59,7 +61,7 @@ var App = StateClass.extend({
     this.triggerMethod('before:stop', options);
 
     this._isRunning = false;
-    this.stopApps();
+    this.stopChildApps();
 
     this.triggerMethod('stop', options);
 
@@ -68,56 +70,63 @@ var App = StateClass.extend({
 
   },
 
-  addApp: function(appName, AppDefinition, options) {
-    var app = this._apps[appName] = new AppDefinition(options);
+
+  addChildApp: function(appName, AppDefinition, options) {
+    var childApp = this._childApps[appName] = new AppDefinition(options);
 
     // When the app is destroyed remove the cached app.
-    app.on('destroy', function() {
-      delete this._apps[appName];
+    childApp.on('destroy', function() {
+      delete this._childApps[appName];
     }, this);
 
-    if(this._isRunning && app.getOption('startWithParent')) {
-      app.start();
+    if(this._isRunning && childApp.startWithParent) {
+      childApp.start();
     }
 
-    return app;
+    return childApp;
   },
 
-  getApp: function(appName) {
-    return this._apps[appName];
+  getChildApp: function(appName) {
+    return this._childApps[appName];
   },
 
-  destroyApp: function(app) {
+  removeChildApp: function(childApp) {
 
     // if app is a string assume it's an app's name
-    if(_.isString(app)) {
-      app = this.getApp(app);
+    if(_.isString(childApp)) {
+      childApp = this.getChildApp(childApp);
     }
 
-    if(app) {
-      app.destroy();
+    if(childApp) {
+      childApp.destroy();
     }
   },
 
-  addApps: function(apps) {
-    _.each(apps, function(app, appName) {
-      this.addApp(appName, app);
-    });
+  addChildApps: function(childApps) {
+    _.each(childApps, function(childApp, appName) {
+      this.addChildApp(appName, childApp);
+    }, this);
   },
 
-  startApps: function() {
-    _.each(this._apps, function(app) {
-      if(app.getOption('startWithParent')) {
-        app.start();
+  startChildApps: function() {
+    _.each(this._childApps, function(childApp) {
+      if(childApp.startWithParent) {
+        childApp.start();
       }
     });
   },
 
-  stopApps: function() {
-    _.each(this._apps, function(app) {
-      if(app.getOption('stopWithParent')) {
-        app.stop();
+  stopChildApps: function() {
+    _.each(this._childApps, function(childApp) {
+      if(childApp.stopWithParent) {
+        childApp.stop();
       }
+    });
+  },
+
+  destroyChildApps: function() {
+    _.each(this._childApps, function(childApp) {
+      childApp.destroy();
     });
   },
 
@@ -132,7 +141,7 @@ var App = StateClass.extend({
   destroy: function() {
     this.stop();
 
-    this.destroyApps();
+    this.destroyChildApps();
 
     this._isDestroyed = true;
 
