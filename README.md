@@ -4,8 +4,6 @@ Marionette.Toolkit
 [![Travis Status](http://img.shields.io/travis/RoundingWellOS/marionette.toolkit/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/RoundingWellOS/marionette.toolkit) [![Code Climate Score](http://img.shields.io/codeclimate/github/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://codeclimate.com/github/RoundingWellOS/marionette.toolkit) [![Coverage](http://img.shields.io/codeclimate/coverage/github/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://codeclimate.com/github/RoundingWellOS/marionette.toolkit) [![Dependency Status](http://img.shields.io/david/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://david-dm.org/RoundingWellOS/marionette.toolkit)
 
 
-Open Source of libraries used internally by [RoundingWell.com](http://roundingwell.com).
-
 ## About Marionette.Toolkit
 
 Marionette.Toolkit is a collection of opinionated extensions for
@@ -15,7 +13,9 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 
 ## Documentation
   [StateClass](./docs/state-class.md) - An Object including model for storing state
+  
   [Component](./docs/component.md) - Reusable StateClass with View management boilerplate
+  
   [App](./docs/app.md) - Object including a start/stop lifecycle and child apps.
 
 ## Getting Help
@@ -34,10 +34,9 @@ Marionette.Toolkit is not yet available via package manager, but will
 soon be released via npm.  If you would like another channel, please
 open an issue.
 
-## Release Notes
+## Changelog
 
-**Changelog**: For change logs and release notes, see the
-[changelog](CHANGELOG.md) file.
+For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 ## Compatibility and Requirements
 
