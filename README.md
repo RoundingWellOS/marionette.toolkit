@@ -7,7 +7,7 @@ Marionette.Toolkit
 ## About Marionette.Toolkit
 
 Marionette.Toolkit is a collection of opinionated extensions for
-[Marionette](http://marionette.js) Each element helps to reduce boilerplate
+[Marionette](http://marionettejs.com) Each element helps to reduce boilerplate
 for complex large scale application problems.  This toolkit was
 built from scripts open sourced from [RoundingWell.com](http://roundingwell.com).
 
@@ -45,7 +45,7 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 #### Compatibility and Requirements
 
-Marionette.Toolkit currently requires [Marionette](http://marionette.js) 2.3.2+
+Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.3.2+
 
 Marionette.Toolkit has not been tested against any earlier versions of
 Marionette.  It will likely work fine with other versions if you shim
@@ -59,9 +59,9 @@ the [guidelines for pull requests and contributions](CONTRIBUTING.md).
 Following these guidelines will help make your contributions easier to
 bring into the next release.
 
-### [Github Issues](//github.com/RoundingWellOS/marionette.toolkit/issues)
+### Github Issues
 
-Report issues with Marionette.Toolkit, submit pull requests to fix problems, or to
+[Report issues](https://github.com/RoundingWellOS/marionette.toolkit/issues) with Marionette.Toolkit, [submit pull requests](https://github.com/RoundingWellOS/marionette.toolkit/pulls) to fix problems, or to
 create summarized and documented feature requests (preferably with pull
 requests that implement the feature).
 
