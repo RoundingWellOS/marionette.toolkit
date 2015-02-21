@@ -12,7 +12,7 @@ for complex large scale application problems.  This toolkit was
 built from scripts open sourced from [RoundingWell.com](http://roundingwell.com).
 
 ## Documentation
-  [StateClass](./docs/state-class.md) - An Object including model for storing state
+  [StateClass](./docs/state-class.md) - Marionette.Object with a Backbone.Model for keeping state.
   
   [Component](./docs/component.md) - Reusable StateClass with View management boilerplate
   
