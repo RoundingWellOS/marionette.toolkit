@@ -22,14 +22,15 @@ $ npm install
 
 There are two methods to running the unit test suite, suited
 for your desired workflow and overall developer happiness:
-you can open runner.html in the browser or run `gulp test`
+you can open [runner.html](./test/runner.html) in the browser or run `gulp test`
 
 
 ### In a browser
 
-  Open [runner.html](./test/runner.html) in your browser.
-  Run `gulp test-browser` to live reload the tests after
+  Optionally run `gulp test-browser` to live reload the tests after
   either the tests or src js change.
+
+  Open [runner.html](./test/runner.html) in your browser.
 
 ### Via Gulp
 
