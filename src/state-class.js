@@ -23,7 +23,7 @@ var StateClass = Marionette.Object.extend({
    * @constructs StateClass
    * @param {Object} [options] - Settings for the stateClass.
    * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to stateClass.
-   * @param {Object} [options.StateModel] - Model class for _stateModel.
+   * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
    */
   constructor: function(options){
     options = options || {};
