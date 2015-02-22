@@ -39,8 +39,10 @@ var Component = StateClass.extend({
    * @constructs Component
    * @param {Object} [stateAttrs] - Attributes to set on the state model.
    * @param {Object} [options] - Settings for the component.
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} [options.ViewClass] - The view class to be managed.
-   * @param {String} [options.viewEventPrefix] - Used as the prefix for events forwarded from the component's view to the component
+   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} [options.ViewClass]
+   * - The view class to be managed.
+   * @param {String} [options.viewEventPrefix]
+   * - Used as the prefix for events forwarded from the component's view to the component
    * @param {Object} [options.viewOptions] - The view class to be managed.
    * @param {Marionette.Region=} [options.region] - The region to show the component in.
    */
@@ -205,7 +207,9 @@ var Component = StateClass.extend({
    * @returns {Object}
    */
   mixinOptions: function(options){
-    return _.extend({ model: this.getState() }, this.viewOptions, options);
+    var viewOptions = _.result(this, 'viewOptions');
+
+    return _.extend({ model: this.getState() }, viewOptions, options);
   },
 
   /**
@@ -220,7 +224,7 @@ var Component = StateClass.extend({
    */
   getViewClass: function(){
     return this.ViewClass;
-  }
+  },
 
   /**
    * Builds the view class with mixed in options

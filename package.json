@@ -75,7 +75,7 @@
     ]
   },
   "dependencies": {
-    "backbone.marionette": "^2.3.2",
+    "backbone.marionette": "^2.1.0",
     "backbone": "1.0.0 - 1.1.2",
     "underscore": "1.4.4 - 1.6.0"
   }
