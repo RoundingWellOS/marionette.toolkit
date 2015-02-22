@@ -11,19 +11,33 @@ var App = StateClass.extend({
 
     this._childApps = {};
 
-    _.extend(this, _.pick(options, ['startWithParent', 'stopWithParent', 'childApps']));
+    var pickOptions = [
+      'startWithParent',
+      'stopWithParent',
+      'startAfterInitialized',
+      'childApps'
+    ];
 
-    var childApps = _.result(this, 'childApps');
+    _.extend(this, _.pick(options, pickOptions));
 
     // Initialize apps
-    this.addChildApps(childApps);
+    if(this.childApps) {
+      this.addChildApps(_.result(this, 'childApps'));
+    }
 
+    // Will call initialize
     StateClass.call(this, options);
+
+    if(_.result(this, 'startAfterInitialized')) {
+      this.start();
+    }
   },
 
   _isRunning: false,
 
   _isDestroyed: false,
+
+  startAfterInitialized: false,
 
   startWithParent: false,
 
@@ -36,6 +50,10 @@ var App = StateClass.extend({
         message: 'App has already been destroyed and cannot be used.'
       });
     }
+  },
+
+  isRunning: function() {
+    return this._isRunning;
   },
 
   start: function(options) {
@@ -73,8 +91,35 @@ var App = StateClass.extend({
     return this;
   },
 
-  addChildApp: function(appName, AppDefinition, options) {
-    var childApp = this._childApps[appName] = new AppDefinition(options);
+
+  _buildAppFromObject: function(appConfig) {
+    var AppClass = appConfig.AppClass;
+    var options = _.omit(appConfig, 'AppClass');
+
+    return new AppClass(options);
+  },
+
+  buildChildApp: function(AppClass, options) {
+    if(_.isObject(AppClass)) {
+      return this._buildAppFromObject(AppClass);
+    }
+
+    if(_.isFunction(AppClass)) {
+      return new AppClass(options);
+    }
+  },
+
+  addChildApp: function(appName, AppClass, options) {
+    var childApp = this.buildChildApp(AppClass, options);
+
+    if(!childApp){
+      throw new Marionette.Error({
+        name: 'AddChildAppError',
+        message: 'App build failed.  Incorrect configuration.'
+      });
+    }
+
+    this._childApps[appName] = childApp;
 
     // When the app is destroyed remove the cached app.
     childApp.on('destroy', function() {
@@ -130,10 +175,6 @@ var App = StateClass.extend({
     _.each(this._childApps, function(childApp) {
       childApp.destroy();
     });
-  },
-
-  isRunning: function() {
-    return this._isRunning;
   },
 
   isDestroyed: function() {
