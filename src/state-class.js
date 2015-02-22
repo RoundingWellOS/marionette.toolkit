@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 
@@ -28,15 +29,31 @@ var StateClass = Marionette.Object.extend({
   constructor: function(options){
     options = options || {};
 
-    // Get the StateModel from options or the class definition
-    var StateModel = options.StateModel || this.StateModel;
+    // Make defaults available to this
+    _.extend(this, _.pick(options, ['StateModel', 'stateEvents']));
+
+    var StateModel = this.getStateModelClass();
 
     this._stateModel = new StateModel();
 
     // Bind events from the _stateModel defined in stateEvents hash
-    this.bindEntityEvents(this._stateModel, this.getOption('stateEvents'));
+    this.bindEntityEvents(this._stateModel, _.result(this, 'stateEvents'));
 
     Marionette.Object.call(this, options);
+  },
+
+  /**
+   * Get the StateClass StateModel class.
+   * If you need a dynamic StateModel override this function
+   *
+   * @public
+   * @abstract
+   * @method getStateModelClass
+   * @memberOf StateClass
+   * @returns {Backbone.Model}
+   */
+  getStateModelClass: function(){
+    return this.StateModel;
   },
 
   /**

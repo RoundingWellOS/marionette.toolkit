@@ -14,9 +14,9 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 
 ## Documentation
   [StateClass](./docs/state-class.md) - Marionette.Object with a Backbone.Model for keeping state.
-  
+
   [Component](./docs/component.md) - Reusable StateClass with View management boilerplate
-  
+
   [App](./docs/app.md) - Object including a start/stop lifecycle and child apps.
 
 
@@ -45,11 +45,13 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 #### Compatibility and Requirements
 
-Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.3.2+
+Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.1.0+ as it extends
+[`Marionette.Object`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md)
 
-Marionette.Toolkit has not been tested against any earlier versions of
-Marionette.  It will likely work fine with other versions if you shim
-in [`Marionette._getValue`](https://github.com/marionettejs/backbone.marionette/blob/v2.3.2/src/helpers.js#L44)
+It's possible this library would work with earlier versions by shiming
+`Marionette.Object = Marionette.Controller;`
+
+This library is currently only tested with the latest version of Marionette.
 
 
 ## How to Contribute

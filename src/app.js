@@ -13,7 +13,7 @@ var App = StateClass.extend({
 
     _.extend(this, _.pick(options, ['startWithParent', 'stopWithParent', 'childApps']));
 
-    var childApps = Marionette._getValue(this.childApps);
+    var childApps = _.result(this, 'childApps');
 
     // Initialize apps
     this.addChildApps(childApps);
@@ -51,6 +51,8 @@ var App = StateClass.extend({
     this.startChildApps();
 
     this.triggerMethod('start', options);
+
+    return this;
   },
 
   stop: function(options) {
@@ -68,8 +70,8 @@ var App = StateClass.extend({
     this._stopRunningListeners();
     this._stopRunningEvents();
 
+    return this;
   },
-
 
   addChildApp: function(appName, AppDefinition, options) {
     var childApp = this._childApps[appName] = new AppDefinition(options);
@@ -79,7 +81,7 @@ var App = StateClass.extend({
       delete this._childApps[appName];
     }, this);
 
-    if(this._isRunning && childApp.startWithParent) {
+    if(this._isRunning && _.result(childApp, 'startWithParent')) {
       childApp.start();
     }
 
@@ -110,7 +112,7 @@ var App = StateClass.extend({
 
   startChildApps: function() {
     _.each(this._childApps, function(childApp) {
-      if(childApp.startWithParent) {
+      if(_.result(childApp, 'startWithParent')) {
         childApp.start();
       }
     });
@@ -118,7 +120,7 @@ var App = StateClass.extend({
 
   stopChildApps: function() {
     _.each(this._childApps, function(childApp) {
-      if(childApp.stopWithParent) {
+      if(_.result(childApp, 'stopWithParent')) {
         childApp.stop();
       }
     });
