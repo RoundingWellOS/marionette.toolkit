@@ -13,11 +13,13 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 
 
 ## Documentation
-  [StateClass](./docs/state-class.md) - Marionette.Object with a Backbone.Model for keeping state.
+  [StateClass](./docs/state-class.md) - `Marionette.Object` with a `Backbone.Model` for keeping state.
 
-  [Component](./docs/component.md) - Reusable StateClass with View management boilerplate
+  [Component](./docs/component.md) - Reusable `StateClass` with `View` management boilerplate
 
-  [App](./docs/app.md) - Object including a start/stop lifecycle and child apps.
+  [AbstractApp](./docs/abstract-app.md) - Object including a start/stop lifecycle and running event registry.
+
+  [App](./docs/app.md) - `AbstractApp` with mixed in "App Manager" for adding and removing child `App`s
 
 
 ## Getting Help
