@@ -5,8 +5,8 @@
  * @license MIT
  */
 (function (global, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? factory(require("backbone.marionette"), require("backbone"), require("underscore")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "backbone", "underscore"], factory) : factory(global.Marionette, global.Backbone, global._);
-})(this, function (Marionette, Backbone, _) {
+  typeof exports === "object" && typeof module !== "undefined" ? factory(require("backbone.marionette"), require("underscore"), require("backbone")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "underscore", "backbone"], factory) : factory(global.Marionette, global._, global.Backbone);
+})(this, function (Marionette, _, Backbone) {
   "use strict";
 
   var StateClass = Marionette.Object.extend({
@@ -14,6 +14,7 @@
     /**
      * The model class for _stateModel.
      * @type {Backbone.Model}
+     * @default Backbone.Model
      */
     StateModel: Backbone.Model,
 
@@ -22,20 +23,36 @@
      * @constructs StateClass
      * @param {Object} [options] - Settings for the stateClass.
      * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to stateClass.
-     * @param {Object} [options.StateModel] - Model class for _stateModel.
+     * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
      */
     constructor: function (options) {
       options = options || {};
 
-      // Get the StateModel from options or the class definition
-      var StateModel = options.StateModel || this.StateModel;
+      // Make defaults available to this
+      _.extend(this, _.pick(options, ["StateModel", "stateEvents"]));
+
+      var StateModel = this.getStateModelClass();
 
       this._stateModel = new StateModel();
 
       // Bind events from the _stateModel defined in stateEvents hash
-      this.bindEntityEvents(this._stateModel, this.getOption("stateEvents"));
+      this.bindEntityEvents(this._stateModel, _.result(this, "stateEvents"));
 
       Marionette.Object.call(this, options);
+    },
+
+    /**
+     * Get the StateClass StateModel class.
+     * If you need a dynamic StateModel override this function
+     *
+     * @public
+     * @abstract
+     * @method getStateModelClass
+     * @memberOf StateClass
+     * @returns {Backbone.Model}
+     */
+    getStateModelClass: function () {
+      return this.StateModel;
     },
 
     /**
@@ -84,31 +101,92 @@
     }
   });
 
-  var App = StateClass.extend({
+  var AbstractApp = StateClass.extend({
 
+    /**
+     * Internal flag indiciate when `App` has started but has not yet stopped.
+     *
+     * @private
+     * @type {Boolean}
+     * @default false
+     */
+    _isRunning: false,
+
+    /**
+     * Internal flag indiciate when `App` has been destroyed
+     *
+     * @private
+     * @type {Boolean}
+     * @default false
+     */
+    _isDestroyed: false,
+
+    /**
+     * Set to true if a parent `App` should not be able to destroy this `App`.
+     *
+     * @type {Boolean|Function}
+     * @default false
+     */
+    preventDestroy: false,
+
+    /**
+     * Set to true if `App` should be started after it is initialized.
+     *
+     * @type {Boolean|Function}
+     * @default false
+     */
+    startAfterInitialized: false,
+
+    /**
+     * Set to true if `App` should be started after its parent starts.
+     *
+     * @type {Boolean|Function}
+     * @default false
+     */
+    startWithParent: false,
+
+    /**
+     * Set to false if `App` should not stop after its parent stops.
+     *
+     * @type {Boolean|Function}
+     * @default true
+     */
+    stopWithParent: true,
+
+    /**
+     * @public
+     * @constructs AbstractApp
+     * @param {Object} [options] - Settings for the App.
+     * @param {Boolean} [options.startWithParent]
+     * @param {Boolean} [options.stopWithParent]
+     * @param {Boolean} [options.startAfterInitialized]
+     * @param {Boolean} [options.preventDestroy]
+     */
     constructor: function (options) {
       options = options || {};
 
       _.bindAll(this, "start", "stop");
 
-      this._apps = {};
+      var pickOptions = ["startWithParent", "stopWithParent", "startAfterInitialized", "preventDestroy"];
 
-      _.extend(this, _.pick(options, ["startWithParent", "stopWithParent", "apps"]));
+      _.extend(this, _.pick(options, pickOptions));
 
-      // Initialize apps
-      this.addApps(this.getOption("apps"));
-
+      // Will call initialize
       StateClass.call(this, options);
+
+      if (_.result(this, "startAfterInitialized")) {
+        this.start();
+      }
     },
 
-    _isRunning: false,
-
-    _isDestroyed: false,
-
-    startWithParent: false,
-
-    stopWithParent: true,
-
+    /**
+     * Internal helper to verify if `App` has been destroyed
+     *
+     * @private
+     * @method _ensureAppIsIntact
+     * @memberOf AbstractApp
+     * @throws AppDestroyedError - Thrown if `App` has already been destroyed
+     */
     _ensureAppIsIntact: function () {
       if (this._isDestroyed) {
         throw new Marionette.Error({
@@ -118,119 +196,136 @@
       }
     },
 
+    /**
+     * Gets the value of internal `_isRunning` flag
+     *
+     * @public
+     * @method isRunning
+     * @memberOf AbstractApp
+     * @returns {Boolean}
+     */
+    isRunning: function () {
+      return this._isRunning;
+    },
+
+    /**
+     * Sets the app lifecycle to running.
+     *
+     * @public
+     * @method start
+     * @memberOf AbstractApp
+     * @param {Object} [options] - Settings for the App passed through to events
+     * @event AbstractApp#before:start - passes options
+     * @event AbstractApp#start - passes options
+     * @returns {AbstractApp}
+     */
     start: function (options) {
       this._ensureAppIsIntact();
 
       if (this._isRunning) {
-        return;
+        return this;
       }
 
       this.triggerMethod("before:start", options);
 
       this._isRunning = true;
-      this.startApps();
 
       this.triggerMethod("start", options);
+
+      return this;
     },
 
+    /**
+     * Sets the app lifecycle to not running.
+     * Removes any listeners added during the running state
+     *
+     * @public
+     * @method stop
+     * @memberOf AbstractApp
+     * @param {Object} [options] - Settings for the App passed through to events
+     * @event AbstractApp#before:stop - passes options
+     * @event AbstractApp#stop - passes options
+     * @returns {AbstractApp}
+     */
     stop: function (options) {
       if (!this._isRunning) {
-        return;
+        return this;
       }
 
       this.triggerMethod("before:stop", options);
 
       this._isRunning = false;
-      this.stopApps();
 
       this.triggerMethod("stop", options);
 
       this._stopRunningListeners();
       this._stopRunningEvents();
+
+      return this;
     },
 
-    addApp: function (appName, AppDefinition, options) {
-      var app = this._apps[appName] = new AppDefinition(options);
-
-      // When the app is destroyed remove the cached app.
-      app.on("destroy", function () {
-        delete this._apps[appName];
-      }, this);
-
-      if (this._isRunning && app.getOption("startWithParent")) {
-        app.start();
-      }
-
-      return app;
-    },
-
-    getApp: function (appName) {
-      return this._apps[appName];
-    },
-
-    destroyApp: function (app) {
-      // if app is a string assume it's an app's name
-      if (_.isString(app)) {
-        app = this.getApp(app);
-      }
-
-      if (app) {
-        app.destroy();
-      }
-    },
-
-    addApps: function (apps) {
-      _.each(apps, function (app, appName) {
-        this.addApp(appName, app);
-      });
-    },
-
-    startApps: function () {
-      _.each(this._apps, function (app) {
-        if (app.getOption("startWithParent")) {
-          app.start();
-        }
-      });
-    },
-
-    stopApps: function () {
-      _.each(this._apps, function (app) {
-        if (app.getOption("stopWithParent")) {
-          app.stop();
-        }
-      });
-    },
-
-    isRunning: function () {
-      return this._isRunning;
-    },
-
+    /**
+     * Gets the value of internal `_isDestroyed` flag
+     *
+     * @public
+     * @method isDestroyed
+     * @memberOf AbstractApp
+     * @returns {Boolean}
+     */
     isDestroyed: function () {
       return this._isDestroyed;
     },
 
+    /**
+     * Stops the `App` and sets it destroyed.
+     *
+     * @public
+     * @method destroy
+     * @memberOf AbstractApp
+     */
     destroy: function () {
       this.stop();
-
-      this.destroyApps();
 
       this._isDestroyed = true;
 
       StateClass.prototype.destroy.apply(this, arguments);
     },
 
+    /**
+     * Internal method to stop any registered events.
+     *
+     * @private
+     * @method _stopRunningEvents
+     * @memberOf AbstractApp
+     */
     _stopRunningEvents: function () {
       _.each(this._runningEvents, function (args) {
         this.off.apply(this, args);
       }, this);
     },
 
+    /**
+     * Internal method to stop any registered listeners.
+     *
+     * @private
+     * @method _stopRunningListeners
+     * @memberOf AbstractApp
+     */
     _stopRunningListeners: function () {
       _.each(this._runningListeningTo, function (args) {
         this.stopListening.apply(this, args);
       }, this);
     },
 
+    /**
+     * Overrides `Backbone.Event.on()`
+     * If this `App` is running it will register the event for removal `onStop`
+     *
+     * @public
+     * @method on
+     * @memberOf AbstractApp
+     * @returns {AbstractApp}
+     */
     on: function () {
       if (this._isRunning) {
         this._runningEvents = this._runningEvents || [];
@@ -239,6 +334,15 @@
       return StateClass.prototype.on.apply(this, arguments);
     },
 
+    /**
+     * Overrides `Backbone.Event.listenTo()`
+     * If this `App` is running it will register the listener for removal `onStop`
+     *
+     * @public
+     * @method listenTo
+     * @memberOf AbstractApp
+     * @returns {AbstractApp}
+     */
     listenTo: function () {
       if (this._isRunning) {
         this._runningListeningTo = this._runningListeningTo || [];
@@ -249,39 +353,402 @@
 
   });
 
+  var App = AbstractApp.extend({
+
+    /**
+     * @public
+     * @constructs App
+     * @param {Object} [options] - Settings for the App.
+     * @param {Object} [options.childApps] - Hash for setting up child apps.
+     *
+     * ```js
+     * childApps: {
+     *   appName: {
+     *     AppClass: MyChildAppClass,
+     *     fooOption: true,
+     *     startWithParent: true
+     *   },
+     *   barApp: MyOtherChildAppClass
+     * }
+     * ```
+     */
+    constructor: function (options) {
+      options = options || {};
+
+      this._childApps = {};
+
+      _.extend(this, _.pick(options, ["childApps"]));
+
+      this._initChildApps();
+
+      // The child apps should be handled while the app is running;
+      // After start, before stop, and before destroy.
+      this.on({
+        start: this._startChildApps,
+        "before:stop": this._stopChildApps,
+        "before:destroy": this._destroyChildApps
+      });
+
+      AbstractApp.call(this, options);
+    },
+
+    /**
+     * Initializes `childApps` option
+     *
+     * @private
+     * @method _initChildApps
+     * @memberOf App
+     */
+    _initChildApps: function () {
+      if (this.childApps) {
+        this.addChildApps(_.result(this, "childApps"));
+      }
+    },
+
+    /**
+     * Starts `childApps` if allowed by child
+     *
+     * @private
+     * @method _startChildApps
+     * @memberOf App
+     */
+    _startChildApps: function () {
+      _.each(this._childApps, function (childApp) {
+        if (_.result(childApp, "startWithParent")) {
+          childApp.start();
+        }
+      });
+    },
+
+    /**
+     * Stops `childApps` if allowed by child
+     *
+     * @private
+     * @method _stopChildApps
+     * @memberOf App
+     */
+    _stopChildApps: function () {
+      _.each(this._childApps, function (childApp) {
+        if (_.result(childApp, "stopWithParent")) {
+          childApp.stop();
+        }
+      });
+    },
+
+    /**
+     * Destroys `childApps` if allowed by child
+     *
+     * @private
+     * @method _destroyChildApps
+     * @memberOf App
+     */
+    _destroyChildApps: function () {
+      _.each(this._childApps, function (childApp) {
+        if (_.result(childApp, "preventDestroy")) {
+          childApp.destroy();
+        }
+      });
+    },
+
+    /**
+     * Internal helper to instantiate and `App` from on `Object`
+     *
+     * @private
+     * @method _buildAppFromObject
+     * @memberOf App
+     * @param {Object} [appConfig] - `AppClass` and any other option for the `App`
+     * @returns {App}
+     */
+    _buildAppFromObject: function (appConfig) {
+      var AppClass = appConfig.AppClass;
+      var options = _.omit(appConfig, "AppClass");
+
+      return new AppClass(options);
+    },
+
+    /**
+     * Builds an App and return it
+     *
+     * @public
+     * @method buildApp
+     * @memberOf App
+     * @param {App} [AppClass] - An App Class
+     * @param {Object} [AppClass] - Optionally passed as an appConfig Object
+     * @param {Object=} [options] - options for the AppClass
+     * @returns {App}
+     */
+    buildApp: function (AppClass, options) {
+      if (_.isObject(AppClass)) {
+        return this._buildAppFromObject(AppClass);
+      }
+
+      if (_.isFunction(AppClass)) {
+        return new AppClass(options);
+      }
+    },
+
+    /**
+     * Internal helper to verify `appName` is unique and not in use
+     *
+     * @private
+     * @method _ensureAppIsUnique
+     * @memberOf App
+     * @param {String} [appName] - Name of app to test
+     * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
+     */
+    _ensureAppIsUnique: function (appName) {
+      if (this._childApps[appName]) {
+        throw new Marionette.Error({
+          name: "DuplicateChildAppError",
+          message: "A child App with that name has already been added."
+        });
+      }
+    },
+
+    /**
+     * Add child `App`s to this `App`
+     *
+     * @public
+     * @method addChildApps
+     * @memberOf App
+     * @param {Object} [childApps] - Hash of names and `AppClass` or `appConfig`
+     */
+    addChildApps: function (childApps) {
+      _.each(childApps, function (childApp, appName) {
+        this.addChildApp(appName, childApp);
+      }, this);
+    },
+
+    /**
+     * Build's childApp and registers it with this App
+     * Starts the childApp, if this app is running and child is `startWithParent`
+     *
+     * @public
+     * @method addChildApp
+     * @memberOf App
+     * @param {String} [appName] - Name of App to register
+     * @param {App} [AppClass] - An App Class
+     * @param {Object} [AppClass] - Optionally passed as an appConfig Object
+     * @param {Object=} [options] - options for the AppClass
+     * @throws AddChildAppError - Thrown if no childApp could be built from params
+     * @returns {App}
+     */
+    addChildApp: function (appName, AppClass, options) {
+      this._ensureAppIsUnique();
+
+      var childApp = this.buildApp(AppClass, options);
+
+      if (!childApp) {
+        throw new Marionette.Error({
+          name: "AddChildAppError",
+          message: "App build failed.  Incorrect configuration."
+        });
+      }
+
+      this._childApps[appName] = childApp;
+
+      // When the app is destroyed remove the cached app.
+      childApp.on("destroy", _.partial(this._removeChildApp, appName), this);
+
+      if (this.isRunning() && _.result(childApp, "startWithParent")) {
+        childApp.start();
+      }
+
+      return childApp;
+    },
+
+    /**
+     * Returns registered child `App`s array
+     *
+     * @public
+     * @method getChildApps
+     * @memberOf App
+     * @returns {Array}
+     */
+    getChildApps: function () {
+      return _.clone(this._childApps);
+    },
+
+    /**
+     * Returns registered child `App`
+     *
+     * @public
+     * @method getChildApp
+     * @memberOf App
+     * @param {String} [appName] - Name of App to retrieve
+     * @returns {App}
+     */
+    getChildApp: function (appName) {
+      return this._childApps[appName];
+    },
+
+    /**
+     * Internal helper.  Unregisters child `App`
+     *
+     * @private
+     * @method _removeChildApp
+     * @memberOf App
+     * @param {String} [appName] - Name of App to unregister
+     * @returns {App}
+     */
+    _removeChildApp: function (appName) {
+      delete this._childApps[appName];
+    },
+
+    /**
+     * Removes all childApps and returns them.
+     * The return is useful if any app is using `preventDestroy`
+     *
+     * @public
+     * @method removeChildApps
+     * @memberOf App
+     * @returns {Array}
+     */
+    removeChildApps: function () {
+      var childApps = this.getChildApps();
+
+      _.each(this._childApps, function (childApp, appName) {
+        this.removeChildApp(appName);
+      }, this);
+
+      return childApps;
+    },
+
+    /**
+     * Destroys or removes registered child `App` by name
+     * depending on `preventDestroy`
+     *
+     * @public
+     * @method removeChildApp
+     * @memberOf App
+     * @param {String} [appName] - Name of App to destroy
+     * @param {Object} [options.preventDestroy] - Flag to remove but prevent App destroy
+     * @returns {App}
+     */
+    removeChildApp: function (appName, options) {
+      options = options || {};
+
+      var childApp = this.getChildApp(appName);
+
+      if (!childApp) {
+        return;
+      }
+
+      // if preventDestroy simply unregister the child app
+      if (options.preventDestroy || _.result(childApp, "preventDestroy")) {
+        this._removeChildApp(appName);
+      } else {
+        childApp.destroy();
+      }
+
+      return childApp;
+    }
+
+  });
+
   var Component = StateClass.extend({
+
+    /**
+     * The view class to be managed.
+     * @type {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
+     * @default Marionette.ItemView
+     */
+    ViewClass: Marionette.ItemView,
+
+    /**
+     * Used as the prefix for events forwarded from
+     * the component's view to the component
+     * @type {String}
+     * @default 'view'
+     */
+    viewEventPrefix: "view",
+
+    /**
+     * Options hash passed to the view when built.
+     * @type {Object|Function}
+     * @default '{}'
+     */
+    viewOptions: {},
+
+    /**
+     * @public
+     * @constructs Component
+     * @param {Object} [stateAttrs] - Attributes to set on the state model.
+     * @param {Object} [options] - Settings for the component.
+     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} [options.ViewClass]
+     * - The view class to be managed.
+     * @param {String} [options.viewEventPrefix]
+     * - Used as the prefix for events forwarded from the component's view to the component
+     * @param {Object} [options.viewOptions] - The view class to be managed.
+     * @param {Marionette.Region=} [options.region] - The region to show the component in.
+     */
     constructor: function (stateAttrs, options) {
       options = options || {};
-      // Make defaults available to this
-      _.extend(this, _.pick(options, ["viewEventPrefix", "viewClass", "viewOptions", "region"]));
 
-      Marionette.StateObject.call(this, options);
+      // Make defaults available to this
+      _.extend(this, _.pick(options, ["viewEventPrefix", "ViewClass", "viewOptions", "region"]));
+
+      StateClass.call(this, options);
 
       this._setStateDefaults(stateAttrs);
     },
 
+    /**
+     * Internal flag to determine if the component should destroy.
+     * Set to false while showing the component's view in the component's region.
+     *
+     * @private
+     * @type {Boolean}
+     * @default true
+     */
     _shouldDestroy: true,
 
+    /**
+     * Set the state model attributes to the initial
+     * passed in attributes or any defaults set
+     *
+     * @private
+     * @method _setStateDefaults
+     * @memberOf Component
+     * @param {Object=} stateAttrs - Attributes to set on the state model
+     */
     _setStateDefaults: function (stateAttrs) {
       _.defaults(stateAttrs, _.result(this, "defaults"));
 
       this.setState(stateAttrs, { silent: true });
     },
 
-    viewEventPrefix: "view",
-
-    viewClass: Marionette.ItemView,
-
-    viewOptions: {},
-
+    /**
+     * Set the Component's region and then show it.
+     *
+     * @public
+     * @method showIn
+     * @memberOf Component
+     * @param {Marionette.Region} region - The region for the component
+     * @returns {Component}
+     */
     showIn: function (region) {
       if (region) {
         this.region = region;
       }
 
       this.show();
+
+      return this;
     },
 
+    /**
+     * Show the Component in its region.
+     *
+     * @public
+     * @event Component#before:show
+     * @event Component#show
+     * @throws ComponentShowError - Thrown if component has already been show.
+     * @throws ComponentRegionError - Thrown if component has no defined region.
+     * @method show
+     * @memberOf Component
+     * @returns {Component}
+     */
     show: function () {
       if (this._isShown) {
         throw new Marionette.Error({
@@ -307,8 +774,20 @@
       this._isShown = true;
 
       this.triggerMethod("show");
+
+      return this;
     },
 
+    /**
+     * Shows or re-shows a newly built view in the component's region
+     *
+     * @public
+     * @event Component#before:render:view
+     * @event Component#render:view
+     * @method renderView
+     * @memberOf Component
+     * @returns {Component}
+     */
     renderView: function () {
       this.view = this.buildView();
 
@@ -326,13 +805,20 @@
       this._shouldDestroy = true;
 
       this.triggerMethod("render:view", this.view);
+
+      return this;
     },
 
+    /**
+     * Proxies the ViewClass's viewEvents to the Component itself
+     * Similar to CollectionView childEvents
+     * (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
+     *
+     * @private
+     * @method _proxyViewEvents
+     * @memberOf Component
+     */
     _proxyViewEvents: function () {
-      // Proxies the viewClass's viewEvents to the Component itself
-      // similar to CollectionView childEvents
-      // (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
-
       var prefix = this.getOption("viewEventPrefix");
 
       this.view.on("all", function () {
@@ -346,28 +832,78 @@
       }, this);
     },
 
-    // mixin _state_model from StateObject with any other viewOptions
+    /**
+     * Mixin stateModel from StateClass with any other viewOptions
+     *
+     * @public
+     * @abstract
+     * @method mixinOptions
+     * @memberOf Component
+     * @param {Object=} options - Additional options to mixin
+     * @returns {Object}
+     */
     mixinOptions: function (options) {
-      return _.extend({ model: this.getState() }, this.viewOptions, options);
+      var viewOptions = _.result(this, "viewOptions");
+
+      return _.extend({ model: this.getState() }, viewOptions, options);
     },
 
+    /**
+     * Get the component ViewClass.
+     * If you need a dynamic ViewClass override this function
+     *
+     * @public
+     * @abstract
+     * @method getViewClass
+     * @memberOf Component
+     * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
+     */
+    getViewClass: function () {
+      return this.ViewClass;
+    },
+
+    /**
+     * Builds the view class with mixed in options
+     *
+     * @public
+     * @abstract
+     * @method buildView
+     * @memberOf Component
+     * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
+     */
     buildView: function () {
-      return new this.viewClass(this.mixinOptions());
+      var ViewClass = this.getViewClass();
+
+      return new ViewClass(this.mixinOptions());
     },
 
+    /**
+     * Destroys Component and empties its region.
+     *
+     * @private
+     * @method _destroy
+     * @memberOf Component
+     */
     _destroy: function () {
       // apply destroy first for listener cleanup
       Marionette.StateObject.prototype.destroy.apply(this, arguments);
 
-      this.region.empty();
+      if (this.region) {
+        this.region.empty();
+      }
     },
 
+    /**
+     * If the component should be destroyed, destroy it.
+     *
+     * @public
+     * @method destroy
+     * @memberOf Component
+     */
     destroy: function () {
       if (this._shouldDestroy) {
         this._destroy();
       }
-
-      return this;
     }
   });
 
