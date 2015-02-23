@@ -6,7 +6,7 @@ import StateClass from './state-class';
  * Reusable StateClass with View management boilerplate
  *
  * @public
- * @class StateClass
+ * @class Component
  * @memberOf Toolkit
  * @memberOf Marionette
  */
