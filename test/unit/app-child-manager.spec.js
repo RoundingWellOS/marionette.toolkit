@@ -1,4 +1,6 @@
+import _ from 'underscore';
 import '../../src/marionette.toolkit';
+
 
 describe('App Manager', function() {
 
@@ -13,12 +15,32 @@ describe('App Manager', function() {
 
     describe('without declared child apps', function() {
 
+      describe('childApps object', function() {
+
+        it('should not be created', function() {
+            expect(this.myApp.childApps).to.be.undefined;
+        });
+
+      });
+
       describe('_childApps object', function() {
 
-        it('should be empty', function() {
+        it('should be created but empty', function() {
+          expect(this.myApp.childApps).to.not.be.null;
           expect(Object.keys(this.myApp._childApps)).to.have.length(0);
         });
 
+      });
+
+      describe('_initChildApps', function() {
+
+        it('should not have error', function() {
+          this.sinon.spy(this.myApp, '_initChildApps');
+          this.myApp._initChildApps();
+
+          expect(this.myApp._initChildApps.calledOn(this.myApp)).to.be.true;
+          expect(_.bind(this.myApp._initChildApps, this.myApp)).to.not.throw(Error);
+        });
       });
 
       describe('addChildApp function', function() {
@@ -35,20 +57,46 @@ describe('App Manager', function() {
     });
 
     describe('with declared child apps', function() {
+      beforeEach(function() {
+        var childApps = {
+          cA1: Marionette.Toolkit.App,
+          cA2: Marionette.Toolkit.App,
+          cA3: Marionette.Toolkit.App
+        };
 
-      describe('childApps object', function() {
-        before(function() {
-          this.childApps = {
-            cA1: Marionette.Toolkit.App,
-            cA2: Marionette.Toolkit.App
-          };
+        this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+      });
 
-          this.myApp = new Marionette.Toolkit.App({ childApps: this.childApps });
+      describe('constructor', function() {
+
+        it('should add childApps to object', function() {
+          expect(_.keys(this.myApp.childApps)).to.have.length(3);
+          expect(_.keys(this.myApp._childApps)).to.have.length(3);
         });
 
-        it('should have two childApps', function() {
-          expect(this.myApp.childApps).to.not.be.undefined;
-          expect(Object.keys(this.myApp.childApps)).to.have.length(2);
+      });
+
+      describe('_initChildApps', function() {
+
+        it('should accept a hash', function() {
+          this.sinon.spy(this.myApp, '_initChildApps');
+          this.myApp._initChildApps();
+
+          expect(this.myApp._initChildApps.calledOn(this.myApp)).to.be.true;
+          expect(_.keys(this.myApp._childApps)).to.have.length(3);
+        });
+
+        it('should accept a function', function() {
+          var childApps = function(){
+            return {
+              cA1: Marionette.Toolkit.App,
+              cA2: Marionette.Toolkit.App
+            };
+          };
+
+          this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+
+          expect(_.keys(this.myApp._childApps)).to.have.length(2);
         });
 
       });
