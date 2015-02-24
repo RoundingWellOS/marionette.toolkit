@@ -90,7 +90,7 @@ var AbstractApp = StateClass.extend({
     StateClass.call(this, options);
 
     if(_.result(this, 'startAfterInitialized')) {
-      this.start();
+      this.start(options);
     }
   },
 
