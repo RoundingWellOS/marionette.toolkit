@@ -190,7 +190,7 @@ var App = AbstractApp.extend({
    * @returns {App}
    */
   addChildApp: function(appName, AppClass, options) {
-    this._ensureAppIsUnique();
+    this._ensureAppIsUnique(appName);
 
     var childApp = this.buildApp(AppClass, options);
 
