@@ -135,12 +135,11 @@ var App = AbstractApp.extend({
    * @returns {App}
    */
   buildApp: function(AppClass, options) {
-    if(_.isObject(AppClass)) {
-      return this._buildAppFromObject(AppClass);
-    }
-
     if(_.isFunction(AppClass)) {
       return new AppClass(options);
+    }
+    if(_.isObject(AppClass)) {
+      return this._buildAppFromObject(AppClass);
     }
   },
 
