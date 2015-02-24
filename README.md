@@ -61,7 +61,9 @@ This library is currently only tested with the latest version of Marionette.
 If you would like to contribute to Marionette.Toolkit's source code, please read
 the [guidelines for pull requests and contributions](CONTRIBUTING.md).
 Following these guidelines will help make your contributions easier to
-bring into the next release.
+bring into the next release. 
+
+You can also join us in the [Marionette Toolkit Gitter](https://gitter.im/RoundingWellOS/marionette.toolkit) to think up new features, report bugs, ask questions, and talk design patterns within Toolkit.
 
 ### Github Issues
 
