@@ -101,7 +101,7 @@ var App = AbstractApp.extend({
    */
   _destroyChildApps: function() {
     _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, 'preventDestroy')) {
+      if(!_.result(childApp, 'preventDestroy')) {
         childApp.destroy();
       }
     });
@@ -190,7 +190,7 @@ var App = AbstractApp.extend({
    * @returns {App}
    */
   addChildApp: function(appName, AppClass, options) {
-    this._ensureAppIsUnique();
+    this._ensureAppIsUnique(appName);
 
     var childApp = this.buildApp(AppClass, options);
 

@@ -250,7 +250,7 @@ var Component = StateClass.extend({
    */
   _destroy: function(){
     // apply destroy first for listener cleanup
-    Marionette.StateObject.prototype.destroy.apply(this, arguments);
+    StateClass.prototype.destroy.apply(this, arguments);
 
     if(this.region) {
       this.region.empty();

@@ -14,7 +14,6 @@ describe('App Manager', function() {
     });
 
     describe('without declared child apps', function() {
-
       describe('childApps object', function() {
 
         it('should not be created', function() {
@@ -80,7 +79,6 @@ describe('App Manager', function() {
     });
 
     describe('with declared child apps', function() {
-
       describe('constructor', function() {
         beforeEach(function() {
           var childApps = {
@@ -213,7 +211,7 @@ describe('App Manager', function() {
   });
 
   describe('buildApp', function() {
-    describe('when passing a class', function() {
+    describe('when passing an object', function() {
 
       it('should return and instance of the class', function() {
         var foo = this.myApp.buildApp(Marionette.Toolkit.App);
@@ -223,7 +221,7 @@ describe('App Manager', function() {
 
     });
 
-    describe('when passing an object', function() {
+    describe('when passing an object to buildApp', function() {
 
       it('should return an instance of obj.AppClass', function() {
         var bar = { AppClass: Marionette.Toolkit.App };
@@ -343,7 +341,5 @@ describe('App Manager', function() {
     });
 
   });
-
-
 
 });
