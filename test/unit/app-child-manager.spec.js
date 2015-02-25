@@ -322,7 +322,7 @@ describe('App Manager', function() {
       this.spy = sinon.spy(this.myApp, 'removeChildApps');
     });
 
-    describe('if childApp is not present', function() {
+    describe('when childApp is not present', function() {
 
       it('should return undefined', function() {
         expect(this.myApp.removeChildApp('cA4')).to.eql(undefined);
@@ -330,7 +330,7 @@ describe('App Manager', function() {
 
     });
 
-    describe('if childApp is present', function() {
+    describe('when childApp is present', function() {
 
       it('should remove childApp and return it', function() {
         this.myApp.addChildApp('cA4', Marionette.Toolkit.App);
