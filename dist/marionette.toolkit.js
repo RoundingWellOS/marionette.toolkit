@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - StateClass, App, and Component.
- * @version v0.1.0
+ * @version v0.1.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -25,7 +25,7 @@
      * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to stateClass.
      * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
      */
-    constructor: function (options) {
+    constructor: function constructor(options) {
       options = options || {};
 
       // Make defaults available to this
@@ -51,7 +51,7 @@
      * @memberOf StateClass
      * @returns {Backbone.Model}
      */
-    getStateModelClass: function () {
+    getStateModelClass: function getStateModelClass() {
       return this.StateModel;
     },
 
@@ -66,7 +66,7 @@
      * @param {Object=} options - Backbone.Model options.
      * @returns {Backbone.Model} - The _stateModel
      */
-    setState: function () {
+    setState: function setState() {
       return this._stateModel.set.apply(this._stateModel, arguments);
     },
 
@@ -79,7 +79,7 @@
      * @param {String=} attr - Attribute name of stateModel.
      * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
      */
-    getState: function (attr) {
+    getState: function getState(attr) {
       if (!attr) {
         return this._stateModel;
       }
@@ -94,7 +94,7 @@
      * @method destroy
      * @memberOf StateClass
      */
-    destroy: function () {
+    destroy: function destroy() {
       this._stateModel.stopListening();
 
       Marionette.Object.prototype.destroy.apply(this, arguments);
@@ -162,7 +162,7 @@
      * @param {Boolean} [options.startAfterInitialized]
      * @param {Boolean} [options.preventDestroy]
      */
-    constructor: function (options) {
+    constructor: function constructor(options) {
       options = options || {};
 
       _.bindAll(this, "start", "stop");
@@ -175,7 +175,7 @@
       StateClass.call(this, options);
 
       if (_.result(this, "startAfterInitialized")) {
-        this.start();
+        this.start(options);
       }
     },
 
@@ -187,7 +187,7 @@
      * @memberOf AbstractApp
      * @throws AppDestroyedError - Thrown if `App` has already been destroyed
      */
-    _ensureAppIsIntact: function () {
+    _ensureAppIsIntact: function _ensureAppIsIntact() {
       if (this._isDestroyed) {
         throw new Marionette.Error({
           name: "AppDestroyedError",
@@ -204,7 +204,7 @@
      * @memberOf AbstractApp
      * @returns {Boolean}
      */
-    isRunning: function () {
+    isRunning: function isRunning() {
       return this._isRunning;
     },
 
@@ -219,7 +219,7 @@
      * @event AbstractApp#start - passes options
      * @returns {AbstractApp}
      */
-    start: function (options) {
+    start: function start(options) {
       this._ensureAppIsIntact();
 
       if (this._isRunning) {
@@ -247,7 +247,7 @@
      * @event AbstractApp#stop - passes options
      * @returns {AbstractApp}
      */
-    stop: function (options) {
+    stop: function stop(options) {
       if (!this._isRunning) {
         return this;
       }
@@ -272,7 +272,7 @@
      * @memberOf AbstractApp
      * @returns {Boolean}
      */
-    isDestroyed: function () {
+    isDestroyed: function isDestroyed() {
       return this._isDestroyed;
     },
 
@@ -283,7 +283,7 @@
      * @method destroy
      * @memberOf AbstractApp
      */
-    destroy: function () {
+    destroy: function destroy() {
       this.stop();
 
       this._isDestroyed = true;
@@ -298,7 +298,7 @@
      * @method _stopRunningEvents
      * @memberOf AbstractApp
      */
-    _stopRunningEvents: function () {
+    _stopRunningEvents: function _stopRunningEvents() {
       _.each(this._runningEvents, function (args) {
         this.off.apply(this, args);
       }, this);
@@ -311,7 +311,7 @@
      * @method _stopRunningListeners
      * @memberOf AbstractApp
      */
-    _stopRunningListeners: function () {
+    _stopRunningListeners: function _stopRunningListeners() {
       _.each(this._runningListeningTo, function (args) {
         this.stopListening.apply(this, args);
       }, this);
@@ -326,7 +326,7 @@
      * @memberOf AbstractApp
      * @returns {AbstractApp}
      */
-    on: function () {
+    on: function on() {
       if (this._isRunning) {
         this._runningEvents = this._runningEvents || [];
         this._runningEvents.push(arguments);
@@ -343,7 +343,7 @@
      * @memberOf AbstractApp
      * @returns {AbstractApp}
      */
-    listenTo: function () {
+    listenTo: function listenTo() {
       if (this._isRunning) {
         this._runningListeningTo = this._runningListeningTo || [];
         this._runningListeningTo.push(arguments);
@@ -372,7 +372,7 @@
      * }
      * ```
      */
-    constructor: function (options) {
+    constructor: function constructor(options) {
       options = options || {};
 
       this._childApps = {};
@@ -399,7 +399,7 @@
      * @method _initChildApps
      * @memberOf App
      */
-    _initChildApps: function () {
+    _initChildApps: function _initChildApps() {
       if (this.childApps) {
         this.addChildApps(_.result(this, "childApps"));
       }
@@ -412,7 +412,7 @@
      * @method _startChildApps
      * @memberOf App
      */
-    _startChildApps: function () {
+    _startChildApps: function _startChildApps() {
       _.each(this._childApps, function (childApp) {
         if (_.result(childApp, "startWithParent")) {
           childApp.start();
@@ -427,7 +427,7 @@
      * @method _stopChildApps
      * @memberOf App
      */
-    _stopChildApps: function () {
+    _stopChildApps: function _stopChildApps() {
       _.each(this._childApps, function (childApp) {
         if (_.result(childApp, "stopWithParent")) {
           childApp.stop();
@@ -442,9 +442,9 @@
      * @method _destroyChildApps
      * @memberOf App
      */
-    _destroyChildApps: function () {
+    _destroyChildApps: function _destroyChildApps() {
       _.each(this._childApps, function (childApp) {
-        if (_.result(childApp, "preventDestroy")) {
+        if (!_.result(childApp, "preventDestroy")) {
           childApp.destroy();
         }
       });
@@ -459,7 +459,7 @@
      * @param {Object} [appConfig] - `AppClass` and any other option for the `App`
      * @returns {App}
      */
-    _buildAppFromObject: function (appConfig) {
+    _buildAppFromObject: function _buildAppFromObject(appConfig) {
       var AppClass = appConfig.AppClass;
       var options = _.omit(appConfig, "AppClass");
 
@@ -477,13 +477,12 @@
      * @param {Object=} [options] - options for the AppClass
      * @returns {App}
      */
-    buildApp: function (AppClass, options) {
-      if (_.isObject(AppClass)) {
-        return this._buildAppFromObject(AppClass);
-      }
-
+    buildApp: function buildApp(AppClass, options) {
       if (_.isFunction(AppClass)) {
         return new AppClass(options);
+      }
+      if (_.isObject(AppClass)) {
+        return this._buildAppFromObject(AppClass);
       }
     },
 
@@ -496,7 +495,7 @@
      * @param {String} [appName] - Name of app to test
      * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
      */
-    _ensureAppIsUnique: function (appName) {
+    _ensureAppIsUnique: function _ensureAppIsUnique(appName) {
       if (this._childApps[appName]) {
         throw new Marionette.Error({
           name: "DuplicateChildAppError",
@@ -513,7 +512,7 @@
      * @memberOf App
      * @param {Object} [childApps] - Hash of names and `AppClass` or `appConfig`
      */
-    addChildApps: function (childApps) {
+    addChildApps: function addChildApps(childApps) {
       _.each(childApps, function (childApp, appName) {
         this.addChildApp(appName, childApp);
       }, this);
@@ -533,8 +532,8 @@
      * @throws AddChildAppError - Thrown if no childApp could be built from params
      * @returns {App}
      */
-    addChildApp: function (appName, AppClass, options) {
-      this._ensureAppIsUnique();
+    addChildApp: function addChildApp(appName, AppClass, options) {
+      this._ensureAppIsUnique(appName);
 
       var childApp = this.buildApp(AppClass, options);
 
@@ -565,7 +564,7 @@
      * @memberOf App
      * @returns {Array}
      */
-    getChildApps: function () {
+    getChildApps: function getChildApps() {
       return _.clone(this._childApps);
     },
 
@@ -578,7 +577,7 @@
      * @param {String} [appName] - Name of App to retrieve
      * @returns {App}
      */
-    getChildApp: function (appName) {
+    getChildApp: function getChildApp(appName) {
       return this._childApps[appName];
     },
 
@@ -591,7 +590,7 @@
      * @param {String} [appName] - Name of App to unregister
      * @returns {App}
      */
-    _removeChildApp: function (appName) {
+    _removeChildApp: function _removeChildApp(appName) {
       delete this._childApps[appName];
     },
 
@@ -604,7 +603,7 @@
      * @memberOf App
      * @returns {Array}
      */
-    removeChildApps: function () {
+    removeChildApps: function removeChildApps() {
       var childApps = this.getChildApps();
 
       _.each(this._childApps, function (childApp, appName) {
@@ -625,7 +624,7 @@
      * @param {Object} [options.preventDestroy] - Flag to remove but prevent App destroy
      * @returns {App}
      */
-    removeChildApp: function (appName, options) {
+    removeChildApp: function removeChildApp(appName, options) {
       options = options || {};
 
       var childApp = this.getChildApp(appName);
@@ -682,7 +681,7 @@
      * @param {Object} [options.viewOptions] - The view class to be managed.
      * @param {Marionette.Region=} [options.region] - The region to show the component in.
      */
-    constructor: function (stateAttrs, options) {
+    constructor: function constructor(stateAttrs, options) {
       options = options || {};
 
       // Make defaults available to this
@@ -712,7 +711,7 @@
      * @memberOf Component
      * @param {Object=} stateAttrs - Attributes to set on the state model
      */
-    _setStateDefaults: function (stateAttrs) {
+    _setStateDefaults: function _setStateDefaults(stateAttrs) {
       _.defaults(stateAttrs, _.result(this, "defaults"));
 
       this.setState(stateAttrs, { silent: true });
@@ -727,7 +726,7 @@
      * @param {Marionette.Region} region - The region for the component
      * @returns {Component}
      */
-    showIn: function (region) {
+    showIn: function showIn(region) {
       if (region) {
         this.region = region;
       }
@@ -749,7 +748,7 @@
      * @memberOf Component
      * @returns {Component}
      */
-    show: function () {
+    show: function show() {
       if (this._isShown) {
         throw new Marionette.Error({
           name: "ComponentShowError",
@@ -788,7 +787,7 @@
      * @memberOf Component
      * @returns {Component}
      */
-    renderView: function () {
+    renderView: function renderView() {
       this.view = this.buildView();
 
       this._proxyViewEvents();
@@ -818,7 +817,7 @@
      * @method _proxyViewEvents
      * @memberOf Component
      */
-    _proxyViewEvents: function () {
+    _proxyViewEvents: function _proxyViewEvents() {
       var prefix = this.getOption("viewEventPrefix");
 
       this.view.on("all", function () {
@@ -842,7 +841,7 @@
      * @param {Object=} options - Additional options to mixin
      * @returns {Object}
      */
-    mixinOptions: function (options) {
+    mixinOptions: function mixinOptions(options) {
       var viewOptions = _.result(this, "viewOptions");
 
       return _.extend({ model: this.getState() }, viewOptions, options);
@@ -858,7 +857,7 @@
      * @memberOf Component
      * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
      */
-    getViewClass: function () {
+    getViewClass: function getViewClass() {
       return this.ViewClass;
     },
 
@@ -871,7 +870,7 @@
      * @memberOf Component
      * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
      */
-    buildView: function () {
+    buildView: function buildView() {
       var ViewClass = this.getViewClass();
 
       return new ViewClass(this.mixinOptions());
@@ -884,9 +883,9 @@
      * @method _destroy
      * @memberOf Component
      */
-    _destroy: function () {
+    _destroy: function _destroy() {
       // apply destroy first for listener cleanup
-      Marionette.StateObject.prototype.destroy.apply(this, arguments);
+      StateClass.prototype.destroy.apply(this, arguments);
 
       if (this.region) {
         this.region.empty();
@@ -900,7 +899,7 @@
      * @method destroy
      * @memberOf Component
      */
-    destroy: function () {
+    destroy: function destroy() {
       if (this._shouldDestroy) {
         this._destroy();
       }

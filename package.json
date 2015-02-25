@@ -1,6 +1,6 @@
 {
   "name": "marionette.toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "StateClass, App, and Component.",
   "main": "./dist/marionette.toolkit.js",
   "scripts": {
