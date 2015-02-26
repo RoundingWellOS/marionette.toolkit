@@ -63,6 +63,8 @@ Try and stick to Marionette.Toolkit's existing coding conventions
 Installing the appropriate [EditorConfig plugin](http://editorconfig.org/#download)
 for your code editor will help with this.
 
+While this library uses the babel transpiler, it supports IE8, so these [caveats](http://babeljs.io/docs/usage/caveats/) must be respected.
+
 ## General Submission Guidelines
 
 These guidelines are generally applicable whether or not
