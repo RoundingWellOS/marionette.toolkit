@@ -55,6 +55,8 @@ It's possible this library would work with earlier versions by shiming
 
 This library is currently only tested with the latest version of Marionette.
 
+Marionette.Toolkit supports IE8+ and modern browsers.
+
 
 ## How to Contribute
 
