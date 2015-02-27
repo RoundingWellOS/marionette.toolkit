@@ -26,9 +26,18 @@ describe('App-running-events', function() {
       this.myApp.trigger('foo');
       this.myApp.trigger('bar');
       expect(this.fooStub).to.have.been.calledOnce;
-      expect(this.barStub).to.have.not.been.called;
+      expect(this.barStub).to.have.not.been.calledOnce;
     });
+  });
 
+  describe('when triggering an event with once()', function () {
+    it('should not be triggered after stop()', function () {
+      this.myApp.start();
+      this.myApp.once('foo', this.fooStub);
+      this.myApp.stop();
+      this.myApp.trigger('foo');
+      expect(this.fooStub).to.not.have.been.calledOnce;
+    });
   });
 
   describe('when listening to an event on a model', function() {
@@ -51,9 +60,28 @@ describe('App-running-events', function() {
       this.myModel.trigger('foo');
       this.myModel.trigger('bar');
       expect(this.fooStub).to.have.been.calledOnce;
-      expect(this.barStub).to.have.not.been.called;
+      expect(this.barStub).to.have.not.been.calledOnce;
+    });
+  });
+
+  describe('when listening to an event on a model with listenToOnce()', function() {
+    it('should not work with events created after start when the app is stopped', function() {
+      this.myModel = new Backbone.Model();
+      this.myApp.start();
+      this.myApp.listenToOnce(this.myModel, 'foo', this.fooStub);
+      this.myApp.stop();
+      this.myModel.trigger('foo');
+      expect(this.fooStub).to.not.have.been.calledOnce;
     });
 
+    it('should work with events created after start when the app is stopped', function() {
+      this.myModel = new Backbone.Model();
+      this.myApp.listenToOnce(this.myModel, 'foo', this.fooStub);
+      this.myApp.start();
+      this.myApp.stop();
+      this.myModel.trigger('foo');
+      expect(this.fooStub).to.have.been.calledOnce;
+    });
   });
 
 });
