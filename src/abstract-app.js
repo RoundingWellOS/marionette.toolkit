@@ -264,8 +264,25 @@ var AbstractApp = StateClass.extend({
       this._runningListeningTo.push(arguments);
     }
     return StateClass.prototype.listenTo.apply(this, arguments);
-  }
+  },
 
+  /**
+   * Overrides `Backbone.Event.listenToOnce()`
+   * If this `App` is running it will register the listener for removal `onStop`
+   *
+   * @public
+   * @method listenToOnce
+   * @memberOf AbstractApp
+   * @returns {AbstractApp}
+   */
+  listenToOnce: function(){
+    if(this._isRunning) {
+      this._runningListeningTo = (this._runningListeningTo || []);
+      this._runningListeningTo.push(arguments);
+    }
+
+    return StateClass.prototype.listenToOnce.apply(this, arguments);
+  }
 });
 
 export default AbstractApp;
