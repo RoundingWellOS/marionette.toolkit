@@ -11,7 +11,7 @@
 * [Getting State](#getting-state)
 * [Destroying A StateClass](#destroying-a-stateclass)
 
-## StateClass's `StateModel`
+### StateClass's `StateModel`
 
 Specify a `StateModel` in your state class definition. This must be
 a `Backbone.Model` object definition, not an instance.  If you do not
