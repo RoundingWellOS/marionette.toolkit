@@ -4,9 +4,9 @@
 
 ## Documentation Index
 
-* [StateClass's `StateModel`](#stateclasses-statemodel)
-* [StateClass's `getStateModelClass`](#stateclasses-getstatemodelclass)
-* [StateClass's `stateEvents`](#stateclasses-stateevents)
+* [StateClass's `StateModel`](#stateclasss-statemodel)
+* [StateClass's `getStateModelClass`](#stateclasss-getstatemodelclass)
+* [StateClass's `stateEvents`](#stateclasss-stateevents)
 * [Setting State](#setting-state)
 * [Getting State](#getting-state)
 * [Destroying A StateClass](#destroying-a-stateclass)
