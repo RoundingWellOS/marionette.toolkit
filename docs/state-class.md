@@ -7,9 +7,9 @@
 * [StateClass's `StateModel`](#stateclasss-statemodel)
 * [StateClass's `getStateModelClass`](#stateclasss-getstatemodelclass)
 * [StateClass's `stateEvents`](#stateclasss-stateevents)
-* [Setting State](#setting-state)
-* [Getting State](#getting-state)
-* [Destroying A StateClass](#destroying-a-stateclass)
+* [Setting State `setState`](#setting-state)
+* [Getting State `getState`](#getting-state)
+* [Destroying A StateClass `destroy`](#destroying-a-stateclass)
 
 ### StateClass's `StateModel`
 
