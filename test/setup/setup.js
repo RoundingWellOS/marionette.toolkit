@@ -4,6 +4,8 @@ module.exports = function() {
   var $ = require('jquery');
   Backbone.$ = $;
   var Marionette = require('backbone.marionette');
+  require('../../src/marionette.toolkit');
+
 
   before(function() {
     global._ = _;
