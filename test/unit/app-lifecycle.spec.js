@@ -1,6 +1,8 @@
+import AbstractApp from '../../src/abstract-app';
+
 describe('App-Lifecycle', function () {
   beforeEach(function () {
-    this.myApp = new Marionette.Toolkit.App();
+    this.myApp = new AbstractApp();
   });
 
   describe('when starting the application', function () {

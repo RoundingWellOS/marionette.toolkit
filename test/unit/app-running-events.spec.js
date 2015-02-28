@@ -1,5 +1,3 @@
-import '../../src/marionette.toolkit';
-
 describe('App-running-events', function() {
   beforeEach(function() {
     this.fooStub = this.sinon.stub();
