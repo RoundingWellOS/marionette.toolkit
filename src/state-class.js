@@ -30,11 +30,11 @@ var StateClass = Marionette.Object.extend({
     options = options || {};
 
     // Make defaults available to this
-    _.extend(this, _.pick(options, ['StateModel', 'stateEvents']));
+    _.extend(this, _.pick(options, ['StateModel', 'stateEvents', 'stateDefaults']));
 
     var StateModel = this.getStateModelClass();
 
-    this._stateModel = new StateModel();
+    this._stateModel = new StateModel(_.result(this, 'stateDefaults'));
 
     // Bind events from the _stateModel defined in stateEvents hash
     this.bindEntityEvents(this._stateModel, _.result(this, 'stateEvents'));
