@@ -2,6 +2,8 @@
 
 `Marionette.Toolkit.StateClass` is a `Marionette.Object` with a `Backbone.Model` for keeping state.
 
+Use a `StateClass` if your object needs to maintain information that isn't business data.  This provides a consistent method for storing and getting state, along with triggering related events.
+
 ## Documentation Index
 
 * [StateClass's `StateModel`](#stateclasss-statemodel)
