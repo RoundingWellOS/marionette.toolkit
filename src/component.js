@@ -135,7 +135,7 @@ var Component = StateClass.extend({
 
     // Destroy the component if the region is emptied because
     // it destroys the view
-    this.listenTo(this.region, 'empty', this.destroy);
+    this.listenTo(this.region, 'empty', this._destroy);
 
     return this;
   },
