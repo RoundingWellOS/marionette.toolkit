@@ -120,27 +120,42 @@ var App = AbstractApp.extend({
     var AppClass = appConfig.AppClass;
     var options = _.omit(appConfig, 'AppClass');
 
-    return new AppClass(options);
+    return this.buildApp(AppClass, options);
   },
 
   /**
-   * Builds an App and return it
+   * Helper for building an App and return it
    *
-   * @public
-   * @method buildApp
+   * @private
+   * @method _buildApp
    * @memberOf App
    * @param {App} AppClass - An App Class
    * @param {Object} AppClass - Optionally passed as an appConfig Object
    * @param {Object} [options] - options for the AppClass
    * @returns {App}
    */
-  buildApp: function(AppClass, options) {
+  _buildApp: function(AppClass, options) {
     if(_.isFunction(AppClass)) {
-      return new AppClass(options);
+      return this.buildApp(AppClass, options);
     }
     if(_.isObject(AppClass)) {
       return this._buildAppFromObject(AppClass);
     }
+  },
+
+  /**
+   * Build an App and return it
+   * Override for dynamic App building
+   *
+   * @public
+   * @method buildApp
+   * @memberOf App
+   * @param {App} [AppClass] - An App Class
+   * @param {Object} [options] - options for the AppClass
+   * @returns {App}
+   */
+  buildApp: function(AppClass, options) {
+    return new AppClass(options);
   },
 
   /**
@@ -192,7 +207,7 @@ var App = AbstractApp.extend({
   addChildApp: function(appName, AppClass, options) {
     this._ensureAppIsUnique(appName);
 
-    var childApp = this.buildApp(AppClass, options);
+    var childApp = this._buildApp(AppClass, options);
 
     if(!childApp){
       throw new Marionette.Error({
