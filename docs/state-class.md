@@ -7,11 +7,13 @@ Use a `StateClass` if your object needs to maintain information that isn't busin
 ## Documentation Index
 
 * [StateClass's `StateModel`](#stateclasss-statemodel)
-* [StateClass's `getStateModelClass`](#stateclasss-getstatemodelclass)
+* [StateClass's `stateDefaults`](#stateclasss-statedefaults)
 * [StateClass's `stateEvents`](#stateclasss-stateevents)
-* [Setting State `setState`](#setting-state)
-* [Getting State `getState`](#getting-state)
-* [Destroying A StateClass `destroy`](#destroying-a-stateclass)
+* [StateClass API](#stateclass-api)
+  * [StateClass `getStateModelClass`](#stateclass-getstatemodelclass)
+  * [Setting State `setState`](#setting-state)
+  * [Getting State `getState`](#getting-state)
+  * [Destroying A StateClass `destroy`](#destroying-a-stateclass)
 
 ### StateClass's `StateModel`
 
@@ -28,7 +30,7 @@ Marionette.Toolkit.StateClass.extend({
 ```
 
 The state model must be defined before it is referenced by the
-`StateModel` attribute in a state class definition. 
+`StateModel` attribute in a state class definition.
 Use `getStateModelClass` to lookup the definition as state classes are instantiated.
 
 Alternatively, you can specify a `StateModel` in the options for
@@ -42,7 +44,50 @@ new MyStateClass({
 });
 ```
 
-### StateClass's `getStateModelClass`
+### StateClass's `stateDefaults`
+
+`stateDefaults` can be a hash or function on the definition
+or passed as an option when instantiating to define the initial default state.
+
+```js
+var MyStateClass = Marionette.Toolkit.StateClass.extend({
+  stateDefaults: {
+    fooState: 'bar'
+  }
+});
+
+var myStateClass = new MyStateClass();
+
+myStateClass.getState('fooState') === 'bar';
+```
+
+### StateClass's `stateEvents`
+
+StateClass can bind directly to state events in a declarative manner:
+
+```js
+var MyStateClass = Marionette.Toolkit.StateClass.extend({
+  stateEvents: {
+    'change': 'stateChanged'
+  },
+  stateChanged: function(model, options){
+    console.log('Changed!');
+  }
+});
+
+var myStateClass = new MyStateClass();
+
+// will log "Changed!"
+myStateClass.setState('foo', 'bar');
+
+```
+
+For more information on the various declaritive options, see the
+implementations of `modelEvents` and `collectionEvents` in the [Marionette.View](./marionette.view.md#viewmodelevents-and-viewcollectionevents) documentation.
+
+## StateClass API
+
+### StateClass `getStateModelClass`
 The value returned by this method is the `StateModel` class that will be instantiated when a state class is instatiated.
 Override this method for dynamic `StateModel` definitions.
 
@@ -64,21 +109,6 @@ var MyStateClass = Marionette.Toolkit.StateClass.extend({
 var myFooStateClass = new MyStateClass({ isFoo: true });
 var myBarStateClass = new MyStateClass();
 ```
-
-### StateClass's `stateEvents`
-
-StateClass can bind directly to state events in a declarative manner:
-
-```js
-Marionette.Toolkit.StateClass.extend({
-  stateEvents: {
-    'change': 'stateChanged'
-  }
-});
-```
-
-For more information on the various declaritive options, see the 
-implementations of `modelEvents` and `collectionEvents` in the [Marionette.View](./marionette.view.md#viewmodelevents-and-viewcollectionevents) documentation.
 
 ### Setting State
 
