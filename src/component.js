@@ -77,8 +77,6 @@ var Component = StateClass.extend({
    * @param {Object} [stateAttrs] - Attributes to set on the state model
    */
   _setStateDefaults: function(stateAttrs){
-    _.defaults(stateAttrs, _.result(this, 'defaults'));
-
     this.setState(stateAttrs, { silent: true });
   },
 

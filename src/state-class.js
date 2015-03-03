@@ -30,11 +30,11 @@ var StateClass = Marionette.Object.extend({
     options = options || {};
 
     // Make defaults available to this
-    _.extend(this, _.pick(options, ['StateModel', 'stateEvents']));
+    _.extend(this, _.pick(options, ['StateModel', 'stateEvents', 'stateDefaults']));
 
     var StateModel = this.getStateModelClass();
 
-    this._stateModel = new StateModel();
+    this._stateModel = new StateModel(_.result(this, 'stateDefaults'));
 
     // Bind events from the _stateModel defined in stateEvents hash
     this.bindEntityEvents(this._stateModel, _.result(this, 'stateEvents'));
@@ -63,8 +63,8 @@ var StateClass = Marionette.Object.extend({
    * @method setState
    * @memberOf StateClass
    * @param {String|Object} key - Attribute name or Hash of any number of key value pairs.
-   * @param {*=} value - Attribute value if key is String, replaces options param otherwise.
-   * @param {Object=} options - Backbone.Model options.
+   * @param {*} [value] - Attribute value if key is String, replaces options param otherwise.
+   * @param {Object} [options] - Backbone.Model options.
    * @returns {Backbone.Model} - The _stateModel
    */
   setState: function(){
@@ -77,7 +77,7 @@ var StateClass = Marionette.Object.extend({
    * @public
    * @method getState
    * @memberOf StateClass
-   * @param {String=} attr - Attribute name of stateModel.
+   * @param {String} [attr] - Attribute name of stateModel.
    * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
    */
   getState: function(attr){
