@@ -113,7 +113,7 @@ var App = AbstractApp.extend({
    * @private
    * @method _buildAppFromObject
    * @memberOf App
-   * @param {Object} [appConfig] - `AppClass` and any other option for the `App`
+   * @param {Object} appConfig - `AppClass` and any other option for the `App`
    * @returns {App}
    */
   _buildAppFromObject: function(appConfig) {
@@ -129,9 +129,9 @@ var App = AbstractApp.extend({
    * @public
    * @method buildApp
    * @memberOf App
-   * @param {App} [AppClass] - An App Class
-   * @param {Object} [AppClass] - Optionally passed as an appConfig Object
-   * @param {Object=} [options] - options for the AppClass
+   * @param {App} AppClass - An App Class
+   * @param {Object} AppClass - Optionally passed as an appConfig Object
+   * @param {Object} [options] - options for the AppClass
    * @returns {App}
    */
   buildApp: function(AppClass, options) {
@@ -149,7 +149,7 @@ var App = AbstractApp.extend({
    * @private
    * @method _ensureAppIsUnique
    * @memberOf App
-   * @param {String} [appName] - Name of app to test
+   * @param {String} appName - Name of app to test
    * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
    */
   _ensureAppIsUnique: function(appName) {
@@ -167,7 +167,7 @@ var App = AbstractApp.extend({
    * @public
    * @method addChildApps
    * @memberOf App
-   * @param {Object} [childApps] - Hash of names and `AppClass` or `appConfig`
+   * @param {Object} childApps - Hash of names and `AppClass` or `appConfig`
    */
   addChildApps: function(childApps) {
     _.each(childApps, function(childApp, appName) {
@@ -182,10 +182,10 @@ var App = AbstractApp.extend({
    * @public
    * @method addChildApp
    * @memberOf App
-   * @param {String} [appName] - Name of App to register
-   * @param {App} [AppClass] - An App Class
-   * @param {Object} [AppClass] - Optionally passed as an appConfig Object
-   * @param {Object=} [options] - options for the AppClass
+   * @param {String} appName - Name of App to register
+   * @param {App} AppClass - An App Class
+   * @param {Object} AppClass - Optionally passed as an appConfig Object
+   * @param {Object} [options] - options for the AppClass
    * @throws AddChildAppError - Thrown if no childApp could be built from params
    * @returns {App}
    */
@@ -231,7 +231,7 @@ var App = AbstractApp.extend({
    * @public
    * @method getChildApp
    * @memberOf App
-   * @param {String} [appName] - Name of App to retrieve
+   * @param {String} appName - Name of App to retrieve
    * @returns {App}
    */
   getChildApp: function(appName) {
@@ -244,7 +244,7 @@ var App = AbstractApp.extend({
    * @private
    * @method _removeChildApp
    * @memberOf App
-   * @param {String} [appName] - Name of App to unregister
+   * @param {String} appName - Name of App to unregister
    * @returns {App}
    */
   _removeChildApp: function(appName) {
@@ -277,7 +277,7 @@ var App = AbstractApp.extend({
    * @public
    * @method removeChildApp
    * @memberOf App
-   * @param {String} [appName] - Name of App to destroy
+   * @param {String} appName - Name of App to destroy
    * @param {Object} [options.preventDestroy] - Flag to remove but prevent App destroy
    * @returns {App}
    */
