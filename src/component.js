@@ -39,12 +39,12 @@ var Component = StateClass.extend({
    * @constructs Component
    * @param {Object} [stateAttrs] - Attributes to set on the state model.
    * @param {Object} [options] - Settings for the component.
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} [options.ViewClass]
+   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView=} [options.ViewClass]
    * - The view class to be managed.
    * @param {String} [options.viewEventPrefix]
    * - Used as the prefix for events forwarded from the component's view to the component
-   * @param {Object} [options.viewOptions] - The view class to be managed.
-   * @param {Marionette.Region=} [options.region] - The region to show the component in.
+   * @param {Object} [options.viewOptions] - Options hash passed to an instantiated ViewClass.
+   * @param {Marionette.Region} [options.region] - The region to show the component in.
    */
   constructor: function(stateAttrs, options){
     options = options || {};
@@ -74,7 +74,7 @@ var Component = StateClass.extend({
    * @private
    * @method _setStateDefaults
    * @memberOf Component
-   * @param {Object=} stateAttrs - Attributes to set on the state model
+   * @param {Object} [stateAttrs] - Attributes to set on the state model
    */
   _setStateDefaults: function(stateAttrs){
     _.defaults(stateAttrs, _.result(this, 'defaults'));
@@ -89,14 +89,13 @@ var Component = StateClass.extend({
    * @method showIn
    * @memberOf Component
    * @param {Marionette.Region} region - The region for the component
+   * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
    * @returns {Component}
    */
-  showIn: function(region) {
-    if(region) {
-      this.region = region;
-    }
+  showIn: function(region, viewOptions) {
+    this.region = region;
 
-    this.show();
+    this.show(viewOptions);
 
     return this;
   },
@@ -110,10 +109,11 @@ var Component = StateClass.extend({
    * @throws ComponentShowError - Thrown if component has already been show.
    * @throws ComponentRegionError - Thrown if component has no defined region.
    * @method show
+   * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
    * @memberOf Component
    * @returns {Component}
    */
-  show: function(){
+  show: function(viewOptions){
     if(this._isShown) {
       throw new Marionette.Error({
         name: 'ComponentShowError',
@@ -134,7 +134,7 @@ var Component = StateClass.extend({
 
     this.triggerMethod('before:show');
 
-    this.renderView();
+    this.renderView(viewOptions);
     this._isShown = true;
 
     this.triggerMethod('show');
@@ -150,25 +150,31 @@ var Component = StateClass.extend({
    * @event Component#render:view
    * @method renderView
    * @memberOf Component
+   * @param {Object} [options] - Options hash mixed into the instantiated ViewClass.
    * @returns {Component}
    */
-  renderView: function(){
-    this.view = this.buildView();
+  renderView: function(options){
+    var viewOptions = this.mixinOptions(options);
 
-    this._proxyViewEvents();
+    var view = this.buildView(this.ViewClass, viewOptions);
 
-    this.triggerMethod('before:render:view', this.view);
+    // Attach current built view to component
+    this.currentView = view;
+
+    this._proxyViewEvents(view);
+
+    this.triggerMethod('before:render:view', view);
 
     // _shouldDestroy is flag that prevents the Component from being
     // destroyed if the region is emptied by Component itself.
     this._shouldDestroy = false;
 
     // Show the view in the region
-    this.region.show(this.view);
+    this.region.show(view);
 
     this._shouldDestroy = true;
 
-    this.triggerMethod('render:view', this.view);
+    this.triggerMethod('render:view', view);
 
     return this;
   },
@@ -181,16 +187,17 @@ var Component = StateClass.extend({
    * @private
    * @method _proxyViewEvents
    * @memberOf Component
+   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view - The instantiated ViewClass.
    */
-  _proxyViewEvents: function(){
+  _proxyViewEvents: function(view){
     var prefix = this.getOption('viewEventPrefix');
 
-    this.view.on('all', function() {
+    view.on('all', function() {
       var args = _.toArray(arguments);
       var rootEvent = args[0];
 
       args[0] = prefix + ':' + rootEvent;
-      args.splice(1, 0, this.view);
+      args.splice(1, 0, view);
 
       this.triggerMethod.apply(this, args);
     }, this);
@@ -203,7 +210,7 @@ var Component = StateClass.extend({
    * @abstract
    * @method mixinOptions
    * @memberOf Component
-   * @param {Object=} options - Additional options to mixin
+   * @param {Object} [options] - Additional options to mixin
    * @returns {Object}
    */
   mixinOptions: function(options){
@@ -213,32 +220,19 @@ var Component = StateClass.extend({
   },
 
   /**
-   * Get the component ViewClass.
+   * Builds the view class with options
    * If you need a dynamic ViewClass override this function
-   *
-   * @public
-   * @abstract
-   * @method getViewClass
-   * @memberOf Component
-   * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
-   */
-  getViewClass: function(){
-    return this.ViewClass;
-  },
-
-  /**
-   * Builds the view class with mixed in options
    *
    * @public
    * @abstract
    * @method buildView
    * @memberOf Component
+   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass - The view class to instantiate.
+   * @param {Object} [viewOptions] - Options to pass to the View
    * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
    */
-  buildView: function() {
-    var ViewClass = this.getViewClass();
-
-    return new ViewClass(this.mixinOptions());
+  buildView: function(ViewClass, viewOptions) {
+    return new ViewClass(viewOptions);
   },
 
   /**
