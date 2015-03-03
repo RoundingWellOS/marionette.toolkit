@@ -93,7 +93,7 @@ var Component = StateClass.extend({
    */
   showIn: function(region) {
     if(region) {
-        this.region = region;
+      this.region = region;
     }
 
     this.show();
@@ -115,22 +115,22 @@ var Component = StateClass.extend({
    */
   show: function(){
     if(this._isShown) {
-        throw new Marionette.Error({
-            name: 'ComponentShowError',
-            message: 'Component has already been shown in a region.'
-        });
+      throw new Marionette.Error({
+        name: 'ComponentShowError',
+        message: 'Component has already been shown in a region.'
+      });
     }
 
     if(!this.region) {
-        throw new Marionette.Error({
-            name: 'ComponentRegionError',
-            message: 'Component has no defined region.'
-        });
+      throw new Marionette.Error({
+        name: 'ComponentRegionError',
+        message: 'Component has no defined region.'
+      });
     }
 
     // Destroy the component if the region is emptied because
     // it destroys the view
-    this.listenTo(this.region, 'empty', this.destroy);
+    this.listenTo(this.region, 'empty', this._destroy);
 
     this.triggerMethod('before:show');
 
@@ -242,32 +242,47 @@ var Component = StateClass.extend({
   },
 
   /**
-   * Destroys Component and empties its region.
+   * Destroys Component.
    *
    * @private
    * @method _destroy
    * @memberOf Component
    */
   _destroy: function(){
-    // apply destroy first for listener cleanup
-    StateClass.prototype.destroy.apply(this, arguments);
-
-    if(this.region) {
-      this.region.empty();
+    if(this._shouldDestroy) {
+      StateClass.prototype.destroy.apply(this, arguments);
     }
   },
 
   /**
-   * If the component should be destroyed, destroy it.
+   * Empties component's region.
+   *
+   * @private
+   * @method _emptyRegion
+   * @param {Object} [options] - Options passed to `region.empty`
+   * @memberOf Component
+   */
+  _emptyRegion: function(options){
+      if(this.region) {
+        this.stopListening(this.region, 'empty');
+        this.region.empty(options);
+      }
+  },
+
+  /**
+   * Empty the region and destroy the component.
    *
    * @public
    * @method destroy
+   * @param {Object} [options] - Options passed to `_emptyRegion` and `destroy`
    * @memberOf Component
    */
-  destroy: function(){
-    if(this._shouldDestroy) {
-        this._destroy();
-    }
+  destroy: function(options){
+      this._emptyRegion(options);
+
+      this._shouldDestroy = true;
+
+      this._destroy(options);
   }
 });
 
