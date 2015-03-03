@@ -7,7 +7,15 @@ import Component from './component';
 /**
  * @module Toolkit
  */
+
+var previousToolkit = Marionette.Toolkit;
+
 var Toolkit = Marionette.Toolkit = {};
+
+Toolkit.noConflict = function() {
+  Marionette.Toolkit = previousToolkit;
+  return this;
+};
 
 Toolkit.StateClass = StateClass;
 
