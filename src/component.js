@@ -216,7 +216,7 @@ var Component = StateClass.extend({
   mixinOptions: function(options){
     var viewOptions = _.result(this, 'viewOptions');
 
-    return _.extend({ model: this.getState() }, viewOptions, options);
+    return _.extend({ stateModel: this.getState() }, viewOptions, options);
   },
 
   /**
