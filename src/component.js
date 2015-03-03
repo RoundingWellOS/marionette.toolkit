@@ -128,16 +128,16 @@ var Component = StateClass.extend({
       });
     }
 
-    // Destroy the component if the region is emptied because
-    // it destroys the view
-    this.listenTo(this.region, 'empty', this._destroy);
-
     this.triggerMethod('before:show');
 
     this.renderView(viewOptions);
     this._isShown = true;
 
     this.triggerMethod('show');
+
+    // Destroy the component if the region is emptied because
+    // it destroys the view
+    this.listenTo(this.region, 'empty', this.destroy);
 
     return this;
   },
