@@ -1,6 +1,6 @@
 /**
- * marionette.toolkit - StateClass, App, and Component.
- * @version v0.1.1
+ * marionette.toolkit - A collection of opinionated extensions for Marionette
+ * @version v0.2.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
