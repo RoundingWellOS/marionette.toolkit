@@ -11,7 +11,7 @@ describe('State Class', function() {
         'change': 'stateChanged'
       },
       StateModel : this.MyModel,
-      stateChanged: function() {console.log('hello');}
+      stateChanged: function() {}
     });
     this.myStateClass = new this.MyStateClass();
   });
