@@ -2,7 +2,15 @@ import AbstractApp from '../../src/abstract-app';
 
 describe('App-Lifecycle', function () {
   beforeEach(function () {
+    this.beforeStartStub = this.sinon.stub();
+    this.startStub = this.sinon.stub();
+    this.beforeStopStub = this.sinon.stub();
+    this.stopStub = this.sinon.stub();
     this.myApp = new AbstractApp();
+    this.myApp.on('before:start', this.beforeStartStub);
+    this.myApp.on('start', this.startStub);
+    this.myApp.on('before:stop', this.beforeStopStub);
+    this.myApp.on('stop', this.stopStub);
   });
 
   describe('when starting the application', function () {
@@ -10,27 +18,54 @@ describe('App-Lifecycle', function () {
       this.myApp.start();
     });
 
+    it('should trigger before:start event', function () {
+      expect(this.beforeStartStub).to.have.been.calledOnce;
+    });
+
+    it('should trigger start event', function () {
+      expect(this.startStub).to.have.been.calledOnce;
+    });
+
     it('should be successfully started', function () {
       expect(this.myApp._isRunning).to.equal(true);
     });
 
     describe('when the application has already been started', function () {
-      it('should not start the app again', function () {
+      it('should not start the app again and not trigger before:start twice', function () {
         this.myApp.start();
-        // TODO:  Check needed here?
+        expect(this.beforeStartStub).to.have.not.been.calledTwice;
+      });
+
+      it('should not start the app again and not trigger start twice', function () {
+        this.myApp.start();
+        expect(this.startStub).to.have.not.been.calledTwice;
       });
     });
 
     describe('and stopping the application', function () {
-      it('should stop the application', function () {
+      beforeEach(function() {
         this.myApp.stop();
+      });
+
+      it('should stop the application', function () {
         expect(this.myApp._isRunning).to.equal(false);
       });
 
-      it('should NOT stop the application if the application has already been stopped', function () {
+      it('should call before:stop', function () {
+        expect(this.beforeStopStub).to.have.been.calledOnce;
+      });
+
+      it('should call stop', function () {
+        expect(this.stopStub).to.have.been.calledOnce;
+      });
+
+      it('should NOT stop the application if the application has already been stopped and not call before:stop twice', function () {
         this.myApp.stop();
-        this.myApp.stop();
-        // TODO:  Check needed here?
+        expect(this.beforeStopStub).to.have.not.been.calledTwice;
+      });
+
+      it('should NOT stop the application if the application has already been stopped and not call stop twice', function () {
+        expect(this.stopStub).to.have.not.been.calledTwice;
       });
     });
   });
