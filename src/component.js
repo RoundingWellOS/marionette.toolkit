@@ -185,7 +185,8 @@ var Component = StateClass.extend({
    * @private
    * @method _proxyViewEvents
    * @memberOf Component
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view - The instantiated ViewClass.
+   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
+   * The instantiated ViewClass.
    */
   _proxyViewEvents: function(view){
     var prefix = this.getOption('viewEventPrefix');
@@ -225,7 +226,8 @@ var Component = StateClass.extend({
    * @abstract
    * @method buildView
    * @memberOf Component
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass - The view class to instantiate.
+   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass -
+   * The view class to instantiate.
    * @param {Object} [viewOptions] - Options to pass to the View
    * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
    */
