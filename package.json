@@ -1,7 +1,7 @@
 {
   "name": "marionette.toolkit",
-  "version": "0.1.1",
-  "description": "StateClass, App, and Component.",
+  "version": "0.2.0",
+  "description": "A collection of opinionated extensions for Marionette",
   "main": "./dist/marionette.toolkit.js",
   "scripts": {
     "test": "gulp",
@@ -14,12 +14,14 @@
     "url": "https://github.com/RoundingWellOS/marionette.toolkit.git"
   },
   "keywords": [
+    "backbone.marionette",
     "marionette",
     "backbone",
     "toolkit",
     "app",
     "subapp",
-    "component"
+    "component",
+    "state"
   ],
   "author": "Paul Falgout <paul@otterball.com>",
   "license": "MIT",

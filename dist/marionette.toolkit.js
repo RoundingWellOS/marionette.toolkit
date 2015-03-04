@@ -25,15 +25,15 @@
      * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to stateClass.
      * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
      */
-    constructor: function constructor(options) {
+    constructor: function (options) {
       options = options || {};
 
       // Make defaults available to this
-      _.extend(this, _.pick(options, ["StateModel", "stateEvents"]));
+      _.extend(this, _.pick(options, ["StateModel", "stateEvents", "stateDefaults"]));
 
       var StateModel = this.getStateModelClass();
 
-      this._stateModel = new StateModel();
+      this._stateModel = new StateModel(_.result(this, "stateDefaults"));
 
       // Bind events from the _stateModel defined in stateEvents hash
       this.bindEntityEvents(this._stateModel, _.result(this, "stateEvents"));
@@ -51,7 +51,7 @@
      * @memberOf StateClass
      * @returns {Backbone.Model}
      */
-    getStateModelClass: function getStateModelClass() {
+    getStateModelClass: function () {
       return this.StateModel;
     },
 
@@ -62,11 +62,11 @@
      * @method setState
      * @memberOf StateClass
      * @param {String|Object} key - Attribute name or Hash of any number of key value pairs.
-     * @param {*=} value - Attribute value if key is String, replaces options param otherwise.
-     * @param {Object=} options - Backbone.Model options.
+     * @param {*} [value] - Attribute value if key is String, replaces options param otherwise.
+     * @param {Object} [options] - Backbone.Model options.
      * @returns {Backbone.Model} - The _stateModel
      */
-    setState: function setState() {
+    setState: function () {
       return this._stateModel.set.apply(this._stateModel, arguments);
     },
 
@@ -76,10 +76,10 @@
      * @public
      * @method getState
      * @memberOf StateClass
-     * @param {String=} attr - Attribute name of stateModel.
+     * @param {String} [attr] - Attribute name of stateModel.
      * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
      */
-    getState: function getState(attr) {
+    getState: function (attr) {
       if (!attr) {
         return this._stateModel;
       }
@@ -94,7 +94,7 @@
      * @method destroy
      * @memberOf StateClass
      */
-    destroy: function destroy() {
+    destroy: function () {
       this._stateModel.stopListening();
 
       Marionette.Object.prototype.destroy.apply(this, arguments);
@@ -162,7 +162,7 @@
      * @param {Boolean} [options.startAfterInitialized]
      * @param {Boolean} [options.preventDestroy]
      */
-    constructor: function constructor(options) {
+    constructor: function (options) {
       options = options || {};
 
       _.bindAll(this, "start", "stop");
@@ -187,7 +187,7 @@
      * @memberOf AbstractApp
      * @throws AppDestroyedError - Thrown if `App` has already been destroyed
      */
-    _ensureAppIsIntact: function _ensureAppIsIntact() {
+    _ensureAppIsIntact: function () {
       if (this._isDestroyed) {
         throw new Marionette.Error({
           name: "AppDestroyedError",
@@ -204,7 +204,7 @@
      * @memberOf AbstractApp
      * @returns {Boolean}
      */
-    isRunning: function isRunning() {
+    isRunning: function () {
       return this._isRunning;
     },
 
@@ -216,10 +216,9 @@
      * @memberOf AbstractApp
      * @param {Object} [options] - Settings for the App passed through to events
      * @event AbstractApp#before:start - passes options
-     * @event AbstractApp#start - passes options
      * @returns {AbstractApp}
      */
-    start: function start(options) {
+    start: function (options) {
       this._ensureAppIsIntact();
 
       if (this._isRunning) {
@@ -230,9 +229,24 @@
 
       this._isRunning = true;
 
-      this.triggerMethod("start", options);
+      this.triggerStart(options);
 
       return this;
+    },
+
+    /**
+     * Triggers start event.
+     * Override to introduce async start
+     *
+     * @public
+     * @method triggerStart
+     * @memberOf AbstractApp
+     * @param {Object} [options] - Settings for the App passed through to events
+     * @event AbstractApp#start - passes options
+     * @returns
+     */
+    triggerStart: function (options) {
+      this.triggerMethod("start", options);
     },
 
     /**
@@ -247,7 +261,7 @@
      * @event AbstractApp#stop - passes options
      * @returns {AbstractApp}
      */
-    stop: function stop(options) {
+    stop: function (options) {
       if (!this._isRunning) {
         return this;
       }
@@ -272,7 +286,7 @@
      * @memberOf AbstractApp
      * @returns {Boolean}
      */
-    isDestroyed: function isDestroyed() {
+    isDestroyed: function () {
       return this._isDestroyed;
     },
 
@@ -283,7 +297,7 @@
      * @method destroy
      * @memberOf AbstractApp
      */
-    destroy: function destroy() {
+    destroy: function () {
       this.stop();
 
       this._isDestroyed = true;
@@ -298,7 +312,7 @@
      * @method _stopRunningEvents
      * @memberOf AbstractApp
      */
-    _stopRunningEvents: function _stopRunningEvents() {
+    _stopRunningEvents: function () {
       _.each(this._runningEvents, function (args) {
         this.off.apply(this, args);
       }, this);
@@ -311,7 +325,7 @@
      * @method _stopRunningListeners
      * @memberOf AbstractApp
      */
-    _stopRunningListeners: function _stopRunningListeners() {
+    _stopRunningListeners: function () {
       _.each(this._runningListeningTo, function (args) {
         this.stopListening.apply(this, args);
       }, this);
@@ -326,7 +340,7 @@
      * @memberOf AbstractApp
      * @returns {AbstractApp}
      */
-    on: function on() {
+    on: function () {
       if (this._isRunning) {
         this._runningEvents = this._runningEvents || [];
         this._runningEvents.push(arguments);
@@ -343,14 +357,31 @@
      * @memberOf AbstractApp
      * @returns {AbstractApp}
      */
-    listenTo: function listenTo() {
+    listenTo: function () {
       if (this._isRunning) {
         this._runningListeningTo = this._runningListeningTo || [];
         this._runningListeningTo.push(arguments);
       }
       return StateClass.prototype.listenTo.apply(this, arguments);
-    }
+    },
 
+    /**
+     * Overrides `Backbone.Event.listenToOnce()`
+     * If this `App` is running it will register the listener for removal `onStop`
+     *
+     * @public
+     * @method listenToOnce
+     * @memberOf AbstractApp
+     * @returns {AbstractApp}
+     */
+    listenToOnce: function () {
+      if (this._isRunning) {
+        this._runningListeningTo = this._runningListeningTo || [];
+        this._runningListeningTo.push(arguments);
+      }
+
+      return StateClass.prototype.listenToOnce.apply(this, arguments);
+    }
   });
 
   var App = AbstractApp.extend({
@@ -372,7 +403,7 @@
      * }
      * ```
      */
-    constructor: function constructor(options) {
+    constructor: function (options) {
       options = options || {};
 
       this._childApps = {};
@@ -399,7 +430,7 @@
      * @method _initChildApps
      * @memberOf App
      */
-    _initChildApps: function _initChildApps() {
+    _initChildApps: function () {
       if (this.childApps) {
         this.addChildApps(_.result(this, "childApps"));
       }
@@ -412,7 +443,7 @@
      * @method _startChildApps
      * @memberOf App
      */
-    _startChildApps: function _startChildApps() {
+    _startChildApps: function () {
       _.each(this._childApps, function (childApp) {
         if (_.result(childApp, "startWithParent")) {
           childApp.start();
@@ -427,7 +458,7 @@
      * @method _stopChildApps
      * @memberOf App
      */
-    _stopChildApps: function _stopChildApps() {
+    _stopChildApps: function () {
       _.each(this._childApps, function (childApp) {
         if (_.result(childApp, "stopWithParent")) {
           childApp.stop();
@@ -442,7 +473,7 @@
      * @method _destroyChildApps
      * @memberOf App
      */
-    _destroyChildApps: function _destroyChildApps() {
+    _destroyChildApps: function () {
       _.each(this._childApps, function (childApp) {
         if (!_.result(childApp, "preventDestroy")) {
           childApp.destroy();
@@ -456,34 +487,49 @@
      * @private
      * @method _buildAppFromObject
      * @memberOf App
-     * @param {Object} [appConfig] - `AppClass` and any other option for the `App`
+     * @param {Object} appConfig - `AppClass` and any other option for the `App`
      * @returns {App}
      */
-    _buildAppFromObject: function _buildAppFromObject(appConfig) {
+    _buildAppFromObject: function (appConfig) {
       var AppClass = appConfig.AppClass;
       var options = _.omit(appConfig, "AppClass");
 
-      return new AppClass(options);
+      return this.buildApp(AppClass, options);
     },
 
     /**
-     * Builds an App and return it
+     * Helper for building an App and return it
+     *
+     * @private
+     * @method _buildApp
+     * @memberOf App
+     * @param {App} AppClass - An App Class
+     * @param {Object} AppClass - Optionally passed as an appConfig Object
+     * @param {Object} [options] - options for the AppClass
+     * @returns {App}
+     */
+    _buildApp: function (AppClass, options) {
+      if (_.isFunction(AppClass)) {
+        return this.buildApp(AppClass, options);
+      }
+      if (_.isObject(AppClass)) {
+        return this._buildAppFromObject(AppClass);
+      }
+    },
+
+    /**
+     * Build an App and return it
+     * Override for dynamic App building
      *
      * @public
      * @method buildApp
      * @memberOf App
      * @param {App} [AppClass] - An App Class
-     * @param {Object} [AppClass] - Optionally passed as an appConfig Object
-     * @param {Object=} [options] - options for the AppClass
+     * @param {Object} [options] - options for the AppClass
      * @returns {App}
      */
-    buildApp: function buildApp(AppClass, options) {
-      if (_.isFunction(AppClass)) {
-        return new AppClass(options);
-      }
-      if (_.isObject(AppClass)) {
-        return this._buildAppFromObject(AppClass);
-      }
+    buildApp: function (AppClass, options) {
+      return new AppClass(options);
     },
 
     /**
@@ -492,10 +538,10 @@
      * @private
      * @method _ensureAppIsUnique
      * @memberOf App
-     * @param {String} [appName] - Name of app to test
+     * @param {String} appName - Name of app to test
      * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
      */
-    _ensureAppIsUnique: function _ensureAppIsUnique(appName) {
+    _ensureAppIsUnique: function (appName) {
       if (this._childApps[appName]) {
         throw new Marionette.Error({
           name: "DuplicateChildAppError",
@@ -510,9 +556,9 @@
      * @public
      * @method addChildApps
      * @memberOf App
-     * @param {Object} [childApps] - Hash of names and `AppClass` or `appConfig`
+     * @param {Object} childApps - Hash of names and `AppClass` or `appConfig`
      */
-    addChildApps: function addChildApps(childApps) {
+    addChildApps: function (childApps) {
       _.each(childApps, function (childApp, appName) {
         this.addChildApp(appName, childApp);
       }, this);
@@ -525,17 +571,17 @@
      * @public
      * @method addChildApp
      * @memberOf App
-     * @param {String} [appName] - Name of App to register
-     * @param {App} [AppClass] - An App Class
-     * @param {Object} [AppClass] - Optionally passed as an appConfig Object
-     * @param {Object=} [options] - options for the AppClass
+     * @param {String} appName - Name of App to register
+     * @param {App} AppClass - An App Class
+     * @param {Object} AppClass - Optionally passed as an appConfig Object
+     * @param {Object} [options] - options for the AppClass
      * @throws AddChildAppError - Thrown if no childApp could be built from params
      * @returns {App}
      */
-    addChildApp: function addChildApp(appName, AppClass, options) {
+    addChildApp: function (appName, AppClass, options) {
       this._ensureAppIsUnique(appName);
 
-      var childApp = this.buildApp(AppClass, options);
+      var childApp = this._buildApp(AppClass, options);
 
       if (!childApp) {
         throw new Marionette.Error({
@@ -564,7 +610,7 @@
      * @memberOf App
      * @returns {Array}
      */
-    getChildApps: function getChildApps() {
+    getChildApps: function () {
       return _.clone(this._childApps);
     },
 
@@ -574,10 +620,10 @@
      * @public
      * @method getChildApp
      * @memberOf App
-     * @param {String} [appName] - Name of App to retrieve
+     * @param {String} appName - Name of App to retrieve
      * @returns {App}
      */
-    getChildApp: function getChildApp(appName) {
+    getChildApp: function (appName) {
       return this._childApps[appName];
     },
 
@@ -587,10 +633,10 @@
      * @private
      * @method _removeChildApp
      * @memberOf App
-     * @param {String} [appName] - Name of App to unregister
+     * @param {String} appName - Name of App to unregister
      * @returns {App}
      */
-    _removeChildApp: function _removeChildApp(appName) {
+    _removeChildApp: function (appName) {
       delete this._childApps[appName];
     },
 
@@ -603,7 +649,7 @@
      * @memberOf App
      * @returns {Array}
      */
-    removeChildApps: function removeChildApps() {
+    removeChildApps: function () {
       var childApps = this.getChildApps();
 
       _.each(this._childApps, function (childApp, appName) {
@@ -620,11 +666,11 @@
      * @public
      * @method removeChildApp
      * @memberOf App
-     * @param {String} [appName] - Name of App to destroy
+     * @param {String} appName - Name of App to destroy
      * @param {Object} [options.preventDestroy] - Flag to remove but prevent App destroy
      * @returns {App}
      */
-    removeChildApp: function removeChildApp(appName, options) {
+    removeChildApp: function (appName, options) {
       options = options || {};
 
       var childApp = this.getChildApp(appName);
@@ -674,14 +720,14 @@
      * @constructs Component
      * @param {Object} [stateAttrs] - Attributes to set on the state model.
      * @param {Object} [options] - Settings for the component.
-     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} [options.ViewClass]
+     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView=} [options.ViewClass]
      * - The view class to be managed.
      * @param {String} [options.viewEventPrefix]
      * - Used as the prefix for events forwarded from the component's view to the component
-     * @param {Object} [options.viewOptions] - The view class to be managed.
-     * @param {Marionette.Region=} [options.region] - The region to show the component in.
+     * @param {Object} [options.viewOptions] - Options hash passed to an instantiated ViewClass.
+     * @param {Marionette.Region} [options.region] - The region to show the component in.
      */
-    constructor: function constructor(stateAttrs, options) {
+    constructor: function (stateAttrs, options) {
       options = options || {};
 
       // Make defaults available to this
@@ -709,11 +755,9 @@
      * @private
      * @method _setStateDefaults
      * @memberOf Component
-     * @param {Object=} stateAttrs - Attributes to set on the state model
+     * @param {Object} [stateAttrs] - Attributes to set on the state model
      */
-    _setStateDefaults: function _setStateDefaults(stateAttrs) {
-      _.defaults(stateAttrs, _.result(this, "defaults"));
-
+    _setStateDefaults: function (stateAttrs) {
       this.setState(stateAttrs, { silent: true });
     },
 
@@ -724,14 +768,13 @@
      * @method showIn
      * @memberOf Component
      * @param {Marionette.Region} region - The region for the component
+     * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
      * @returns {Component}
      */
-    showIn: function showIn(region) {
-      if (region) {
-        this.region = region;
-      }
+    showIn: function (region, viewOptions) {
+      this.region = region;
 
-      this.show();
+      this.show(viewOptions);
 
       return this;
     },
@@ -745,10 +788,11 @@
      * @throws ComponentShowError - Thrown if component has already been show.
      * @throws ComponentRegionError - Thrown if component has no defined region.
      * @method show
+     * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
      * @memberOf Component
      * @returns {Component}
      */
-    show: function show() {
+    show: function (viewOptions) {
       if (this._isShown) {
         throw new Marionette.Error({
           name: "ComponentShowError",
@@ -763,16 +807,16 @@
         });
       }
 
-      // Destroy the component if the region is emptied because
-      // it destroys the view
-      this.listenTo(this.region, "empty", this.destroy);
-
       this.triggerMethod("before:show");
 
-      this.renderView();
+      this.renderView(viewOptions);
       this._isShown = true;
 
       this.triggerMethod("show");
+
+      // Destroy the component if the region is emptied because
+      // it destroys the view
+      this.listenTo(this.region, "empty", this._destroy);
 
       return this;
     },
@@ -785,25 +829,31 @@
      * @event Component#render:view
      * @method renderView
      * @memberOf Component
+     * @param {Object} [options] - Options hash mixed into the instantiated ViewClass.
      * @returns {Component}
      */
-    renderView: function renderView() {
-      this.view = this.buildView();
+    renderView: function (options) {
+      var viewOptions = this.mixinOptions(options);
 
-      this._proxyViewEvents();
+      var view = this.buildView(this.ViewClass, viewOptions);
 
-      this.triggerMethod("before:render:view", this.view);
+      // Attach current built view to component
+      this.currentView = view;
+
+      this._proxyViewEvents(view);
+
+      this.triggerMethod("before:render:view", view);
 
       // _shouldDestroy is flag that prevents the Component from being
       // destroyed if the region is emptied by Component itself.
       this._shouldDestroy = false;
 
       // Show the view in the region
-      this.region.show(this.view);
+      this.region.show(view);
 
       this._shouldDestroy = true;
 
-      this.triggerMethod("render:view", this.view);
+      this.triggerMethod("render:view", view);
 
       return this;
     },
@@ -816,16 +866,18 @@
      * @private
      * @method _proxyViewEvents
      * @memberOf Component
+     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
+     * The instantiated ViewClass.
      */
-    _proxyViewEvents: function _proxyViewEvents() {
+    _proxyViewEvents: function (view) {
       var prefix = this.getOption("viewEventPrefix");
 
-      this.view.on("all", function () {
+      view.on("all", function () {
         var args = _.toArray(arguments);
         var rootEvent = args[0];
 
         args[0] = prefix + ":" + rootEvent;
-        args.splice(1, 0, this.view);
+        args.splice(1, 0, view);
 
         this.triggerMethod.apply(this, args);
       }, this);
@@ -838,75 +890,85 @@
      * @abstract
      * @method mixinOptions
      * @memberOf Component
-     * @param {Object=} options - Additional options to mixin
+     * @param {Object} [options] - Additional options to mixin
      * @returns {Object}
      */
-    mixinOptions: function mixinOptions(options) {
+    mixinOptions: function (options) {
       var viewOptions = _.result(this, "viewOptions");
 
-      return _.extend({ model: this.getState() }, viewOptions, options);
+      return _.extend({ stateModel: this.getState() }, viewOptions, options);
     },
 
     /**
-     * Get the component ViewClass.
+     * Builds the view class with options
      * If you need a dynamic ViewClass override this function
-     *
-     * @public
-     * @abstract
-     * @method getViewClass
-     * @memberOf Component
-     * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
-     */
-    getViewClass: function getViewClass() {
-      return this.ViewClass;
-    },
-
-    /**
-     * Builds the view class with mixed in options
      *
      * @public
      * @abstract
      * @method buildView
      * @memberOf Component
+     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass -
+     * The view class to instantiate.
+     * @param {Object} [viewOptions] - Options to pass to the View
      * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
      */
-    buildView: function buildView() {
-      var ViewClass = this.getViewClass();
-
-      return new ViewClass(this.mixinOptions());
+    buildView: function (ViewClass, viewOptions) {
+      return new ViewClass(viewOptions);
     },
 
     /**
-     * Destroys Component and empties its region.
+     * Destroys Component.
      *
      * @private
      * @method _destroy
      * @memberOf Component
      */
-    _destroy: function _destroy() {
-      // apply destroy first for listener cleanup
-      StateClass.prototype.destroy.apply(this, arguments);
-
-      if (this.region) {
-        this.region.empty();
+    _destroy: function () {
+      if (this._shouldDestroy) {
+        StateClass.prototype.destroy.apply(this, arguments);
       }
     },
 
     /**
-     * If the component should be destroyed, destroy it.
+     * Empties component's region.
+     *
+     * @private
+     * @method _emptyRegion
+     * @param {Object} [options] - Options passed to `region.empty`
+     * @memberOf Component
+     */
+    _emptyRegion: function (options) {
+      if (this.region) {
+        this.stopListening(this.region, "empty");
+        this.region.empty(options);
+      }
+    },
+
+    /**
+     * Empty the region and destroy the component.
      *
      * @public
      * @method destroy
+     * @param {Object} [options] - Options passed to `_emptyRegion` and `destroy`
      * @memberOf Component
      */
-    destroy: function destroy() {
-      if (this._shouldDestroy) {
-        this._destroy();
-      }
+    destroy: function (options) {
+      this._emptyRegion(options);
+
+      this._shouldDestroy = true;
+
+      this._destroy(options);
     }
   });
 
+  var previousToolkit = Marionette.Toolkit;
+
   var Toolkit = Marionette.Toolkit = {};
+
+  Toolkit.noConflict = function () {
+    Marionette.Toolkit = previousToolkit;
+    return this;
+  };
 
   Toolkit.StateClass = StateClass;
 
