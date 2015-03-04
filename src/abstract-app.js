@@ -131,7 +131,6 @@ var AbstractApp = StateClass.extend({
    * @memberOf AbstractApp
    * @param {Object} [options] - Settings for the App passed through to events
    * @event AbstractApp#before:start - passes options
-   * @event AbstractApp#start - passes options
    * @returns {AbstractApp}
    */
   start: function(options) {
@@ -145,9 +144,24 @@ var AbstractApp = StateClass.extend({
 
     this._isRunning = true;
 
-    this.triggerMethod('start', options);
+    this.triggerStart(options);
 
     return this;
+  },
+
+  /**
+   * Triggers start event.
+   * Override to introduce async start
+   *
+   * @public
+   * @method triggerStart
+   * @memberOf AbstractApp
+   * @param {Object} [options] - Settings for the App passed through to events
+   * @event AbstractApp#start - passes options
+   * @returns
+   */
+  triggerStart: function(options) {
+    this.triggerMethod('start', options);
   },
 
   /**
