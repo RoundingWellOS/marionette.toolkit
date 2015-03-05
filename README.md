@@ -39,8 +39,13 @@ You can download the latest builds directly from the [dist](https://github.com/R
 
 #### Available Packages
 
-Marionette.Toolkit is not yet available via package manager, but will
-soon be released via npm.  If you would like another channel, please
+Via npm
+
+```
+$ npm i marionette.toolkit
+```
+
+Currently Marionette.Toolkit is available via npm. If you would like add it to another channel, please
 [open an issue](#github-issues).
 
 #### Changelog
