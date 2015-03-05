@@ -156,7 +156,7 @@ myStateClass.getState();
 
 ### Destroying A StateClass
 
-`StateClass` has a `destroy` method that unbinds the events of the state model.
+`StateClass` has a `destroy` method that unbinds the events of the `StateModel`.
 
 ```js
 var MyStateModel = Backbone.Model.extend({
