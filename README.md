@@ -39,7 +39,7 @@ You can download the latest builds directly from the [dist](https://github.com/R
 
 #### Available Packages
 
-Via npm
+**Via [npm](https://www.npmjs.com/package/marionette.toolkit)**
 
 ```
 $ npm i marionette.toolkit
