@@ -52,7 +52,7 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.1.0+ as it extends
 [`Marionette.Object`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md)
 
-It's possible this library would work with earlier versions by shiming
+It's possible this library would work with earlier versions by shimming
 `Marionette.Object = Marionette.Controller;`
 
 This library is currently only tested with the latest version of Marionette.
@@ -71,9 +71,8 @@ You can also join us in the [Marionette Toolkit Gitter](https://gitter.im/Roundi
 
 ### Github Issues
 
-[Report issues](https://github.com/RoundingWellOS/marionette.toolkit/issues) with Marionette.Toolkit, [submit pull requests](https://github.com/RoundingWellOS/marionette.toolkit/pulls) to fix problems, or to
-create summarized and documented feature requests (preferably with pull
-requests that implement the feature).
+[Report issues](https://github.com/RoundingWellOS/marionette.toolkit/issues) with Marionette.Toolkit, and [submit pull requests](https://github.com/RoundingWellOS/marionette.toolkit/pulls) to fix problems or to
+create summarized and documented feature requests (preferably with the feature implemented in the pull request).
 
 
 ===
