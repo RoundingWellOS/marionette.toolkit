@@ -139,7 +139,7 @@ console.log(myStopWithParentApp.isRunning());
 
 ### App `start`
 
-This method sets the `App` to its running state
+This method sets the `App` to its running state.
 Events added after `start` are registered for removal `onStop`.
 This triggers ["before:start" / "start" events](#beforestart--start-events).
 
@@ -169,7 +169,7 @@ myApp.start();
 
 ### App `stop`
 
-This method stops the `App`'s running state
+This method stops the `App`'s running state.
 Events added after `start` are registered for removal `onStop`.
 This triggers ["before:stop" / "stop" events](#beforestop--stop-events).
 
