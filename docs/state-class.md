@@ -82,13 +82,13 @@ myStateClass.setState('foo', 'bar');
 
 ```
 
-For more information on the various declaritive options, see the
-implementations of `modelEvents` and `collectionEvents` in the [Marionette.View](./marionette.view.md#viewmodelevents-and-viewcollectionevents) documentation.
+For more information on the various declarative options, see the
+implementations of `modelEvents` and `collectionEvents` in the [Marionette.View](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.view.md#viewmodelevents-and-viewcollectionevents) documentation.
 
 ## StateClass API
 
 ### StateClass `getStateModelClass`
-The value returned by this method is the `StateModel` class that will be instantiated when a state class is instatiated.
+The value returned by this method is the `StateModel` class that will be instantiated when a `StateClass` is instatiated.
 Override this method for dynamic `StateModel` definitions.
 
 ```js
@@ -116,7 +116,7 @@ var myBarStateClass = new MyStateClass();
 for the `StateClass`'s attached `StateModel`.  Implementation will match [Backbone.Model.set](http://backbonejs.org/#Model-set) documentation.
 
 ```js
-var myStateClass = new Mationette.Toolkit.StateClass({
+var myStateClass = new Marionette.Toolkit.StateClass({
     stateEvents: {
       'change:foo': 'alert'
     },
@@ -137,13 +137,13 @@ exception that not passing any attribute to "get" will return the state model
 instance.
 
 ```js
-var MyStateModel =Backbone.Model.extend({
+var MyStateModel = Backbone.Model.extend({
   defaults: {
     foo: 'bar'
   }
 });
 
-var myStateClass = new Mationette.Toolkit.StateClass({
+var myStateClass = new Marionette.Toolkit.StateClass({
   StateModel: MyStateModel
 });
 
@@ -156,7 +156,7 @@ myStateClass.getState();
 
 ### Destroying A StateClass
 
-`StateClass` has a `destroy` method that unbind the events of the state model.
+`StateClass` has a `destroy` method that unbinds the events of the state model.
 
 ```js
 var MyStateModel = Backbone.Model.extend({
