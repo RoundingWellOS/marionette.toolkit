@@ -27,7 +27,7 @@ var MyAsyncApp = Marionette.Toolkit.App.extend({
 
     // Setup a listener for an event triggered by the completion of the async event
     // We trigger an event so that if the app is destroyed during the async request
-    // the trigger will not occur, where-as triggerMethod would still call onStart
+    // the trigger will not occur, whereas triggerMethod would still call onStart
     this.on('sync:data', _.partial(this.triggerMethod, 'start', options));
 
     this._fetchData(options);
