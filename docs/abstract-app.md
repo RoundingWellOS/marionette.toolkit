@@ -43,20 +43,97 @@ myApp.isRunning() === true;
 
 ```
 
-
 ### App's `preventDestroy`
 
-If set `true` Default value is `false`.
+If set `true` this `App` will not be destroyed when its parent `App` is destroyed.
+Default value is `false`.
+Can be added as an option when instantiated or defined on the `App` definition.
+It can also be defined as a function returning a boolean value.
 
+```js
+var myApp = new Marionette.Toolkit.App();
+
+var myChildApp = myApp.addChildApp('myChildApp', {
+  AppClass: Marionette.Toolkit.App,
+  preventDestroy: false
+});
+
+var myPreventDestroyApp = myApp.addChildApp('myPreventDestroyApp', {
+  AppClass: Marionette.Toolkit.App,
+  preventDestroy: true
+});
+
+myApp.destroy();
+
+// logs true
+console.log(myChildApp.isDestroyed());
+
+// logs false
+console.log(myPreventDestroyApp.isDestroyed());
+
+```
 
 ### App's `startWithParent`
 
-If set `true` Default value is `false`.
+If set `true` this `App` will start when its parent `App` starts.
+Default value is `false`.
+Can be added as an option when instantiated or defined on the `App` definition.
+It can also be defined as a function returning a boolean value.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+var myChildApp = myApp.addChildApp('myChildApp', {
+  AppClass: Marionette.Toolkit.App,
+  startWithParent: false
+});
+
+var myStartWithParentApp = myApp.addChildApp('myStartWithParentApp', {
+  AppClass: Marionette.Toolkit.App,
+  startWithParent: true
+});
+
+myApp.start();
+
+// logs false
+console.log(myChildApp.isRunning());
+
+// logs true
+console.log(myStartWithParentApp.isRunning());
+```
 
 ### App's `stopWithParent`
 
+If set `true` this `App` will stop when its parent `App` stops.
 If set `false` Default value is `true`.
+Can be added as an option when instantiated or defined on the `App` definition.
+It can also be defined as a function returning a boolean value.
 
+```js
+var myApp = new Marionette.Toolkit.App();
+
+var myChildApp = myApp.addChildApp('myChildApp', {
+  AppClass: Marionette.Toolkit.App,
+  stopWithParent: false
+});
+
+var myStopWithParentApp = myApp.addChildApp('myStopWithParentApp', {
+  AppClass: Marionette.Toolkit.App,
+  stopWithParent: true
+});
+
+myApp.start();
+myChildApp.start();
+myStopWithParentApp.start();
+
+myApp.stop();
+
+// logs true
+console.log(myChildApp.isRunning());
+
+// logs false
+console.log(myStopWithParentApp.isRunning());
+```
 
 ## Lifecycle API
 
