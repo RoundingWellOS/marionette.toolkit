@@ -39,8 +39,13 @@ You can download the latest builds directly from the [dist](https://github.com/R
 
 #### Available Packages
 
-Marionette.Toolkit is not yet available via package manager, but will
-soon be released via npm.  If you would like another channel, please
+**Via [npm](https://www.npmjs.com/package/marionette.toolkit)**
+
+```
+$ npm i marionette.toolkit
+```
+
+Currently Marionette.Toolkit is available via npm. If you would like add it to another channel, please
 [open an issue](#github-issues).
 
 #### Changelog
@@ -52,7 +57,7 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.1.0+ as it extends
 [`Marionette.Object`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md)
 
-It's possible this library would work with earlier versions by shiming
+It's possible this library would work with earlier versions by shimming
 `Marionette.Object = Marionette.Controller;`
 
 This library is currently only tested with the latest version of Marionette.
@@ -71,9 +76,8 @@ You can also join us in the [Marionette Toolkit Gitter](https://gitter.im/Roundi
 
 ### Github Issues
 
-[Report issues](https://github.com/RoundingWellOS/marionette.toolkit/issues) with Marionette.Toolkit, [submit pull requests](https://github.com/RoundingWellOS/marionette.toolkit/pulls) to fix problems, or to
-create summarized and documented feature requests (preferably with pull
-requests that implement the feature).
+[Report issues](https://github.com/RoundingWellOS/marionette.toolkit/issues) with Marionette.Toolkit, and [submit pull requests](https://github.com/RoundingWellOS/marionette.toolkit/pulls) to fix problems or to
+create summarized and documented feature requests (preferably with the feature implemented in the pull request).
 
 
 ===
