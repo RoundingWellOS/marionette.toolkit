@@ -1,3 +1,9 @@
+#### v0.2.1
+
+* No code changes
+* Fixed html test runner
+* Documentation update with version bump for npm publish ¯\_(ツ)_/¯
+
 #### v0.2.0
 
 * 100% Code Coverage **@brentli1**!!

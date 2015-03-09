@@ -1,6 +1,6 @@
 /**
- * marionette.toolkit - A collection of opinionated extensions for Marionette
- * @version v0.2.0
+ * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
+ * @version v0.2.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */

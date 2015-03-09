@@ -1,7 +1,7 @@
 {
   "name": "marionette.toolkit",
-  "version": "0.2.0",
-  "description": "A collection of opinionated extensions for Marionette",
+  "version": "0.2.1",
+  "description": "A collection of opinionated Backbone.Marionette extensions for large scale application architecture.",
   "main": "./dist/marionette.toolkit.js",
   "scripts": {
     "test": "gulp",
