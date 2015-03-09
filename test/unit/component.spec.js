@@ -1,7 +1,9 @@
 describe('Marionette.Toolkit.Component', function () {
   beforeEach(function () {
+    this.setFixtures('<div id="testRegion"></div>');
+    this.el = Backbone.$('#testRegion');
     this.myRegion = new Backbone.Marionette.Region({
-      el:'body'
+      el:this.el
     });
   });
 
@@ -150,10 +152,10 @@ describe('Marionette.Toolkit.Component', function () {
     });
 
     describe('with defined viewOptions', function () {
-      beforeEach(function () {
+      beforeEach(function() {
         this.MyView = Marionette.ItemView.extend({
           initialize: function(options) {
-            global.test = options.foo;
+            this.test = options.foo;
           }
         });
       });
@@ -170,7 +172,7 @@ describe('Marionette.Toolkit.Component', function () {
           });
           this.myComponent = new this.MyComponent();
           this.myComponent.renderView();
-          expect(global.test).to.equal('bar1');
+          expect(this.myComponent.currentView.test).to.equal('bar1');
         });
       });
 
@@ -186,7 +188,7 @@ describe('Marionette.Toolkit.Component', function () {
             });
             this.myComponent = new this.MyComponent();
             this.myComponent.renderView();
-            expect(global.test).to.equal('bar2');
+            expect(this.myComponent.currentView.test).to.equal('bar2');
         });
       });
     });

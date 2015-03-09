@@ -1,6 +1,6 @@
 # Marionette.Toolkit.AbstractApp
 
-`Marionette.Toolkit.AbstractApp` is an extention of [`StateClass`](./state-class.md).  Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.  All events bound to the `AbstractApp` while running (and only those) will be removed when stopped.
+`Marionette.Toolkit.AbstractApp` is an extension of [`StateClass`](./state-class.md).  Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.  All events bound to the `AbstractApp` while running (and only those) will be removed when stopped.
 
 **Note:** `Marionette.Toolkit.AbstractApp` class is not intended to be used directly. It will eventually become the [`App`](./app.md) class once the "App Manager" functionality is mixed in, instead of extending from this `AbstractApp`.
 
@@ -105,7 +105,7 @@ console.log(myStartWithParentApp.isRunning());
 ### App's `stopWithParent`
 
 If set `true` this `App` will stop when its parent `App` stops.
-If set `false` Default value is `true`.
+Default value is `true`.
 Can be added as an option when instantiated or defined on the `App` definition.
 It can also be defined as a function returning a boolean value.
 
@@ -139,7 +139,7 @@ console.log(myStopWithParentApp.isRunning());
 
 ### App `start`
 
-This method sets the `App` to its running state
+This method sets the `App` to its running state.
 Events added after `start` are registered for removal `onStop`.
 This triggers ["before:start" / "start" events](#beforestart--start-events).
 
@@ -169,7 +169,7 @@ myApp.start();
 
 ### App `stop`
 
-This method stops the `App`'s running state
+This method stops the `App`'s running state.
 Events added after `start` are registered for removal `onStop`.
 This triggers ["before:stop" / "stop" events](#beforestop--stop-events).
 

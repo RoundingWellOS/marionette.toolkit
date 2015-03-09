@@ -1,8 +1,8 @@
 # Marionette.Toolkit.Component
 
 `Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component).
-It is an extention of [`StateClass`](./state-class.md) that manages a view (or views) who's lifecycle is tied to the region it is shown in.
-The Component provides a consistant interface for which to package state-view-logic.
+It is an extension of [`StateClass`](./state-class.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
+The Component provides a consistent interface for which to package state-view-logic.
 
 ## Documentation Index
 * [Using a Component](#using-a-component)
@@ -262,7 +262,7 @@ myComponent.showIn(someRegion, viewOptions);
 ```
 ### Component `show`
 
-Renders the view and shows it in the components region.
+Renders the view and shows it in the component's region.
 A region must be defined on the component and a component can only be
 shown once during its lifetime.
 `show` triggers ["before:show" / "show" events](#beforeshow--show-events).
