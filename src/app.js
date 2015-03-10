@@ -222,7 +222,7 @@ var App = AbstractApp.extend({
     childApp.on('destroy', _.partial(this._removeChildApp, appName), this);
 
     if(this.isRunning() && _.result(childApp, 'startWithParent')) {
-      childApp.start();
+      childApp.start(options);
     }
 
     return childApp;
