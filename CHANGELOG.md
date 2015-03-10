@@ -1,3 +1,7 @@
+#### v0.2.2
+
+* Bug Fix - Passed in options to child app on start
+
 #### v0.2.1
 
 * No code changes
