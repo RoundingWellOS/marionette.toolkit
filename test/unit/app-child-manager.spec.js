@@ -149,15 +149,9 @@ describe('App Manager', function() {
   describe('_ensureAppIsUnique', function() {
     beforeEach(function() {
       this.thirdChildAppName = 'cA3';
-
       this.fourthChildAppName = 'cA4';
-
-      this.errMessage = 'A child App with that name has already been added.';
-
+      this.errMessage = 'A child App with name "cA3" has already been added.';
       this.myApp = new Marionette.Toolkit.App();
-
-      this.spy = sinon.spy(this.myApp, '_ensureAppIsUnique');
-
       this.myApp.addChildApps(this.childApps);
     });
 
@@ -165,16 +159,12 @@ describe('App Manager', function() {
       expect(_.bind(function(){
         this.myApp._ensureAppIsUnique(this.thirdChildAppName);
       }, this)).to.throw(this.errMessage);
-
-      expect(this.spy.callCount === 4).to.be.true;
     });
 
     it('should not throw an error if new child app is not a duplicate', function() {
       expect(_.bind(function(){
         this.myApp._ensureAppIsUnique(this.fourthChildAppName);
-      }, this)).to.not.throw(this.errMessage);
-
-      expect(this.spy.callCount === 4).to.be.true;
+      }, this)).to.not.throw(Error);
     });
   });
 
