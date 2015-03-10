@@ -171,7 +171,7 @@ var App = AbstractApp.extend({
     if(this._childApps[appName]) {
       throw new Marionette.Error({
         name: 'DuplicateChildAppError',
-        message: 'A child App with that name has already been added.'
+        message: 'A child App with name "' + appName + '" has already been added.'
       });
     }
   },
