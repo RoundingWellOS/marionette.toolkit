@@ -21,26 +21,14 @@ describe('app-lifecycle-options', function () {
 		});
 
     describe('and adding a childApp with startWithParent = true after parent has started', function () {
-      beforeEach(function () {
-        this.optionsStub = this.sinon.spy();
+      it('should start the childApp', function () {
         this.myApp = new Marionette.Toolkit.App();
         this.myApp.start();
-        this.ChildApp = Marionette.Toolkit.App.extend({
-          onStart: this.optionsStub
-        });
-        this.myApp.addChildApp('myAddedChild', this.ChildApp, {
+        this.myApp.addChildApp('myAddedChild', Marionette.Toolkit.App, {
           startWithParent : true
         });
-      });
-
-      it('should start the childApp', function () {
         var test = this.myApp.getChildApp('myAddedChild');
         expect(test.isRunning()).to.equal(true);
-      });
-
-      it('should contain the options on "start"', function () {
-        var test = { startWithParent: true };
-        expect(this.optionsStub.args[0][0]).to.deep.equal(test);
       });
     });
 	});
