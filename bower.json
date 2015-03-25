@@ -1,0 +1,40 @@
+{
+  "name": "marionette.toolkit",
+  "version": "0.2.0",
+  "description": "A collection of opinionated Backbone.Marionette extensions for large scale application architecture.",
+  "main": "./dist/marionette.toolkit.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RoundingWellOS/marionette.toolkit.git"
+  },
+  "keywords": [
+    "backbone.marionette",
+    "marionette",
+    "marionettejs",
+    "backbone",
+    "backbonejs",
+    "toolkit",
+    "app",
+    "subapp",
+    "component",
+    "state"
+  ],
+  "author": "Paul Falgout <paul@otterball.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RoundingWellOS/marionette.toolkit/issues"
+  },
+  "homepage": "https://github.com/RoundingWellOS/marionette.toolkit",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone.marionette": "^2.1.0",
+    "backbone": "1.0.0 - 1.1.2",
+    "underscore": "1.4.4 - 1.8.2"
+  }
+}
