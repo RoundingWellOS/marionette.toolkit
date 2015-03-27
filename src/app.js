@@ -216,6 +216,8 @@ var App = AbstractApp.extend({
       });
     }
 
+    childApp._name = appName;
+
     this._childApps[appName] = childApp;
 
     // When the app is destroyed remove the cached app.
@@ -227,6 +229,19 @@ var App = AbstractApp.extend({
 
     return childApp;
   },
+
+  /**
+   * Returns registered child `App`s name
+   *
+   * @public
+   * @method getName
+   * @memberOf App
+   * @returns {String}
+   */
+  getName: function() {
+    return this._name;
+  },
+
 
   /**
    * Returns registered child `App`s array
@@ -263,6 +278,7 @@ var App = AbstractApp.extend({
    * @returns {App}
    */
   _removeChildApp: function(appName) {
+    delete this._childApps[appName]._name;
     delete this._childApps[appName];
   },
 

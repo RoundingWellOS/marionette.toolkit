@@ -9,6 +9,7 @@
   * [App `buildApp`](#app-buildapp)
   * [App `addChildApp`](#app-addchildapp)
   * [App `addChildApps`](#app-addchildapps)
+  * [App `getName`](#app-getName)
   * [App `getChildApp`](#app-getchildapp)
   * [App `getChildApps`](#app-getchildapps)
   * [App `removeChildApp`](#app-removechildapp)
@@ -119,6 +120,30 @@ myApp.getChildApp('main');        //=> 'main' app instance
 var navApp = myApp.getChildApp('navigation');  //=> 'navigation' app instance
 navApp.getOption('fooOption'); //=> true
 myApp.getChildApp('footer'); //=> 'footer' app instance
+```
+
+### App `getName`
+
+An App's name can be retrieved from the App
+instance calling the `getName` method on the
+instance. If the app is a childApp then the
+app name will be returned, however if an app
+is not a childApp or is a parentApp `undefined`
+will be returned.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+myApp.addChildApp('bar', Marionette.Toolkit.App);
+var barAppName = myApp.getChildApp('bar').getName();
+
+// logs bar
+console.log(barAppName);
+
+var myAppName = myApp.getName();
+
+// logs undefined
+console.log(myAppName);
 ```
 
 ### App `getChildApp`

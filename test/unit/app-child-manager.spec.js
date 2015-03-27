@@ -178,6 +178,34 @@ describe('App Manager', function() {
     it('should be called three times', function() {
       expect(this.myApp.addChildApp.callCount === 3).to.be.true;
     });
+
+    it('should assign the childApp name to the passed in appName', function(){
+      expect(this.myApp.addChildApp('cA4', Marionette.Toolkit.App)).to.have.property('_name', 'cA4');
+    });
+
+  });
+
+  describe('getName', function(){
+    beforeEach(function() {
+      this.sinon.spy(this.myApp, 'addChildApp');
+
+      this.myApp.addChildApps(this.childApps);
+    });
+
+    it('should return the name of the childApp', function(){
+      expect(this.myApp.getChildApp('cA1').getName()).to.equal('cA1');
+    });
+
+    it('should return undefined for an app that is not a child app', function(){
+      expect(this.myApp.getName()).to.be.undefined;
+    });
+
+    it('should return undefined if a childApp has been removed from parent', function(){
+      var childApp = this.myApp.getChildApp('cA3');
+      this.myApp.removeChildApp('cA3');
+
+      expect(childApp.getName()).to.be.undefined;
+    });
   });
 
   describe('buildApp', function() {
