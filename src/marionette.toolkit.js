@@ -22,3 +22,5 @@ Toolkit.StateClass = StateClass;
 Toolkit.App = App;
 
 Toolkit.Component = Component;
+
+export default Toolkit;
