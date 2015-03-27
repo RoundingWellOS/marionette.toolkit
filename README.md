@@ -40,12 +40,17 @@ You can download the latest builds directly from the [dist](https://github.com/R
 #### Available Packages
 
 **Via [npm](https://www.npmjs.com/package/marionette.toolkit)**
-
 ```
-$ npm i marionette.toolkit
+$ npm install marionette.toolkit
 ```
 
-Currently Marionette.Toolkit is available via npm. If you would like add it to another channel, please
+**Via [bower](http://bower.io/search/?q=marionette.toolkit)**
+```
+$ bower install marionette.toolkit
+```
+
+
+Currently Marionette.Toolkit is available via npm and bower. If you would like add it to another channel, please
 [open an issue](#github-issues).
 
 #### Changelog
