@@ -1,11 +1,11 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v0.2.2
+ * @version v0.3.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
 (function (global, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? factory(require("backbone.marionette"), require("underscore"), require("backbone")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "underscore", "backbone"], factory) : factory(global.Marionette, global._, global.Backbone);
+  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("backbone.marionette"), require("underscore"), require("backbone")) : typeof define === "function" && define.amd ? define(["backbone.marionette", "underscore", "backbone"], factory) : global.Marionette.Toolkit = factory(global.Marionette, global._, global.Backbone);
 })(this, function (Marionette, _, Backbone) {
   "use strict";
 
@@ -545,7 +545,7 @@
       if (this._childApps[appName]) {
         throw new Marionette.Error({
           name: "DuplicateChildAppError",
-          message: "A child App with that name has already been added."
+          message: "A child App with name \"" + appName + "\" has already been added."
         });
       }
     },
@@ -590,16 +590,30 @@
         });
       }
 
+      childApp._name = appName;
+
       this._childApps[appName] = childApp;
 
       // When the app is destroyed remove the cached app.
       childApp.on("destroy", _.partial(this._removeChildApp, appName), this);
 
       if (this.isRunning() && _.result(childApp, "startWithParent")) {
-        childApp.start(options);
+        childApp.start();
       }
 
       return childApp;
+    },
+
+    /**
+     * Returns registered child `App`s name
+     *
+     * @public
+     * @method getName
+     * @memberOf App
+     * @returns {String}
+     */
+    getName: function getName() {
+      return this._name;
     },
 
     /**
@@ -637,6 +651,7 @@
      * @returns {App}
      */
     _removeChildApp: function _removeChildApp(appName) {
+      delete this._childApps[appName]._name;
       delete this._childApps[appName];
     },
 
@@ -975,5 +990,9 @@
   Toolkit.App = App;
 
   Toolkit.Component = Component;
+
+  var marionette_toolkit = Toolkit;
+
+  return marionette_toolkit;
 });
 //# sourceMappingURL=./marionette.toolkit.js.map
