@@ -1,3 +1,11 @@
+#### v0.3.0
+
+* Revert 0.2.2 bugfix
+* Returning Toolkit as a require object `var Toolkit = require('Marionette.Toolkit');`
+* Add name to childApp Instance and getName method
+* Add bower.json definition
+* Add appName to `DuplicateChildAppError`
+
 #### v0.2.2
 
 * Bug Fix - Passed in options to child app on start
