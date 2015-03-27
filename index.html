@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Marionette.toolkit by RoundingWellOS</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Marionette.toolkit</h1>
+        <h2>A collection of opinionated extensions for Backbone.Marionette to help with large scale application architecture.</h2>
+        <a href="https://github.com/RoundingWellOS/marionette.toolkit" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="marionettetoolkit" class="anchor" href="#marionettetoolkit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Marionette.Toolkit</h1>
+
+<p><a href="https://travis-ci.org/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/travis/RoundingWellOS/marionette.toolkit/master.svg?style=flat&amp;amp;label=travis" alt="Travis Status"></a> <a href="https://codeclimate.com/github/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/codeclimate/github/RoundingWellOS/marionette.toolkit.svg?style=flat" alt="Code Climate Score"></a> <a href="https://codeclimate.com/github/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/codeclimate/coverage/github/RoundingWellOS/marionette.toolkit.svg?style=flat" alt="Coverage"></a> <a href="https://david-dm.org/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/david/RoundingWellOS/marionette.toolkit.svg?style=flat" alt="Dependency Status"></a></p>
+
+<h2>
+<a id="about-marionettetoolkit" class="anchor" href="#about-marionettetoolkit" aria-hidden="true"><span class="octicon octicon-link"></span></a>About Marionette.Toolkit</h2>
+
+<p>Marionette.Toolkit is a collection of opinionated extensions for
+<a href="http://marionettejs.com">Marionette</a> Each element helps to reduce boilerplate
+for complex large scale application problems.  This toolkit was
+built from scripts open sourced from <a href="http://roundingwell.com">RoundingWell.com</a>.</p>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p><a href="./docs/state-class.md">StateClass</a> - <code>Marionette.Object</code> with a <code>Backbone.Model</code> for keeping state.</p>
+
+<p><a href="./docs/component.md">Component</a> - Reusable <code>StateClass</code> with <code>View</code> management boilerplate</p>
+
+<p><a href="./docs/abstract-app.md">AbstractApp</a> - Object including a start/stop lifecycle and running event registry.</p>
+
+<p><a href="./docs/app.md">App</a> - <code>AbstractApp</code> with mixed in "App Manager" for adding and removing child <code>App</code>s</p>
+
+<p><a href="./docs/async-app-start.md">Asnyc App start</a> - How to easily start apps asynchronously</p>
+
+<h2>
+<a id="getting-help" class="anchor" href="#getting-help" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Help</h2>
+
+<p>If you have questions or concerns please feel free to <a href="#github-issues">open an issue</a>.
+Additionally join us on the <a href="https://gitter.im/marionettejs/backbone.marionette">Marionette Gitter</a> to have a chat.
+Everyone there is happy to discuss design patterns.</p>
+
+<h2>
+<a id="project-details" class="anchor" href="#project-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Details</h2>
+
+<h4>
+<a id="library-downloads" class="anchor" href="#library-downloads" aria-hidden="true"><span class="octicon octicon-link"></span></a>Library Downloads</h4>
+
+<p>You can download the latest builds directly from the <a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/dist">dist</a> folder above.</p>
+
+<h4>
+<a id="available-packages" class="anchor" href="#available-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Available Packages</h4>
+
+<p><strong>Via <a href="https://www.npmjs.com/package/marionette.toolkit">npm</a></strong></p>
+
+<pre><code>$ npm install marionette.toolkit
+</code></pre>
+
+<p><strong>Via <a href="http://bower.io/search/?q=marionette.toolkit">bower</a></strong></p>
+
+<pre><code>$ bower install marionette.toolkit
+</code></pre>
+
+<p>Currently Marionette.Toolkit is available via npm and bower. If you would like add it to another channel, please
+<a href="#github-issues">open an issue</a>.</p>
+
+<h4>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h4>
+
+<p>For change logs and release notes, see the <a href="CHANGELOG.md">changelog</a> file.</p>
+
+<h4>
+<a id="compatibility-and-requirements" class="anchor" href="#compatibility-and-requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compatibility and Requirements</h4>
+
+<p>Marionette.Toolkit currently requires <a href="http://marionettejs.com">Marionette</a> 2.1.0+ as it extends
+<a href="https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md"><code>Marionette.Object</code></a></p>
+
+<p>It's possible this library would work with earlier versions by shimming
+<code>Marionette.Object = Marionette.Controller;</code></p>
+
+<p>This library is currently only tested with the latest version of Marionette.</p>
+
+<p>Marionette.Toolkit supports IE8+ and modern browsers.</p>
+
+<h2>
+<a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to Contribute</h2>
+
+<p>If you would like to contribute to Marionette.Toolkit's source code, please read
+the <a href="CONTRIBUTING.md">guidelines for pull requests and contributions</a>.
+Following these guidelines will help make your contributions easier to
+bring into the next release.</p>
+
+<p>You can also join us in the <a href="https://gitter.im/RoundingWellOS/marionette.toolkit">Marionette Toolkit Gitter</a> to think up new features, report bugs, ask questions, and talk design patterns within Toolkit.</p>
+
+<h3>
+<a id="github-issues" class="anchor" href="#github-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Github Issues</h3>
+
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/issues">Report issues</a> with Marionette.Toolkit, and <a href="https://github.com/RoundingWellOS/marionette.toolkit/pulls">submit pull requests</a> to fix problems or to
+create summarized and documented feature requests (preferably with the feature implemented in the pull request).</p>
+
+<h1></h1>
+
+<p>This library is © 2015 RoundingWell. Distributed under MIT license.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/RoundingWellOS/marionette.toolkit/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/RoundingWellOS/marionette.toolkit/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/RoundingWellOS/marionette.toolkit"></a> is maintained by <a href="https://github.com/RoundingWellOS">RoundingWellOS</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
