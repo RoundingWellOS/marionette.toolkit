@@ -84,8 +84,10 @@ gulp.task('build', ['lint-src', 'clean'], function(done) {
       return _.template(source)(manifest);
     }
   }).then(function(bundle) {
+    var banner = getBanner();
+
     var res = bundle.toUmd({
-      banner: getBanner(),
+      banner: banner,
       sourceMap: true,
       sourceMapSource: config.entryFileName + '.js',
       sourceMapFile: exportFileName + '.js',
@@ -108,6 +110,7 @@ gulp.task('build', ['lint-src', 'clean'], function(done) {
         outSourceMap: true,
         inSourceMap: destinationFolder + '/' + exportFileName + '.js.map',
       }))
+      .pipe($.header(banner))
       .pipe(gulp.dest(destinationFolder))
       .on('end', done);
   });
