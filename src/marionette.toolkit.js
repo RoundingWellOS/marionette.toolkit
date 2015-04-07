@@ -17,6 +17,8 @@ Toolkit.noConflict = function() {
   return this;
 };
 
+Toolkit.VERSION = '<%= version %>';
+
 Toolkit.StateClass = StateClass;
 
 Toolkit.App = App;

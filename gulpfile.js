@@ -80,6 +80,9 @@ gulp.task('build', ['lint-src', 'clean'], function(done) {
   esperanto.bundle({
     base: 'src',
     entry: config.entryFileName,
+    transform: function(source) {
+      return _.template(source)(manifest);
+    }
   }).then(function(bundle) {
     var res = bundle.toUmd({
       banner: getBanner(),
