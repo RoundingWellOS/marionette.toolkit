@@ -6,11 +6,13 @@ describe('App-Lifecycle', function () {
     this.startStub = this.sinon.stub();
     this.beforeStopStub = this.sinon.stub();
     this.stopStub = this.sinon.stub();
+    this.destroyStub = this.sinon.stub();
     this.myApp = new AbstractApp();
     this.myApp.on('before:start', this.beforeStartStub);
     this.myApp.on('start', this.startStub);
     this.myApp.on('before:stop', this.beforeStopStub);
     this.myApp.on('stop', this.stopStub);
+    this.myApp.on('destroy', this.destroyStub);
   });
 
   describe('when starting the application', function () {
@@ -70,28 +72,44 @@ describe('App-Lifecycle', function () {
     });
   });
 
+  describe('when an application is yet to be destroyed', function () {
+    it('should have isDestroyed() to return false', function () {
+      expect(this.myApp.isDestroyed()).to.equal(false);
+    });
+  });
+
   describe('when destroying an application', function () {
     beforeEach(function () {
       this.myApp.start();
+      this.myApp.destroy();
     });
 
-    it('should have isDestroyed() to return false PRIOR to destroying', function () {
-      expect(this.myApp.isDestroyed()).to.equal(false);
+    it('should be stopped', function () {
+      expect(this.stopStub).to.have.been.calledOnce;
     });
 
     it('should successfully be destroyed', function () {
-      this.myApp.destroy();
       expect(this.myApp.isDestroyed()).to.equal(true);
     });
 
     describe('and restarting the destroyed application', function () {
       it('should throw an error', function () {
-        this.myApp.destroy();
         expect(_.bind(function(){
           this.myApp.start();
         }, this)).to.throw('App has already been destroyed and cannot be used.');
       });
     });
+
+    describe('and destroying it again', function () {
+      beforeEach(function () {
+        this.myApp.destroy();
+      });
+
+      it('should not destroy', function () {
+        expect(this.destroyStub).to.have.not.been.calledTwice;
+      });
+    });
+
   });
 
 });
