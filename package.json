@@ -59,12 +59,12 @@
     "jquery": "~2.1.1",
     "jsdom": "^2.0.0",
     "jshint-stylish": "^1.0.0",
-    "lodash": "^3.2.0",
     "mkdirp": "^0.5.0",
     "mocha": "^2.1.0",
     "run-sequence": "^1.0.2",
     "sinon": "^1.12.2",
     "sinon-chai": "^2.7.0",
+    "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.0.0"
   },
   "babelBoilerplateOptions": {
@@ -83,6 +83,6 @@
     "backbone.marionette": "^2.1.0",
     "backbone-metal": "^0.5.0",
     "backbone": "1.0.0 - 1.1.2",
-    "underscore": "1.4.4 - 1.8.2"
+    "underscore": "1.4.4 - 1.8.3"
   }
 }

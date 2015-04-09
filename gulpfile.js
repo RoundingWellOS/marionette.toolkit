@@ -11,7 +11,7 @@ const esperanto = require('esperanto');
 const browserify = require('browserify');
 const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
-const _ = require('lodash');
+const _ = require('underscore');
 
 const manifest = require('./package.json');
 const config = manifest.babelBoilerplateOptions;
