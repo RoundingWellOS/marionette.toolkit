@@ -213,9 +213,13 @@ var AbstractApp = StateClass.extend({
    * @memberOf AbstractApp
    */
   destroy: function() {
-    this.stop();
+    if(this._isDestroyed) {
+      return;
+    }
 
     this._isDestroyed = true;
+
+    this.stop();
 
     StateClass.prototype.destroy.apply(this, arguments);
   },
