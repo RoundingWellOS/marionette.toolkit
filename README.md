@@ -59,13 +59,14 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 #### Compatibility and Requirements
 
-Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.1.0+ as it extends
+Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.2.0+ as it utilizes [`Marionette.Error`](https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js) and extends
 [`Marionette.Object`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md)
 
-It's possible this library would work with earlier versions by shimming
+It's possible this library would work with earlier versions by manually adding `Marionette.Error` and shimming
 `Marionette.Object = Marionette.Controller;`
 
-This library is currently only tested with the latest version of Marionette.
+
+This library is tested with v2.2+ and a mix of underscore and lodash versions.
 
 Marionette.Toolkit supports IE8+ and modern browsers.
 
