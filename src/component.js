@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import Marionette from 'backbone.marionette';
-import StateClass from './state-class';
+import StateMixin from './state-mixin';
 
 /**
  * Reusable StateClass with View management boilerplate
@@ -10,7 +10,7 @@ import StateClass from './state-class';
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var Component = StateClass.extend({
+var Component = Marionette.Class.extend({
 
   /**
    * The view class to be managed.
@@ -52,7 +52,7 @@ var Component = StateClass.extend({
     // Make defaults available to this
     _.extend(this, _.pick(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']));
 
-    StateClass.call(this, options);
+    this._super(options);
 
     this._setStateDefaults(stateAttrs);
   },
@@ -244,7 +244,7 @@ var Component = StateClass.extend({
    */
   _destroy: function(){
     if(this._shouldDestroy) {
-      StateClass.prototype.destroy.apply(this, arguments);
+      Marionette.Class.prototype.destroy.apply(this, arguments);
     }
   },
 
@@ -279,5 +279,7 @@ var Component = StateClass.extend({
       this._destroy(options);
   }
 });
+
+Component.mixin(StateMixin);
 
 export default Component;
