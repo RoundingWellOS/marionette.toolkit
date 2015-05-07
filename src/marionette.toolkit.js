@@ -1,5 +1,7 @@
 import Marionette from 'backbone.marionette';
 
+import './class-shim';
+
 import StateClass from './state-class';
 import App from './app';
 import Component from './component';

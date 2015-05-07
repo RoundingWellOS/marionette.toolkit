@@ -10,7 +10,7 @@ import Marionette from 'backbone.marionette';
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var StateClass = Marionette.Object.extend({
+var StateClass = Marionette.Class.extend({
 
   /**
    * The model class for _stateModel.
