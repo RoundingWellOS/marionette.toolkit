@@ -24,10 +24,11 @@
 `childApps` is an object literal or a function that returns an object literal.
 The object literal must contain app names as keys and app definitions as values.
 `childApps` can be passed to an `App` at instantiation or defined on the definition.
+If defined as a function it will receive the `options` passed to the `constructor`.
 
 ```js
 var MyApp = Marionette.Toolkit.App.extend({
-  childApps: function(){
+  childApps: function(options){
     return {
       childName: MyChildApp,
       otherName: {
