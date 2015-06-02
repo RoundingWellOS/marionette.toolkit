@@ -10,7 +10,6 @@ Use a `StateClass` if your object needs to maintain information that isn't busin
 * [StateClass's `stateDefaults`](#stateclasss-statedefaults)
 * [StateClass's `stateEvents`](#stateclasss-stateevents)
 * [StateClass API](#stateclass-api)
-  * [StateClass `getStateModelClass`](#stateclass-getstatemodelclass)
   * [Setting State `setState`](#setting-state)
   * [Getting State `getState`](#getting-state)
   * [Destroying A StateClass `destroy`](#destroying-a-stateclass)
@@ -29,12 +28,25 @@ Marionette.Toolkit.StateClass.extend({
 });
 ```
 
-The state model must be defined before it is referenced by the
-`StateModel` attribute in a state class definition.
-Use `getStateModelClass` to lookup the definition as state classes are instantiated.
+You can also define `StateModel` as a function. In this form, the value
+returned by this method is the `StateModel` class that will be instantiated.
+When defined as a function, it will receive the `options` passed to the `constructor`.
+
+```js
+var MyStateModel = Backbone.Model.extend({});
+
+Marionette.Toolkit.StateClass.extend({
+  StateModel: function(options){
+    if(options.foo){
+      return MyStateModel;
+    }
+    return Backbone.Model;
+  }
+});
+```
 
 Alternatively, you can specify a `StateModel` in the options for
-the constructor:
+the `constructor`:
 
 ```js
 var MyStateClass = Marionette.Toolkit.StateClass.extend({...});
@@ -86,29 +98,6 @@ For more information on the various declarative options, see the
 implementations of `modelEvents` and `collectionEvents` in the [Marionette.View](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.view.md#viewmodelevents-and-viewcollectionevents) documentation.
 
 ## StateClass API
-
-### StateClass `getStateModelClass`
-The value returned by this method is the `StateModel` class that will be instantiated when a `StateClass` is instatiated.
-Override this method for dynamic `StateModel` definitions.
-
-```js
-var FooModel = Backbone.Model.extend({});
-var BarModel = Backbone.Model.extend({});
-
-var MyStateClass = Marionette.Toolkit.StateClass.extend({
-  getStateModelClass: function() {
-    if(this.getOption('isFoo')) {
-      return FooModel;
-    }
-    else {
-      return BarModel;
-    }
-  }
-});
-
-var myFooStateClass = new MyStateClass({ isFoo: true });
-var myBarStateClass = new MyStateClass();
-```
 
 ### Setting State
 
