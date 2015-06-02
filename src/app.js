@@ -36,7 +36,7 @@ var App = AbstractApp.extend({
 
     _.extend(this, _.pick(options, ['childApps']));
 
-    this._initChildApps();
+    this._initChildApps(options);
 
     // The child apps should be handled while the app is running;
     // After start, before stop, and before destroy.
@@ -56,9 +56,16 @@ var App = AbstractApp.extend({
    * @method _initChildApps
    * @memberOf App
    */
-  _initChildApps: function() {
-    if(this.childApps) {
-      this.addChildApps(_.result(this, 'childApps'));
+  _initChildApps: function(options) {
+    var childApps = this.childApps;
+
+    if(childApps) {
+
+      if(_.isFunction(childApps)) {
+        childApps = childApps.call(this, options);
+      }
+
+      this.addChildApps(childApps);
     }
   },
 
