@@ -67,6 +67,24 @@ Marionette.Toolkit.Component.extend({
   ViewClass: MyViewClass
 });
 ```
+
+You can also define `ViewClass` as a function. In this form, the value
+returned by this method is the `ViewClass` class that will be instantiated.
+When defined as a function, it will receive the `options` passed to [`renderView`](#component-renderview).
+
+```js
+var MyViewClass = Marionette.ItemView.extend({});
+
+Marionette.Toolkit.Component.extend({
+  ViewClass: function(options){
+    if(options.foo){
+      return MyViewClass;
+    }
+    return Marionette.ItemView;
+  }
+});
+```
+
 The `ViewClass` can be provided in the component definition or
 in the constructor function call, to get a component instance.
 

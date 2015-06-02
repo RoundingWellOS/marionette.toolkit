@@ -128,6 +128,45 @@ describe('Marionette.Toolkit.Component', function () {
     });
   });
 
+  // SETTING ViewClass
+  describe('when defining ViewClass as a function that returns a view class', function() {
+    beforeEach(function() {
+      this.MyComponent = Marionette.Toolkit.Component.extend({
+        region: this.myRegion,
+        ViewClass: function(options){
+          if(options.foo){
+            return Marionette.ItemView.extend({
+              customViewOption: 'bar',
+              template: _.template('<div></div>')
+            });
+          }
+          return Marionette.ItemView;
+        }
+      });
+      this.myComponent = new this.MyComponent();
+
+      this.myComponent.show({ foo: true });
+    });
+
+    it('should use the correct view class for passed options', function() {
+      expect(this.myComponent.currentView.getOption('customViewOption')).to.equal('bar');
+    });
+  });
+
+  describe('when defining ViewClass as neither a function or a class', function() {
+    beforeEach(function() {
+      this.MyComponent = Marionette.Toolkit.Component.extend({
+        region: this.myRegion,
+        ViewClass: 'Invalid View'
+      });
+      this.myComponent = new this.MyComponent();
+    });
+
+    it('should throw an error saying the ViewClass is invalid', function() {
+      expect(_.bind(this.myComponent.show, this.myComponent)).to.throw('"ViewClass" must be a view class or a function that returns a view class');
+    });
+  });
+
   // INSTANTIATING A COMPONENT WITH OPTIONS
   describe('when instantiating a component', function () {
     describe('with a customized viewEventPrefix', function () {

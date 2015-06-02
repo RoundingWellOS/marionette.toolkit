@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import StateClass from './state-class';
 
@@ -141,6 +142,34 @@ var Component = StateClass.extend({
   },
 
   /**
+   * Get the Component ViewClass class.
+   * Checks if the `ViewClass` is a view class (the common case)
+   * Then check if it's a function (which we assume that returns a view class)
+   *
+   * @private
+   * @method _getViewClass
+   * @memberOf Component
+   * @param {Object} [options] - Options that can be used to determine the ViewClass.
+   * @returns {View}
+   */
+  _getViewClass: function(options) {
+    options = options || {};
+
+    var ViewClass = this.getOption('ViewClass');
+
+    if (ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
+      return ViewClass;
+    } else if (_.isFunction(ViewClass)) {
+      return ViewClass.call(this, options);
+    } else {
+      throw new Marionette.Error({
+        name: 'InvalidViewClassError',
+        message: '"ViewClass" must be a view class or a function that returns a view class'
+      });
+    }
+  },
+
+  /**
    * Shows or re-shows a newly built view in the component's region
    *
    * @public
@@ -152,9 +181,11 @@ var Component = StateClass.extend({
    * @returns {Component}
    */
   renderView: function(options){
+    var ViewClass = this._getViewClass(options);
+
     var viewOptions = this.mixinOptions(options);
 
-    var view = this.buildView(this.ViewClass, viewOptions);
+    var view = this.buildView(ViewClass, viewOptions);
 
     // Attach current built view to component
     this.currentView = view;
