@@ -32,7 +32,7 @@ var StateClass = Marionette.Object.extend({
     // Make defaults available to this
     _.extend(this, _.pick(options, ['StateModel', 'stateEvents', 'stateDefaults']));
 
-    var StateModel = this.getStateModelClass();
+    var StateModel = this._getStateModel(options);
 
     this._stateModel = new StateModel(_.result(this, 'stateDefaults'));
 
@@ -44,16 +44,28 @@ var StateClass = Marionette.Object.extend({
 
   /**
    * Get the StateClass StateModel class.
-   * If you need a dynamic StateModel override this function
+   * Checks if the `StateModel` is a model class (the common case)
+   * Then check if it's a function (which we assume that returns a model class)
    *
-   * @public
-   * @abstract
-   * @method getStateModelClass
+   * @private
+   * @method _getStateModel
+   * @param {Object} [options] - Options that can be used to determine the StateModel.
    * @memberOf StateClass
    * @returns {Backbone.Model}
    */
-  getStateModelClass: function(){
-    return this.StateModel;
+  _getStateModel: function(options){
+    var StateModel = this.getOption('StateModel');
+
+    if (StateModel.prototype instanceof Backbone.Model || StateModel === Backbone.Model) {
+      return StateModel;
+    } else if (_.isFunction(StateModel)) {
+      return StateModel.call(this, options);
+    } else {
+      throw new Marionette.Error({
+        name: 'InvalidStateModelError',
+        message: '"StateModel" must be a model class or a function that returns a model class'
+      });
+    }
   },
 
   /**
