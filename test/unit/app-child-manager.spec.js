@@ -96,17 +96,36 @@ describe('App Manager', function() {
           expect(_.keys(this.myApp._childApps)).to.have.length(3);
         });
 
-        it('should accept a function', function() {
-          var childApps = function(){
-            return {
-              cA1: Marionette.Toolkit.App,
-              cA2: Marionette.Toolkit.App
+        describe('when passing childApps as a function', function() {
+          beforeEach(function () {
+            var childApps = function(){
+              return {
+                cA1: Marionette.Toolkit.App,
+                cA2: Marionette.Toolkit.App
+              };
             };
-          };
 
-          this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+            this.MyApp2 = Marionette.Toolkit.App.extend({
+              childApps: childApps
+            });
+          });
 
-          expect(_.keys(this.myApp._childApps)).to.have.length(2);
+          it('should use the results of the childApps function', function() {
+            this.myApp = new this.MyApp2();
+
+            expect(_.keys(this.myApp._childApps)).to.have.length(2);
+          });
+
+          it('should pass options to childApps', function() {
+            var opts = { fooOption: 'bar' };
+
+            this.sinon.stub(this.MyApp2.prototype, 'childApps');
+            this.myApp = new this.MyApp2(opts);
+
+            expect(this.MyApp2.prototype.childApps)
+              .to.have.been.calledOnce
+              .and.calledWith(opts);
+          });
         });
       });
     });
