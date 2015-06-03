@@ -48,7 +48,7 @@ var Component = StateClass.extend({
    * @param {Marionette.Region} [options.region] - The region to show the component in.
    */
   constructor: function(stateAttrs, options){
-    options = options || {};
+    options = _.extend({}, options);
 
     // Make defaults available to this
     _.extend(this, _.pick(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']));
@@ -153,7 +153,7 @@ var Component = StateClass.extend({
    * @returns {View}
    */
   _getViewClass: function(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     var ViewClass = this.getOption('ViewClass');
 

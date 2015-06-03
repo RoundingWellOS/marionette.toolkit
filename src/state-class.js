@@ -27,7 +27,7 @@ var StateClass = Marionette.Object.extend({
    * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
    */
   constructor: function(options){
-    options = options || {};
+    options = _.extend({}, options);
 
     // Make defaults available to this
     _.extend(this, _.pick(options, ['StateModel', 'stateEvents', 'stateDefaults']));
