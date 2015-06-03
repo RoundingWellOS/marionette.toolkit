@@ -73,7 +73,7 @@ var AbstractApp = StateClass.extend({
    * @param {Boolean} [options.preventDestroy]
    */
   constructor: function(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     _.bindAll(this, 'start', 'stop');
 

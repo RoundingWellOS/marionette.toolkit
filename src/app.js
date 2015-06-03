@@ -30,7 +30,7 @@ var App = AbstractApp.extend({
    * ```
    */
   constructor: function(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     this._childApps = {};
 
@@ -320,7 +320,7 @@ var App = AbstractApp.extend({
    * @returns {App}
    */
   removeChildApp: function(appName, options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     var childApp = this.getChildApp(appName);
 
