@@ -44,9 +44,37 @@ describe('State Class', function() {
    });
   });
 
-  describe('when calling getStateModelClass()', function () {
-    it('should return the correct stateModel that will be used in instantiation', function () {
-      expect(this.myStateClass.getStateModelClass()).to.deep.equal(this.MyModel);
+  // SETTING StateModel
+  describe('when defining StateModel as a function that returns a model class', function() {
+    beforeEach(function() {
+      this.MyStateClass = Marionette.Toolkit.StateClass.extend({
+        StateModel: function(options){
+          if(options.foo){
+            return Backbone.Model.extend({
+              customAttr: 'bar'
+            });
+          }
+          return Backbone.Model;
+        }
+      });
+      this.myStateClass = new this.MyStateClass({ foo: true });
+
+    });
+
+    it('should use the correct model class for the passed options', function() {
+      expect(this.myStateClass.getState().customAttr).to.equal('bar');
+    });
+  });
+
+  describe('when defining StateModel as neither a function or a class', function() {
+    beforeEach(function() {
+      this.MyStateClass = Marionette.Toolkit.StateClass.extend({
+        StateModel: 'Invalid Class'
+      });
+    });
+
+    it('should throw an error saying the StateModel is invalid', function() {
+      expect(_.bind(function(){ this.myStateClass = new this.MyStateClass(); }, this)).to.throw('"StateModel" must be a model class or a function that returns a model class');
     });
   });
 
