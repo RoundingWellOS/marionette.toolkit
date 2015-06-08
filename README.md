@@ -11,7 +11,7 @@ Marionette.Toolkit is a collection of opinionated extensions for
 for complex large scale application problems.  This toolkit was
 built from scripts open sourced from [RoundingWell.com](http://roundingwell.com).
 
-In addition to the full library, each element in Toolkit is available as it's own [npm module](marionette.toolkit-modularized).
+In addition to the full library, each element in Toolkit is available as it's own [npm module](https://www.npmjs.com/browse/keyword/marionette.toolkit-modularized).
 
 ## Documentation
   [StateClass](./docs/state-class.md) - `Marionette.Object` with a `Backbone.Model` for keeping state.
@@ -41,12 +41,17 @@ You can download the latest builds directly from the [dist](https://github.com/R
 #### Available Packages
 
 **Via [npm](https://www.npmjs.com/package/marionette.toolkit)**
-
 ```
-$ npm i marionette.toolkit
+$ npm install marionette.toolkit
 ```
 
-Currently Marionette.Toolkit is available via npm. If you would like add it to another channel, please
+**Via [bower](http://bower.io/search/?q=marionette.toolkit)**
+```
+$ bower install marionette.toolkit
+```
+
+
+Currently Marionette.Toolkit is available via npm and bower. If you would like add it to another channel, please
 [open an issue](#github-issues).
 
 #### Changelog
@@ -55,13 +60,14 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 #### Compatibility and Requirements
 
-Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.1.0+ as it extends
+Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.2.0+ as it utilizes [`Marionette.Error`](https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js) and extends
 [`Marionette.Object`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md)
 
-It's possible this library would work with earlier versions by shimming
+It's possible this library would work with earlier versions by manually adding `Marionette.Error` and shimming
 `Marionette.Object = Marionette.Controller;`
 
-This library is currently only tested with the latest version of Marionette.
+
+This library is tested with v2.2+ and a mix of underscore and lodash versions.
 
 Marionette.Toolkit supports IE8+ and modern browsers.
 

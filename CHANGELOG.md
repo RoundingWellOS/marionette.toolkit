@@ -1,3 +1,11 @@
+#### v0.4.0
+
+* Toolkit now exports `App`, `Component` and `StateClass` to [npm separately](https://www.npmjs.com/browse/keyword/marionette.toolkit-modularized).
+* `StateModel` can now be defined as a function returning a `Backbone.Model`
+* A `Component` `ViewClass` can now be defined as a function returning a View
+* If defining `childApps` as a function, it is now passed the same `options` as `initialize`
+* Prevent an `App` from destroying more than once
+
 #### v0.3.0
 
 * Revert 0.2.2 bugfix
@@ -22,7 +30,7 @@
 * `Component` now mixes in the `StateModel` instance as `stateModel` instead of `model`
 * `stateDefaults` are now on `StateClass` and `defaults` was removed from `Component
 * Added `Toolkit.noConflict`
-* `App` now has a `triggerStart` method that can be overridden to introduce async app starts.
+* `App` now has a `triggerStart` method that can be overridden to introduce async app starts
 * `App` `buildApp` is now easier to override
 * `Component` `buildView` is now easier to override
 * You can now pass `options` to the `Component`'s view via `showIn` `show` and `renderView`
