@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v0.3.0
+ * @version v0.4.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -31,7 +31,7 @@
       // Make defaults available to this
       _.extend(this, _.pick(options, ["StateModel", "stateEvents", "stateDefaults"]));
 
-      var StateModel = this.getStateModelClass();
+      var StateModel = this._getStateModel(options);
 
       this._stateModel = new StateModel(_.result(this, "stateDefaults"));
 
@@ -43,16 +43,28 @@
 
     /**
      * Get the StateClass StateModel class.
-     * If you need a dynamic StateModel override this function
+     * Checks if the `StateModel` is a model class (the common case)
+     * Then check if it's a function (which we assume that returns a model class)
      *
-     * @public
-     * @abstract
-     * @method getStateModelClass
+     * @private
+     * @method _getStateModel
+     * @param {Object} [options] - Options that can be used to determine the StateModel.
      * @memberOf StateClass
      * @returns {Backbone.Model}
      */
-    getStateModelClass: function getStateModelClass() {
-      return this.StateModel;
+    _getStateModel: function _getStateModel(options) {
+      var StateModel = this.getOption("StateModel");
+
+      if (StateModel.prototype instanceof Backbone.Model || StateModel === Backbone.Model) {
+        return StateModel;
+      } else if (_.isFunction(StateModel)) {
+        return StateModel.call(this, options);
+      } else {
+        throw new Marionette.Error({
+          name: "InvalidStateModelError",
+          message: "\"StateModel\" must be a model class or a function that returns a model class"
+        });
+      }
     },
 
     /**
@@ -101,7 +113,9 @@
     }
   });
 
-  var AbstractApp = StateClass.extend({
+  var state_class = StateClass;
+
+  var AbstractApp = state_class.extend({
 
     /**
      * Internal flag indiciate when `App` has started but has not yet stopped.
@@ -172,7 +186,7 @@
       _.extend(this, _.pick(options, pickOptions));
 
       // Will call initialize
-      StateClass.call(this, options);
+      state_class.call(this, options);
 
       if (_.result(this, "startAfterInitialized")) {
         this.start(options);
@@ -298,11 +312,15 @@
      * @memberOf AbstractApp
      */
     destroy: function destroy() {
-      this.stop();
+      if (this._isDestroyed) {
+        return;
+      }
 
       this._isDestroyed = true;
 
-      StateClass.prototype.destroy.apply(this, arguments);
+      this.stop();
+
+      state_class.prototype.destroy.apply(this, arguments);
     },
 
     /**
@@ -345,7 +363,7 @@
         this._runningEvents = this._runningEvents || [];
         this._runningEvents.push(arguments);
       }
-      return StateClass.prototype.on.apply(this, arguments);
+      return state_class.prototype.on.apply(this, arguments);
     },
 
     /**
@@ -362,7 +380,7 @@
         this._runningListeningTo = this._runningListeningTo || [];
         this._runningListeningTo.push(arguments);
       }
-      return StateClass.prototype.listenTo.apply(this, arguments);
+      return state_class.prototype.listenTo.apply(this, arguments);
     },
 
     /**
@@ -380,11 +398,13 @@
         this._runningListeningTo.push(arguments);
       }
 
-      return StateClass.prototype.listenToOnce.apply(this, arguments);
+      return state_class.prototype.listenToOnce.apply(this, arguments);
     }
   });
 
-  var App = AbstractApp.extend({
+  var abstract_app = AbstractApp;
+
+  var App = abstract_app.extend({
 
     /**
      * @public
@@ -410,7 +430,7 @@
 
       _.extend(this, _.pick(options, ["childApps"]));
 
-      this._initChildApps();
+      this._initChildApps(options);
 
       // The child apps should be handled while the app is running;
       // After start, before stop, and before destroy.
@@ -420,7 +440,7 @@
         "before:destroy": this._destroyChildApps
       });
 
-      AbstractApp.call(this, options);
+      abstract_app.call(this, options);
     },
 
     /**
@@ -430,9 +450,16 @@
      * @method _initChildApps
      * @memberOf App
      */
-    _initChildApps: function _initChildApps() {
-      if (this.childApps) {
-        this.addChildApps(_.result(this, "childApps"));
+    _initChildApps: function _initChildApps(options) {
+      var childApps = this.childApps;
+
+      if (childApps) {
+
+        if (_.isFunction(childApps)) {
+          childApps = childApps.call(this, options);
+        }
+
+        this.addChildApps(childApps);
       }
     },
 
@@ -706,7 +733,9 @@
 
   });
 
-  var Component = StateClass.extend({
+  var app = App;
+
+  var Component = state_class.extend({
 
     /**
      * The view class to be managed.
@@ -748,7 +777,7 @@
       // Make defaults available to this
       _.extend(this, _.pick(options, ["viewEventPrefix", "ViewClass", "viewOptions", "region"]));
 
-      StateClass.call(this, options);
+      state_class.call(this, options);
 
       this._setStateDefaults(stateAttrs);
     },
@@ -837,6 +866,34 @@
     },
 
     /**
+     * Get the Component ViewClass class.
+     * Checks if the `ViewClass` is a view class (the common case)
+     * Then check if it's a function (which we assume that returns a view class)
+     *
+     * @private
+     * @method _getViewClass
+     * @memberOf Component
+     * @param {Object} [options] - Options that can be used to determine the ViewClass.
+     * @returns {View}
+     */
+    _getViewClass: function _getViewClass(options) {
+      options = options || {};
+
+      var ViewClass = this.getOption("ViewClass");
+
+      if (ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
+        return ViewClass;
+      } else if (_.isFunction(ViewClass)) {
+        return ViewClass.call(this, options);
+      } else {
+        throw new Marionette.Error({
+          name: "InvalidViewClassError",
+          message: "\"ViewClass\" must be a view class or a function that returns a view class"
+        });
+      }
+    },
+
+    /**
      * Shows or re-shows a newly built view in the component's region
      *
      * @public
@@ -848,9 +905,11 @@
      * @returns {Component}
      */
     renderView: function renderView(options) {
+      var ViewClass = this._getViewClass(options);
+
       var viewOptions = this.mixinOptions(options);
 
-      var view = this.buildView(this.ViewClass, viewOptions);
+      var view = this.buildView(ViewClass, viewOptions);
 
       // Attach current built view to component
       this.currentView = view;
@@ -940,7 +999,7 @@
      */
     _destroy: function _destroy() {
       if (this._shouldDestroy) {
-        StateClass.prototype.destroy.apply(this, arguments);
+        state_class.prototype.destroy.apply(this, arguments);
       }
     },
 
@@ -976,6 +1035,8 @@
     }
   });
 
+  var component = Component;
+
   var previousToolkit = Marionette.Toolkit;
 
   var Toolkit = Marionette.Toolkit = {};
@@ -985,11 +1046,13 @@
     return this;
   };
 
-  Toolkit.StateClass = StateClass;
+  Toolkit.VERSION = "0.4.0";
 
-  Toolkit.App = App;
+  Toolkit.StateClass = state_class;
 
-  Toolkit.Component = Component;
+  Toolkit.App = app;
+
+  Toolkit.Component = component;
 
   var marionette_toolkit = Toolkit;
 
