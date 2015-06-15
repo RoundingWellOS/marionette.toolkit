@@ -144,8 +144,9 @@ function _buildPackage(destFolder, entryName, exportName){
     .pipe($.template(data))
     .pipe(gulp.dest(destFolder));
 
-  gulp.src('./packages/package.json')
+  gulp.src('./packages/package.json.template')
     .pipe($.template(data))
+    .pipe($.rename('package.json'))
     .pipe(gulp.dest(destFolder));
 }
 
