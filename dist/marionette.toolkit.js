@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v0.4.0
+ * @version v0.4.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -26,7 +26,7 @@
      * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
      */
     constructor: function constructor(options) {
-      options = options || {};
+      options = _.extend({}, options);
 
       // Make defaults available to this
       _.extend(this, _.pick(options, ["StateModel", "stateEvents", "stateDefaults"]));
@@ -177,7 +177,7 @@
      * @param {Boolean} [options.preventDestroy]
      */
     constructor: function constructor(options) {
-      options = options || {};
+      options = _.extend({}, options);
 
       _.bindAll(this, "start", "stop");
 
@@ -424,7 +424,7 @@
      * ```
      */
     constructor: function constructor(options) {
-      options = options || {};
+      options = _.extend({}, options);
 
       this._childApps = {};
 
@@ -713,7 +713,7 @@
      * @returns {App}
      */
     removeChildApp: function removeChildApp(appName, options) {
-      options = options || {};
+      options = _.extend({}, options);
 
       var childApp = this.getChildApp(appName);
 
@@ -772,7 +772,7 @@
      * @param {Marionette.Region} [options.region] - The region to show the component in.
      */
     constructor: function constructor(stateAttrs, options) {
-      options = options || {};
+      options = _.extend({}, options);
 
       // Make defaults available to this
       _.extend(this, _.pick(options, ["viewEventPrefix", "ViewClass", "viewOptions", "region"]));
@@ -877,7 +877,7 @@
      * @returns {View}
      */
     _getViewClass: function _getViewClass(options) {
-      options = options || {};
+      options = _.extend({}, options);
 
       var ViewClass = this.getOption("ViewClass");
 
@@ -1046,7 +1046,7 @@
     return this;
   };
 
-  Toolkit.VERSION = "0.4.0";
+  Toolkit.VERSION = "0.4.1";
 
   Toolkit.StateClass = state_class;
 

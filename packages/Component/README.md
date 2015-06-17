@@ -1,4 +1,4 @@
-# Marionette.Toolkit.Component v0.4.0
+# Marionette.Toolkit.Component v0.4.1
 
 [Marionette.Toolkit](https://github.com/RoundingWellOS/marionette.toolkit)'s `Component` exported as a [Node.js](http://nodejs.org/)/[io.js](https://iojs.org/) module.
 

@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v0.4.0
+ * @version v0.4.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -48,7 +48,7 @@ var Component = StateClass.extend({
    * @param {Marionette.Region} [options.region] - The region to show the component in.
    */
   constructor: function constructor(stateAttrs, options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     // Make defaults available to this
     _.extend(this, _.pick(options, ["viewEventPrefix", "ViewClass", "viewOptions", "region"]));
@@ -153,7 +153,7 @@ var Component = StateClass.extend({
    * @returns {View}
    */
   _getViewClass: function _getViewClass(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     var ViewClass = this.getOption("ViewClass");
 

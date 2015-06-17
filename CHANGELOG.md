@@ -1,3 +1,8 @@
+#### v0.4.1
+
+* Updated underscore and backbone dependencies.
+* Small refactor to defaulting empty passed in `options` as an object.
+
 #### v0.4.0
 
 * Toolkit now exports `App`, `Component` and `StateClass` to [npm separately](https://www.npmjs.com/browse/keyword/marionette.toolkit-modularized).

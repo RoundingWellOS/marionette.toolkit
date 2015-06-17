@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v0.4.0
+ * @version v0.4.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -27,7 +27,7 @@ var StateClass = Marionette.Object.extend({
    * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
    */
   constructor: function constructor(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     // Make defaults available to this
     _.extend(this, _.pick(options, ["StateModel", "stateEvents", "stateDefaults"]));

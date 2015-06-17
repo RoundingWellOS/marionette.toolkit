@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v0.4.0
+ * @version v0.4.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -72,7 +72,7 @@ var AbstractApp = StateClass.extend({
    * @param {Boolean} [options.preventDestroy]
    */
   constructor: function constructor(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     _.bindAll(this, "start", "stop");
 
@@ -319,7 +319,7 @@ var App = abstract_app.extend({
    * ```
    */
   constructor: function constructor(options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     this._childApps = {};
 
@@ -608,7 +608,7 @@ var App = abstract_app.extend({
    * @returns {App}
    */
   removeChildApp: function removeChildApp(appName, options) {
-    options = options || {};
+    options = _.extend({}, options);
 
     var childApp = this.getChildApp(appName);
 
