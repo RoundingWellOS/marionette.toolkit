@@ -54,7 +54,7 @@ gulp.task('lint-test', function() {
 });
 
 function getBanner() {
-  var banner = ['/**',
+  const banner = ['/**',
     ' * <%= name %> - <%= description %>',
     ' * @version v<%= version %>',
     ' * @link <%= homepage %>',
@@ -65,48 +65,48 @@ function getBanner() {
   return _.template(banner)(manifest);
 }
 
-function _build(entryFileName, destFolder, expFileName, expVarName, umd){
+function _build(entryFileName, destFolder, expFileName, expVarName, umd) {
   return esperanto.bundle({
     base: 'src',
     entry: entryFileName,
-    transform: function(source) {
-      var js_source = _.template(source)(manifest);
+    transform: function() {
+      const jsSource = _.template(source)(manifest);
 
       // Poor way of modifying dependency for modular build
-      if(!umd){
-        return js_source.replace('./state-class', 'marionette.toolkit.state-class');
+      if(!umd) {
+        return jsSource.replace('./state-class', 'marionette.toolkit.state-class');
       }
 
-      return js_source;
+      return jsSource;
     }
   }).then(function(bundle) {
-    var banner = getBanner();
+    const banner = getBanner();
 
-    var bundleMethod = umd? 'toUmd' : 'toCjs';
+    const bundleMethod = umd ? 'toUmd' : 'toCjs';
 
-    var res = bundle[bundleMethod]({
+    const res = bundle[bundleMethod]({
       banner: banner,
       sourceMap: true,
-      sourceMapSource: entryFileName + '.js',
-      sourceMapFile: expFileName + '.js',
+      sourceMapSource: `${ entryFileName }.js`,
+      sourceMapFile: `${ expFileName }.js`,
       name: expVarName
     });
 
     // Write the generated sourcemap
     mkdirp.sync(destFolder);
-    fs.writeFileSync(path.join(destFolder, expFileName + '.js'), res.map.toString());
+    fs.writeFileSync(path.join(destFolder, `${ expFileName }.js`), res.map.toString());
 
-    $.file(expFileName + '.js', res.code, { src: true })
+    $.file(`${ expFileName }.js`, res.code, { src: true })
       .pipe($.plumber())
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.babel({ blacklist: ['useStrict'] }))
-      .pipe($.sourcemaps.write('./', {addComment: false}))
+      .pipe($.sourcemaps.write('./', { addComment: false }))
       .pipe(gulp.dest(destFolder))
       .pipe($.filter(['*', '!**/*.js.map']))
-      .pipe($.rename(expFileName + '.min.js'))
+      .pipe($.rename(`${ expFileName }.min.js`))
       .pipe($.uglifyjs({
         outSourceMap: true,
-        inSourceMap: destFolder + '/' + expFileName + '.js.map',
+        inSourceMap: `${ destFolder }/${ expFileName }.js.map`
       }))
       .pipe($.header(banner))
       .pipe(gulp.dest(destFolder));
@@ -118,8 +118,8 @@ gulp.task('build-lib', ['lint-src', 'clean'], function() {
   return _build(config.entryFileName, destinationFolder, exportFileName, config.exportVarName, 'umd');
 });
 
-function _buildPackage(destFolder, entryName, exportName){
-  var data = {
+function _buildPackage(destFolder, entryName, exportName) {
+  const data = {
     version: manifest.version,
     exportVarName: exportName,
     entryName: entryName,
@@ -140,9 +140,9 @@ function _buildPackage(destFolder, entryName, exportName){
 }
 
 gulp.task('build-packages', ['lint-src', 'clean'], function() {
-  var tasks = _.map(config.exportPackageNames, function(entryName, exportName){
-    var destFolder = './packages/' + exportName + '/';
-    var exportVarName = 'Marionette.Toolkit.' + exportName;
+  const tasks = _.map(config.exportPackageNames, function(entryName, exportName) {
+    const destFolder = `./packages/'${ exportName }/`;
+    const exportVarName = `Marionette.Toolkit.${ exportName }`;
     return _build(entryName, destFolder, exportName, exportVarName)
       .then(_.partial(_buildPackage, destFolder, entryName, exportName));
   });
@@ -152,16 +152,16 @@ gulp.task('build-packages', ['lint-src', 'clean'], function() {
 
 // Bundle our app for our unit tests
 gulp.task('browserify', function() {
-  var testFiles = glob.sync('./test/unit/**/*');
-  var allFiles = ['./test/setup/browserify.js'].concat(testFiles);
-  var bundler = browserify(allFiles);
+  const testFiles = glob.sync('./test/unit/**/*');
+  const allFiles = ['./test/setup/browserify.js'].concat(testFiles);
+  const bundler = browserify(allFiles);
   bundler.transform(babelify.configure({
-    sourceMapRelative: __dirname + '/src',
+    sourceMapRelative: `${ __dirname }/src`,
     blacklist: ['useStrict']
   }));
-  var bundleStream = bundler.bundle();
+  const bundleStream = bundler.bundle();
   return bundleStream
-    .on('error', function(err){
+    .on('error', function(err) {
       console.log(err.message);
       this.emit('end');
     })
@@ -184,9 +184,9 @@ gulp.task('coverage', ['lint-src', 'lint-test'], function(done) {
 });
 
 function test() {
-  return gulp.src(['test/setup/node.js', 'test/unit/**/*.js'], {read: false})
-    .pipe($.mocha({reporter: 'dot', globals: config.mochaGlobals}));
-};
+  return gulp.src(['test/setup/node.js', 'test/unit/**/*.js'], { read: false })
+    .pipe($.mocha({ reporter: 'dot', globals: config.mochaGlobals }));
+}
 
 // Lint and run our tests
 gulp.task('test', ['lint-src', 'lint-test'], function() {
@@ -207,7 +207,7 @@ gulp.task('watch', function() {
 
 // Set up a livereload environment for our spec runner
 gulp.task('test-browser', ['build-in-sequence'], function() {
-  $.livereload.listen({port: 35729, host: 'localhost', start: true});
+  $.livereload.listen({ port: 35729, host: 'localhost', start: true });
   return gulp.watch(['src/**/*.js', 'test/**/*', '.jshintrc', 'test/.jshintrc'], ['build-in-sequence']);
 });
 
