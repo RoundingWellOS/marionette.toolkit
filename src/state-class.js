@@ -10,7 +10,7 @@ import Marionette from 'backbone.marionette';
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var StateClass = Marionette.Object.extend({
+const StateClass = Marionette.Object.extend({
 
   /**
    * The model class for _stateModel.
@@ -26,13 +26,13 @@ var StateClass = Marionette.Object.extend({
    * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to stateClass.
    * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
    */
-  constructor: function(options){
+  constructor: function(options) {
     options = _.extend({}, options);
 
     // Make defaults available to this
     _.extend(this, _.pick(options, ['StateModel', 'stateEvents', 'stateDefaults']));
 
-    var StateModel = this._getStateModel(options);
+    const StateModel = this._getStateModel(options);
 
     this._stateModel = new StateModel(_.result(this, 'stateDefaults'));
 
@@ -53,19 +53,19 @@ var StateClass = Marionette.Object.extend({
    * @memberOf StateClass
    * @returns {Backbone.Model}
    */
-  _getStateModel: function(options){
-    var StateModel = this.getOption('StateModel');
+  _getStateModel: function(options) {
+    const StateModel = this.getOption('StateModel');
 
-    if (StateModel.prototype instanceof Backbone.Model || StateModel === Backbone.Model) {
+    if(StateModel.prototype instanceof Backbone.Model || StateModel === Backbone.Model) {
       return StateModel;
-    } else if (_.isFunction(StateModel)) {
+    } else if(_.isFunction(StateModel)) {
       return StateModel.call(this, options);
-    } else {
-      throw new Marionette.Error({
-        name: 'InvalidStateModelError',
-        message: '"StateModel" must be a model class or a function that returns a model class'
-      });
     }
+
+    throw new Marionette.Error({
+      name: 'InvalidStateModelError',
+      message: '"StateModel" must be a model class or a function that returns a model class'
+    });
   },
 
   /**
@@ -79,7 +79,7 @@ var StateClass = Marionette.Object.extend({
    * @param {Object} [options] - Backbone.Model options.
    * @returns {Backbone.Model} - The _stateModel
    */
-  setState: function(){
+  setState: function() {
     return this._stateModel.set.apply(this._stateModel, arguments);
   },
 
@@ -92,7 +92,7 @@ var StateClass = Marionette.Object.extend({
    * @param {String} [attr] - Attribute name of stateModel.
    * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
    */
-  getState: function(attr){
+  getState: function(attr) {
     if(!attr) {
       return this._stateModel;
     }
@@ -107,7 +107,7 @@ var StateClass = Marionette.Object.extend({
    * @method destroy
    * @memberOf StateClass
    */
-  destroy: function(){
+  destroy: function() {
     this._stateModel.stopListening();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
