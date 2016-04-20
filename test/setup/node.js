@@ -1,12 +1,11 @@
-if (!global.document || !global.window) {
-
-  var jsdom = require('jsdom').jsdom;
+if(!global.document || !global.window) {
+  const jsdom = require('jsdom').jsdom;
 
   global.document = jsdom('<html><head><script></script></head><body><div id="testDiv"></div></body></html>', null, {
-    FetchExternalResources   : ['script'],
-    ProcessExternalResources : ['script'],
-    MutationEvents           : '2.0',
-    QuerySelector            : false
+    FetchExternalResources: ['script'],
+    ProcessExternalResources: ['script'],
+    MutationEvents: '2.0',
+    QuerySelector: false
   });
 
   global.window = document.parentWindow;

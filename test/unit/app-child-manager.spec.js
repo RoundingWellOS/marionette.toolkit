@@ -17,7 +17,7 @@ describe('App Manager', function() {
     describe('without declared child apps', function() {
       describe('childApps object', function() {
         it('should not be created', function() {
-            expect(this.myApp.childApps).to.be.undefined;
+          expect(this.myApp.childApps).to.be.undefined;
         });
       });
 
@@ -56,7 +56,7 @@ describe('App Manager', function() {
 
       describe('addChildApp function', function() {
         it('should raise an error message', function() {
-          var errMessage = 'App build failed.  Incorrect configuration.';
+          const errMessage = 'App build failed.  Incorrect configuration.';
 
           // Bind function because `this` needs to be the other describe block
           expect(_.bind(this.myApp.addChildApp, this.myApp)).to.throw(errMessage);
@@ -67,7 +67,7 @@ describe('App Manager', function() {
     describe('with declared child apps', function() {
       describe('constructor', function() {
         beforeEach(function() {
-          var childApps = {
+          const childApps = {
             cA1: Marionette.Toolkit.App,
             cA2: Marionette.Toolkit.App,
             cA3: Marionette.Toolkit.App
@@ -84,7 +84,7 @@ describe('App Manager', function() {
 
       describe('_initChildApps', function() {
         it('should accept a hash', function() {
-          var childApps = {
+          const childApps = {
             cA1: Marionette.Toolkit.App,
             cA2: Marionette.Toolkit.App,
             cA3: Marionette.Toolkit.App
@@ -97,8 +97,8 @@ describe('App Manager', function() {
         });
 
         describe('when passing childApps as a function', function() {
-          beforeEach(function () {
-            var childApps = function(){
+          beforeEach(function() {
+            const childApps = function() {
               return {
                 cA1: Marionette.Toolkit.App,
                 cA2: Marionette.Toolkit.App
@@ -117,7 +117,7 @@ describe('App Manager', function() {
           });
 
           it('should pass options to childApps', function() {
-            var opts = { fooOption: 'bar' };
+            const opts = { fooOption: 'bar' };
 
             this.sinon.stub(this.MyApp2.prototype, 'childApps');
             this.myApp = new this.MyApp2(opts);
@@ -132,24 +132,24 @@ describe('App Manager', function() {
   });
 
   describe('when adding a child app', function() {
-    describe('using addChildApp with an object literal', function () {
-      beforeEach(function () {
+    describe('using addChildApp with an object literal', function() {
+      beforeEach(function() {
         this.myApp.addChildApp('newChildApp', {
           AppClass: this.MyApp,
           bazOption: true
         });
       });
 
-      it('should contain the options from the initial MyApp definition', function () {
+      it('should contain the options from the initial MyApp definition', function() {
         expect(this.myApp.getOption('fooOption')).to.equal('bar');
       });
 
-      it('should contain the options on the added childApp', function () {
+      it('should contain the options on the added childApp', function() {
         expect(this.myApp.getChildApp('newChildApp').getOption('bazOption')).to.equal(true);
       });
     });
 
-    describe('using addChildApps', function () {
+    describe('using addChildApps', function() {
       beforeEach(function() {
         this.sinon.spy(this.myApp, 'addChildApps');
         this.myApp.addChildApps(this.childApps);
@@ -175,13 +175,13 @@ describe('App Manager', function() {
     });
 
     it('should throw error if a duplicate child exists', function() {
-      expect(_.bind(function(){
+      expect(_.bind(function() {
         this.myApp._ensureAppIsUnique(this.thirdChildAppName);
       }, this)).to.throw(this.errMessage);
     });
 
     it('should not throw an error if new child app is not a duplicate', function() {
-      expect(_.bind(function(){
+      expect(_.bind(function() {
         this.myApp._ensureAppIsUnique(this.fourthChildAppName);
       }, this)).to.not.throw(Error);
     });
@@ -198,29 +198,28 @@ describe('App Manager', function() {
       expect(this.myApp.addChildApp.callCount === 3).to.be.true;
     });
 
-    it('should assign the childApp name to the passed in appName', function(){
+    it('should assign the childApp name to the passed in appName', function() {
       expect(this.myApp.addChildApp('cA4', Marionette.Toolkit.App)).to.have.property('_name', 'cA4');
     });
-
   });
 
-  describe('getName', function(){
+  describe('getName', function() {
     beforeEach(function() {
       this.sinon.spy(this.myApp, 'addChildApp');
 
       this.myApp.addChildApps(this.childApps);
     });
 
-    it('should return the name of the childApp', function(){
+    it('should return the name of the childApp', function() {
       expect(this.myApp.getChildApp('cA1').getName()).to.equal('cA1');
     });
 
-    it('should return undefined for an app that is not a child app', function(){
+    it('should return undefined for an app that is not a child app', function() {
       expect(this.myApp.getName()).to.be.undefined;
     });
 
-    it('should return undefined if a childApp has been removed from parent', function(){
-      var childApp = this.myApp.getChildApp('cA3');
+    it('should return undefined if a childApp has been removed from parent', function() {
+      const childApp = this.myApp.getChildApp('cA3');
       this.myApp.removeChildApp('cA3');
 
       expect(childApp.getName()).to.be.undefined;
@@ -230,7 +229,7 @@ describe('App Manager', function() {
   describe('buildApp', function() {
     describe('when passing an object', function() {
       it('should return and instance of the class', function() {
-        var foo = this.myApp.buildApp(Marionette.Toolkit.App);
+        const foo = this.myApp.buildApp(Marionette.Toolkit.App);
 
         expect(foo).to.be.instanceOf(Marionette.Toolkit.App);
       });
@@ -243,7 +242,7 @@ describe('App Manager', function() {
     });
 
     it('should return are registered childApps', function() {
-      var childAppKeys = _.keys(this.myApp.getChildApps());
+      const childAppKeys = _.keys(this.myApp.getChildApps());
       expect(childAppKeys).to.have.length(3);
       expect(childAppKeys).to.eql(_.keys(this.childApps));
     });
@@ -256,7 +255,7 @@ describe('App Manager', function() {
 
     describe('with existing childApp', function() {
       it('should return childApp object', function() {
-        var existingChildApp = this.myApp._childApps.cA1;
+        const existingChildApp = this.myApp._childApps.cA1;
 
         expect(this.myApp.getChildApp('cA1')).to.eql(existingChildApp);
       });

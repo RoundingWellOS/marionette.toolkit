@@ -1,4 +1,4 @@
-var config = require('../../package.json').babelBoilerplateOptions;
+const config = require('../../package.json').babelBoilerplateOptions;
 
 require('backbone').$ = require('jquery');
 
