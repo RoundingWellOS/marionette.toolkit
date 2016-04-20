@@ -1,5 +1,5 @@
-var gulp = require('gulp');
-var $ = require('gulp-load-plugins')();
+const gulp = require('gulp');
+const $ = require('gulp-load-plugins')();
 const fs = require('fs');
 const del = require('del');
 const glob = require('glob');
@@ -13,6 +13,9 @@ const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
 const Promise = require('bluebird');
 const _ = require('underscore');
+const eslint = require('gulp-eslint');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
 
 const manifest = require('./package.json');
 const config = manifest.babelBoilerplateOptions;
@@ -30,38 +33,24 @@ gulp.task('clean-tmp', function(cb) {
   del(['tmp'], cb);
 });
 
-// Send a notification when JSHint fails,
-// so that you know your changes didn't build
-function jshintNotify(file) {
-  if (!file.jshint) { return; }
-  return file.jshint.success ? false : 'JSHint failed';
-}
+const onError = notify.onError('Error: <%= error.message %>');
 
-function jscsNotify(file) {
-  if (!file.jscs) { return; }
-  return file.jscs.success ? false : 'JSRC failed';
+function lint(files, options) {
+  return gulp.src(files)
+    .pipe(plumber(onError))
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failOnError());
 }
 
 // Lint our source code
 gulp.task('lint-src', function() {
-  return gulp.src(['src/**/*.js'])
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.notify(jshintNotify))
-    .pipe($.jscs())
-    .pipe($.notify(jscsNotify))
-    .pipe($.jshint.reporter('fail'));
+  return lint(['src/**/*.js']);
 });
 
 // Lint our test code
 gulp.task('lint-test', function() {
-  return gulp.src(['test/**/*.js'])
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.notify(jshintNotify))
-    .pipe($.jscs())
-    .pipe($.notify(jscsNotify))
-    .pipe($.jshint.reporter('fail'));
+  return lint(['test/**/*.js'], { configPath: './test/.eslintrc' });
 });
 
 function getBanner() {
