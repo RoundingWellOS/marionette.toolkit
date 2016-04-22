@@ -23,7 +23,7 @@
     "camelcase": 2,
     "comma-spacing": [2, {"before": false, "after": true}],
     "comma-style": 2,
-    "complexity": [2, 11],  // FIXME: Ideally this could be reduced to 5
+    "complexity": [2, 5],
     "computed-property-spacing": [2, "never"],
     "curly": [ 2, "multi-line" ],
     "dot-location": [2, "property"],
