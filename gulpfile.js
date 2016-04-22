@@ -1,17 +1,10 @@
 const gulp = require('gulp');
 const $ = require('gulp-load-plugins')();
 const del = require('del');
-const file = require('gulp-file');
-const filter = require('gulp-filter');
-const rename = require('gulp-rename');
-const uglify = require('gulp-uglify');
 const path = require('path');
 const isparta = require('isparta');
 const Promise = require('bluebird');
 const _ = require('underscore');
-const eslint = require('gulp-eslint');
-const plumber = require('gulp-plumber');
-const notify = require('gulp-notify');
 const rollup = require('rollup').rollup;
 const multiEntry = require('rollup-plugin-multi-entry');
 const nodeResolve = require('rollup-plugin-node-resolve');
@@ -37,14 +30,14 @@ gulp.task('clean-tmp', function(cb) {
   del(['tmp'], cb);
 });
 
-const onError = notify.onError('Error: <%= error.message %>');
+const onError = $.notify.onError('Error: <%= error.message %>');
 
 function lint(files) {
   return gulp.src(files)
-    .pipe(plumber(onError))
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failOnError());
+    .pipe($.plumber(onError))
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError());
 }
 
 // Lint our source code
@@ -108,19 +101,19 @@ function _buildLib(entryFileName, destFolder, expFileName, expVarName, isPackage
   return bundleCode(entryFileName).then(gen => {
     if(isPackage) gen.code.replace('./state-class', 'marionette.toolkit.state-class');
 
-    return file(`${ expFileName }.js`, gen.code, { src: true })
+    return $.file(`${ expFileName }.js`, gen.code, { src: true })
       .on('error', function(err) {
         console.log(err);
         this.emit('end');
       })
-      .pipe(plumber())
+      .pipe($.plumber())
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.sourcemaps.write('./'))
       .pipe(gulp.dest(destFolder))
-      .pipe(filter(['*', '!**/*.js.map']))
-      .pipe(rename(`${ expFileName }.min.js`))
+      .pipe($.filter(['*', '!**/*.js.map']))
+      .pipe($.rename(`${ expFileName }.min.js`))
       .pipe($.sourcemaps.init({ loadMaps: true }))
-      .pipe(uglify({
+      .pipe($.uglify({
         preserveComments: 'license'
       }))
       .pipe($.sourcemaps.write('./'))
