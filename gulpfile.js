@@ -59,14 +59,14 @@ gulp.task('lint-test', function() {
 
 function getBanner() {
   const banner = ['/**',
-    ' * <%= name %> - <%= description %>',
-    ' * @version v<%= version %>',
-    ' * @link <%= homepage %>',
-    ' * @license <%= license %>',
+    ` * ${ manifest.name } - ${ manifest.description }`,
+    ` * @version v${ manifest.version }`,
+    ` * @link ${ manifest.homepage }`,
+    ` * @license ${ manifest.license }`,
     ' */',
     ''].join('\n');
 
-  return _.template(banner)(manifest);
+  return banner;
 }
 
 function _generate(bundle) {
