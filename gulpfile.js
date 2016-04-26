@@ -62,12 +62,12 @@ function getBanner() {
   return banner;
 }
 
-function _generate(bundle) {
+function _generate(bundle, expVarName) {
   const intro = getBanner();
 
   return bundle.generate({
     format: 'umd',
-    moduleName: config.exportVarName,
+    moduleName: expVarName,
     sourceMap: true,
     banner: intro,
     globals: {
@@ -78,7 +78,7 @@ function _generate(bundle) {
   });
 }
 
-function bundleCode(entryFileName) {
+function bundleCode(entryFileName, expVarName) {
   return rollup({
     entry: `src/${ entryFileName }.js`,
     external: ['underscore', 'backbone', 'backbone.marionette'],
@@ -90,17 +90,15 @@ function bundleCode(entryFileName) {
       })
     ]
   }).then(function(bundle) {
-    return _generate(bundle);
+    return _generate(bundle, expVarName);
   }).then(gen => {
     gen.code += `\n//# sourceMappingURL=${ gen.map.toUrl() }`;
     return gen;
   });
 }
 
-function _buildLib(entryFileName, destFolder, expFileName, expVarName, isPackage) {
-  return bundleCode(entryFileName).then(gen => {
-    if(isPackage) gen.code.replace('./state-class', 'marionette.toolkit.state-class');
-
+function _buildLib(entryFileName, destFolder, expFileName, expVarName) {
+  return bundleCode(entryFileName, expVarName).then(function(gen) {
     return $.file(`${ expFileName }.js`, gen.code, { src: true })
       .on('error', function(err) {
         console.log(err);
