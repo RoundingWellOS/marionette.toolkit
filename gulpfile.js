@@ -97,6 +97,8 @@ function bundleCode(entryFileName, expVarName) {
 
 function _buildLib(entryFileName, destFolder, expFileName, expVarName) {
   return bundleCode(entryFileName, expVarName).then(function(gen) {
+    gen.code = gen.code.replace('<%VERSION%>', manifest.version);
+
     return $.file(`${ expFileName }.js`, gen.code, { src: true })
       .on('error', function(err) {
         console.log(err);
