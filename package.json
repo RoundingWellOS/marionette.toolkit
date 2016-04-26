@@ -73,12 +73,7 @@
   },
   "babelBoilerplateOptions": {
     "entryFileName": "marionette.toolkit",
-    "exportVarName": "Marionette.Toolkit",
-    "exportPackageNames": {
-      "App": "app",
-      "Component": "component",
-      "StateClass": "state-class"
-    }
+    "exportVarName": "Marionette.Toolkit"
   },
   "peerDependencies": {
     "backbone.marionette": "^2.1.0",

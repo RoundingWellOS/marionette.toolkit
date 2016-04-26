@@ -3,8 +3,6 @@ const $ = require('gulp-load-plugins')();
 const del = require('del');
 const path = require('path');
 const isparta = require('isparta');
-const Promise = require('bluebird');
-const _ = require('underscore');
 const rollup = require('rollup').rollup;
 const multiEntry = require('rollup-plugin-multi-entry');
 const nodeResolve = require('rollup-plugin-node-resolve');
@@ -119,41 +117,8 @@ function _buildLib(entryFileName, destFolder, expFileName, expVarName) {
   });
 }
 
-// Build two versions of the library
 gulp.task('build-lib', ['lint-src', 'clean'], function() {
   return _buildLib(config.entryFileName, destinationFolder, exportFileName, config.exportVarName);
-});
-
-function _buildPackage(destFolder, entryName, exportName) {
-  const data = {
-    version: manifest.version,
-    exportVarName: exportName,
-    entryName: entryName,
-    dependencies: JSON.stringify(manifest.dependencies, null, 4)
-  };
-
-  gulp.src('./packages/LICENSE')
-    .pipe(gulp.dest(destFolder));
-
-  gulp.src('./packages/README.md')
-    .pipe($.template(data))
-    .pipe(gulp.dest(destFolder));
-
-  gulp.src('./packages/package.json.template')
-    .pipe($.template(data))
-    .pipe($.rename('package.json'))
-    .pipe(gulp.dest(destFolder));
-}
-
-gulp.task('build-packages', ['lint-src', 'clean'], function() {
-  const tasks = _.map(config.exportPackageNames, function(entryName, exportName) {
-    const destFolder = `./packages/${ exportName }/`;
-    const exportVarName = `Marionette.Toolkit.${ exportName }`;
-    return _buildLib(entryName, destFolder, exportName, exportVarName, true)
-      .then(_.partial(_buildPackage, destFolder, entryName, exportName));
-  });
-
-  return Promise.all(tasks);
 });
 
 function bundleTest() {
@@ -222,7 +187,7 @@ gulp.task('browser-bundle', ['lint-src', 'lint-test'], bundleTest);
 
 gulp.task('test-browser', ['browser-bundle'], browserWatch);
 
-gulp.task('build', ['build-lib', 'build-packages']);
+gulp.task('build', ['build-lib']);
 
 // An alias of test
 gulp.task('default', ['test']);
