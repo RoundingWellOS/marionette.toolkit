@@ -7,8 +7,7 @@
     "test": "gulp",
     "test-browser": "gulp test-browser",
     "build": "gulp build",
-    "coverage": "gulp coverage",
-    "deploy": "./ship.sh"
+    "coverage": "gulp coverage"
   },
   "repository": {
     "type": "git",
