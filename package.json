@@ -80,9 +80,9 @@
       "StateClass": "state-class"
     }
   },
-  "dependencies": {
-    "backbone.marionette": "2.4.5",
-    "backbone": "1.3.2",
-    "underscore": "^1.4.4"
+  "peerDependencies": {
+    "backbone.marionette": "^2.1.0",
+    "backbone": "^1.0.0",
+    "underscore": "^1.8.3"
   }
 }
