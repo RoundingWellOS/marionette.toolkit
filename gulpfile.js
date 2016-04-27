@@ -100,10 +100,6 @@ function _buildLib(entryFileName, destFolder, expFileName, expVarName) {
     gen.code = gen.code.replace('<%VERSION%>', manifest.version);
 
     return $.file(`${ expFileName }.js`, gen.code, { src: true })
-      .on('error', function(err) {
-        console.log(err);
-        this.emit('end');
-      })
       .pipe($.plumber())
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.sourcemaps.write('./'))
