@@ -1,3 +1,7 @@
+#### v0.4.2
+
+* Deprecate modularized classes.
+
 #### v0.4.1
 
 * Updated underscore and backbone dependencies.

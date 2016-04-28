@@ -1,6 +1,6 @@
 {
   "name": "marionette.toolkit.component",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Marionette.Toolkit’s `Component` as a module.",
   "main": "./Component.js",
   "keywords": [

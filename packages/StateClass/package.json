@@ -1,6 +1,6 @@
 {
   "name": "marionette.toolkit.state-class",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Marionette.Toolkit’s `StateClass` as a module.",
   "main": "./StateClass.js",
   "keywords": [

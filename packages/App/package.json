@@ -1,6 +1,6 @@
 {
   "name": "marionette.toolkit.app",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Marionette.Toolkit’s `App` as a module.",
   "main": "./App.js",
   "keywords": [
