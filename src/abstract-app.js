@@ -11,7 +11,7 @@ import StateClass from './state-class';
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var AbstractApp = StateClass.extend({
+const AbstractApp = StateClass.extend({
 
   /**
    * Internal flag indiciate when `App` has started but has not yet stopped.
@@ -77,7 +77,7 @@ var AbstractApp = StateClass.extend({
 
     _.bindAll(this, 'start', 'stop');
 
-    var pickOptions = [
+    const pickOptions = [
       'startWithParent',
       'stopWithParent',
       'startAfterInitialized',
@@ -231,7 +231,7 @@ var AbstractApp = StateClass.extend({
    * @method _stopRunningEvents
    * @memberOf AbstractApp
    */
-  _stopRunningEvents: function(){
+  _stopRunningEvents: function() {
     _.each(this._runningEvents, function(args) {
       this.off.apply(this, args);
     }, this);
@@ -244,7 +244,7 @@ var AbstractApp = StateClass.extend({
    * @method _stopRunningListeners
    * @memberOf AbstractApp
    */
-  _stopRunningListeners: function(){
+  _stopRunningListeners: function() {
     _.each(this._runningListeningTo, function(args) {
       this.stopListening.apply(this, args);
     }, this);
@@ -293,7 +293,7 @@ var AbstractApp = StateClass.extend({
    * @memberOf AbstractApp
    * @returns {AbstractApp}
    */
-  listenToOnce: function(){
+  listenToOnce: function() {
     if(this._isRunning) {
       this._runningListeningTo = (this._runningListeningTo || []);
       this._runningListeningTo.push(arguments);

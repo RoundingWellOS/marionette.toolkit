@@ -10,7 +10,7 @@ import AbstractApp from './abstract-app';
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var App = AbstractApp.extend({
+const App = AbstractApp.extend({
 
   /**
    * @public
@@ -41,9 +41,9 @@ var App = AbstractApp.extend({
     // The child apps should be handled while the app is running;
     // After start, before stop, and before destroy.
     this.on({
-      'start'          : this._startChildApps,
-      'before:stop'    : this._stopChildApps,
-      'before:destroy' : this._destroyChildApps
+      'start': this._startChildApps,
+      'before:stop': this._stopChildApps,
+      'before:destroy': this._destroyChildApps
     });
 
     AbstractApp.call(this, options);
@@ -57,10 +57,9 @@ var App = AbstractApp.extend({
    * @memberOf App
    */
   _initChildApps: function(options) {
-    var childApps = this.childApps;
+    let childApps = this.childApps;
 
     if(childApps) {
-
       if(_.isFunction(childApps)) {
         childApps = childApps.call(this, options);
       }
@@ -124,8 +123,8 @@ var App = AbstractApp.extend({
    * @returns {App}
    */
   _buildAppFromObject: function(appConfig) {
-    var AppClass = appConfig.AppClass;
-    var options = _.omit(appConfig, 'AppClass');
+    const AppClass = appConfig.AppClass;
+    const options = _.omit(appConfig, 'AppClass');
 
     return this.buildApp(AppClass, options);
   },
@@ -178,7 +177,7 @@ var App = AbstractApp.extend({
     if(this._childApps[appName]) {
       throw new Marionette.Error({
         name: 'DuplicateChildAppError',
-        message: 'A child App with name "' + appName + '" has already been added.'
+        message: `A child App with name "${ appName }" has already been added.`
       });
     }
   },
@@ -214,9 +213,9 @@ var App = AbstractApp.extend({
   addChildApp: function(appName, AppClass, options) {
     this._ensureAppIsUnique(appName);
 
-    var childApp = this._buildApp(AppClass, options);
+    const childApp = this._buildApp(AppClass, options);
 
-    if(!childApp){
+    if(!childApp) {
       throw new Marionette.Error({
         name: 'AddChildAppError',
         message: 'App build failed.  Incorrect configuration.'
@@ -258,7 +257,7 @@ var App = AbstractApp.extend({
    * @memberOf App
    * @returns {Array}
    */
-  getChildApps: function(){
+  getChildApps: function() {
     return _.clone(this._childApps);
   },
 
@@ -298,8 +297,8 @@ var App = AbstractApp.extend({
    * @memberOf App
    * @returns {Array}
    */
-  removeChildApps: function(){
-    var childApps = this.getChildApps();
+  removeChildApps: function() {
+    const childApps = this.getChildApps();
 
     _.each(this._childApps, function(childApp, appName) {
       this.removeChildApp(appName);
@@ -322,7 +321,7 @@ var App = AbstractApp.extend({
   removeChildApp: function(appName, options) {
     options = _.extend({}, options);
 
-    var childApp = this.getChildApp(appName);
+    const childApp = this.getChildApp(appName);
 
     if(!childApp) {
       return;

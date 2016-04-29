@@ -8,16 +8,16 @@ import Component from './component';
  * @module Toolkit
  */
 
-var previousToolkit = Marionette.Toolkit;
+const previousToolkit = Marionette.Toolkit;
 
-var Toolkit = Marionette.Toolkit = {};
+const Toolkit = Marionette.Toolkit = {};
 
 Toolkit.noConflict = function() {
   Marionette.Toolkit = previousToolkit;
   return this;
 };
 
-Toolkit.VERSION = '<%= version %>';
+Toolkit.VERSION = '<%VERSION%>';
 
 Toolkit.StateClass = StateClass;
 
