@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - "4"
+sudo: false
+cache:
+  directories:
+    - node_modules
 env:
   matrix:
     - UNDERSCORE=1.6 BACKBONE=1.1 MARIONETTE=2.2
