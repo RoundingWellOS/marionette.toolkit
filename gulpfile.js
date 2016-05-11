@@ -154,7 +154,7 @@ function _registerBabel() {
 
 gulp.task('coverage', ['lint-src', 'lint-test'], function(done) {
   _registerBabel();
-  gulp.src(['src/*.js'])
+  gulp.src(['src/**/*.js'])
     .pipe($.babelIstanbul())
     .pipe($.babelIstanbul.hookRequire())
     .on('finish', function() {
