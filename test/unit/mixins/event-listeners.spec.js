@@ -1,4 +1,4 @@
-describe('App-running-events', function() {
+describe('EventListenersMixin', function() {
   beforeEach(function() {
     this.fooStub = this.sinon.stub();
     this.barStub = this.sinon.stub();
