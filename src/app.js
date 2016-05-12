@@ -221,7 +221,6 @@ const App = Marionette.Object.extend({
     this._isDestroyed = true;
 
     this.stop();
-    this.destroyState();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
   }

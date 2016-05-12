@@ -13,7 +13,6 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 * [StateMixin API](#statemixin-api)
   * [Setting State `setState`](#setting-state)
   * [Getting State `getState`](#getting-state)
-  * [Destroying State `destroy`](#destroying-state)
 
 ### Using StateMixin
 
@@ -177,32 +176,4 @@ myStateClass.getState('foo');
 
 // returns myStateClass's MyStateModel instance.
 myStateClass.getState();
-```
-
-### Destroying State
-
-`StateMixin` has a `destroyState` method that unbinds the events of the `StateModel`.
-
-```js
-var MyStateModel = Backbone.Model.extend({
-  initialize: function(){
-    this.on('change', function(){
-      console.log('I changed!');
-    });
-  }
-});
-
-var MyToolKitApp = Marionette.Toolkit.App.extend({
-  StateModel: MyStateModel
-});
-
-var myToolKitApp = new MyToolKitApp();
-
-// This will console log "I changed!"
-myToolKitApp.setState('foo', 'bar');
-
-myToolKitApp.destroyState();
-
-// This will not log anything to the console
-myToolKitApp.setState('foo', 'baz');
 ```

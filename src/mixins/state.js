@@ -34,6 +34,8 @@ export default {
 
     // Bind events from the _stateModel defined in stateEvents hash
     this.bindEntityEvents(this._stateModel, _.result(this, 'stateEvents'));
+
+    this.on('destroy', this._destroyState);
   },
 
   /**
@@ -92,10 +94,10 @@ export default {
   /**
    * Clean up any listeners on the _stateModel.
    *
-   * @public
-   * @method destroyState
+   * @private
+   * @method _destroyState
    */
-  destroyState() {
+  _destroyState() {
     this._stateModel.stopListening();
   }
 };

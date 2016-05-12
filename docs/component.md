@@ -379,5 +379,4 @@ buildView: function(ViewClass, viewOptions){
 ### Component `destroy`
 
 Calling `destroy` will empty the `Component`'s `region` and destroy the `Component`.
-Destroying the `Component` calls `destroyState` on the [`StateMixin`](./mixin/state.md#destroying-state)
 A destroyed `Component` instance should not be reused.
