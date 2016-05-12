@@ -307,6 +307,8 @@ const Component = Marionette.Object.extend({
 
     this._shouldDestroy = true;
 
+    this.destroyState();
+
     this._destroy(options);
   }
 });

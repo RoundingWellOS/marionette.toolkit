@@ -1,10 +1,10 @@
 # Marionette.Toolkit.Component
 
 `Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component).
-It is an extension of [`StateClass`](./state-class.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
+It mixes in [`StateClass`](./mixins/state-class.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
 The Component provides a consistent interface for which to package state-view-logic.
 
-## Documentation Index
+## Documentation Index(#lifecycle-settings)
 * [Using a Component](#using-a-component)
 * [Component's `ViewClass`](#components-viewclass)
   * [Component's `viewEventPrefix`](#components-vieweventprefix)
@@ -379,5 +379,5 @@ buildView: function(ViewClass, viewOptions){
 ### Component `destroy`
 
 Calling `destroy` will empty the `Component`'s `region` and destroy the `Component`.
-Destroying the `Component` calls `destroy` on the [`StateClass`](./state-class.md#destroying-a-stateclass)
+Destroying the `Component` calls `destroyState` on the [`StateMixin`](./mixin/state.md#destroying-state)
 A destroyed `Component` instance should not be reused.
