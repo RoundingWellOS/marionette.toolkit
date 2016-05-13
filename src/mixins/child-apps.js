@@ -15,6 +15,7 @@ export default {
    * @constructs ChildApps
    * @param {Object} [options] - Settings for the ChildApps.
    * @param {Object} [options.childApps] - Hash for setting up child apps.
+   * @param {Object} [options.childAppOptions] - Hash of options passed to every child app.
    *
    * ```js
    * childApps: {
@@ -30,7 +31,7 @@ export default {
   _initChildApps(options = {}) {
     this._childApps = {};
 
-    this.mergeOptions(options, ['childApps']);
+    this.mergeOptions(options, ['childApps', 'childAppOptions']);
 
     let childApps = this.childApps;
 
@@ -147,6 +148,8 @@ export default {
    * @returns {App}
    */
   buildApp(AppClass, options) {
+    options = _.extend({}, options, this.childAppOptions);
+
     return new AppClass(options);
   },
 
