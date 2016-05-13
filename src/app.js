@@ -1,343 +1,231 @@
 import _ from 'underscore';
 import Marionette from 'backbone.marionette';
-import AbstractApp from './abstract-app';
+import StateMixin from './mixins/state';
+import ChildAppsMixin from './mixins/child-apps';
+import EventListenersMixin from './mixins/event-listeners';
 
 /**
- * AbstractApp with an "App Manager" functionality mixed in for adding and removing child `App`s.
+ * Marionette.Object with an `initialize` / `start` / `stop` / `destroy` lifecycle.
  *
  * @public
  * @class App
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var App = AbstractApp.extend({
+const App = Marionette.Object.extend({
+
+  /**
+   * Internal flag indiciate when `App` has started but has not yet stopped.
+   *
+   * @private
+   * @type {Boolean}
+   * @default false
+   */
+  _isRunning: false,
+
+  /**
+   * Internal flag indiciate when `App` has been destroyed
+   *
+   * @private
+   * @type {Boolean}
+   * @default false
+   */
+  _isDestroyed: false,
+
+  /**
+   * Set to true if a parent `App` should not be able to destroy this `App`.
+   *
+   * @type {Boolean|Function}
+   * @default false
+   */
+  preventDestroy: false,
+
+  /**
+   * Set to true if `App` should be started after it is initialized.
+   *
+   * @type {Boolean|Function}
+   * @default false
+   */
+  startAfterInitialized: false,
+
+  /**
+   * Set to true if `App` should be started after its parent starts.
+   *
+   * @type {Boolean|Function}
+   * @default false
+   */
+  startWithParent: false,
+
+  /**
+   * Set to false if `App` should not stop after its parent stops.
+   *
+   * @type {Boolean|Function}
+   * @default true
+   */
+  stopWithParent: true,
 
   /**
    * @public
    * @constructs App
    * @param {Object} [options] - Settings for the App.
-   * @param {Object} [options.childApps] - Hash for setting up child apps.
-   *
-   * ```js
-   * childApps: {
-   *   appName: {
-   *     AppClass: MyChildAppClass,
-   *     fooOption: true,
-   *     startWithParent: true
-   *   },
-   *   barApp: MyOtherChildAppClass
-   * }
-   * ```
+   * @param {Boolean} [options.startWithParent]
+   * @param {Boolean} [options.stopWithParent]
+   * @param {Boolean} [options.startAfterInitialized]
+   * @param {Boolean} [options.preventDestroy]
    */
-  constructor: function(options) {
-    options = _.extend({}, options);
+  constructor(options = {}) {
+    _.bindAll(this, 'start', 'stop');
 
-    this._childApps = {};
+    const pickOptions = [
+      'startWithParent',
+      'stopWithParent',
+      'startAfterInitialized',
+      'preventDestroy'
+    ];
 
-    _.extend(this, _.pick(options, ['childApps']));
+    this.mergeOptions(options, pickOptions);
 
+    this.initState(options);
     this._initChildApps(options);
 
-    // The child apps should be handled while the app is running;
-    // After start, before stop, and before destroy.
-    this.on({
-      'start'          : this._startChildApps,
-      'before:stop'    : this._stopChildApps,
-      'before:destroy' : this._destroyChildApps
-    });
+    Marionette.Object.call(this, options);
 
-    AbstractApp.call(this, options);
-  },
-
-  /**
-   * Initializes `childApps` option
-   *
-   * @private
-   * @method _initChildApps
-   * @memberOf App
-   */
-  _initChildApps: function(options) {
-    var childApps = this.childApps;
-
-    if(childApps) {
-
-      if(_.isFunction(childApps)) {
-        childApps = childApps.call(this, options);
-      }
-
-      this.addChildApps(childApps);
+    if(_.result(this, 'startAfterInitialized')) {
+      this.start(options);
     }
   },
 
   /**
-   * Starts `childApps` if allowed by child
+   * Internal helper to verify if `App` has been destroyed
    *
    * @private
-   * @method _startChildApps
+   * @method _ensureAppIsIntact
    * @memberOf App
+   * @throws AppDestroyedError - Thrown if `App` has already been destroyed
    */
-  _startChildApps: function() {
-    _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, 'startWithParent')) {
-        childApp.start();
-      }
-    });
-  },
-
-  /**
-   * Stops `childApps` if allowed by child
-   *
-   * @private
-   * @method _stopChildApps
-   * @memberOf App
-   */
-  _stopChildApps: function() {
-    _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, 'stopWithParent')) {
-        childApp.stop();
-      }
-    });
-  },
-
-  /**
-   * Destroys `childApps` if allowed by child
-   *
-   * @private
-   * @method _destroyChildApps
-   * @memberOf App
-   */
-  _destroyChildApps: function() {
-    _.each(this._childApps, function(childApp) {
-      if(!_.result(childApp, 'preventDestroy')) {
-        childApp.destroy();
-      }
-    });
-  },
-
-  /**
-   * Internal helper to instantiate and `App` from on `Object`
-   *
-   * @private
-   * @method _buildAppFromObject
-   * @memberOf App
-   * @param {Object} appConfig - `AppClass` and any other option for the `App`
-   * @returns {App}
-   */
-  _buildAppFromObject: function(appConfig) {
-    var AppClass = appConfig.AppClass;
-    var options = _.omit(appConfig, 'AppClass');
-
-    return this.buildApp(AppClass, options);
-  },
-
-  /**
-   * Helper for building an App and return it
-   *
-   * @private
-   * @method _buildApp
-   * @memberOf App
-   * @param {App} AppClass - An App Class
-   * @param {Object} AppClass - Optionally passed as an appConfig Object
-   * @param {Object} [options] - options for the AppClass
-   * @returns {App}
-   */
-  _buildApp: function(AppClass, options) {
-    if(_.isFunction(AppClass)) {
-      return this.buildApp(AppClass, options);
-    }
-    if(_.isObject(AppClass)) {
-      return this._buildAppFromObject(AppClass);
-    }
-  },
-
-  /**
-   * Build an App and return it
-   * Override for dynamic App building
-   *
-   * @public
-   * @method buildApp
-   * @memberOf App
-   * @param {App} [AppClass] - An App Class
-   * @param {Object} [options] - options for the AppClass
-   * @returns {App}
-   */
-  buildApp: function(AppClass, options) {
-    return new AppClass(options);
-  },
-
-  /**
-   * Internal helper to verify `appName` is unique and not in use
-   *
-   * @private
-   * @method _ensureAppIsUnique
-   * @memberOf App
-   * @param {String} appName - Name of app to test
-   * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
-   */
-  _ensureAppIsUnique: function(appName) {
-    if(this._childApps[appName]) {
+  _ensureAppIsIntact() {
+    if(this._isDestroyed) {
       throw new Marionette.Error({
-        name: 'DuplicateChildAppError',
-        message: 'A child App with name "' + appName + '" has already been added.'
+        name: 'AppDestroyedError',
+        message: 'App has already been destroyed and cannot be used.'
       });
     }
   },
 
   /**
-   * Add child `App`s to this `App`
+   * Gets the value of internal `_isRunning` flag
    *
    * @public
-   * @method addChildApps
+   * @method isRunning
    * @memberOf App
-   * @param {Object} childApps - Hash of names and `AppClass` or `appConfig`
+   * @returns {Boolean}
    */
-  addChildApps: function(childApps) {
-    _.each(childApps, function(childApp, appName) {
-      this.addChildApp(appName, childApp);
-    }, this);
+  isRunning() {
+    return this._isRunning;
   },
 
   /**
-   * Build's childApp and registers it with this App
-   * Starts the childApp, if this app is running and child is `startWithParent`
+   * Sets the app lifecycle to running.
    *
    * @public
-   * @method addChildApp
+   * @method start
    * @memberOf App
-   * @param {String} appName - Name of App to register
-   * @param {App} AppClass - An App Class
-   * @param {Object} AppClass - Optionally passed as an appConfig Object
-   * @param {Object} [options] - options for the AppClass
-   * @throws AddChildAppError - Thrown if no childApp could be built from params
-   * @returns {App}
+   * @param {Object} [options] - Settings for the App passed through to events
+   * @event AbstractApp#before:start - passes options
+   * @returns {AbstractApp}
    */
-  addChildApp: function(appName, AppClass, options) {
-    this._ensureAppIsUnique(appName);
+  start(options) {
+    this._ensureAppIsIntact();
 
-    var childApp = this._buildApp(AppClass, options);
-
-    if(!childApp){
-      throw new Marionette.Error({
-        name: 'AddChildAppError',
-        message: 'App build failed.  Incorrect configuration.'
-      });
+    if(this._isRunning) {
+      return this;
     }
 
-    childApp._name = appName;
+    this.triggerMethod('before:start', options);
 
-    this._childApps[appName] = childApp;
+    this._isRunning = true;
 
-    // When the app is destroyed remove the cached app.
-    childApp.on('destroy', _.partial(this._removeChildApp, appName), this);
+    this.triggerStart(options);
 
-    if(this.isRunning() && _.result(childApp, 'startWithParent')) {
-      childApp.start();
+    return this;
+  },
+
+  /**
+   * Triggers start event.
+   * Override to introduce async start
+   *
+   * @public
+   * @method triggerStart
+   * @memberOf App
+   * @param {Object} [options] - Settings for the App passed through to events
+   * @event AbstractApp#start - passes options
+   * @returns
+   */
+  triggerStart(options) {
+    this.triggerMethod('start', options);
+  },
+
+  /**
+   * Sets the app lifecycle to not running.
+   * Removes any listeners added during the running state
+   *
+   * @public
+   * @method stop
+   * @memberOf App
+   * @param {Object} [options] - Settings for the App passed through to events
+   * @event AbstractApp#before:stop - passes options
+   * @event AbstractApp#stop - passes options
+   * @returns {AbstractApp}
+   */
+  stop(options) {
+    if(!this._isRunning) {
+      return this;
     }
 
-    return childApp;
+    this.triggerMethod('before:stop', options);
+
+    this._isRunning = false;
+
+    this.triggerMethod('stop', options);
+
+    this._stopRunningListeners();
+    this._stopRunningEvents();
+
+    return this;
   },
 
   /**
-   * Returns registered child `App`s name
+   * Gets the value of internal `_isDestroyed` flag
    *
    * @public
-   * @method getName
+   * @method isDestroyed
    * @memberOf App
-   * @returns {String}
+   * @returns {Boolean}
    */
-  getName: function() {
-    return this._name;
+  isDestroyed() {
+    return this._isDestroyed;
   },
 
-
   /**
-   * Returns registered child `App`s array
+   * Stops the `App` and sets it destroyed.
    *
    * @public
-   * @method getChildApps
+   * @method destroy
    * @memberOf App
-   * @returns {Array}
    */
-  getChildApps: function(){
-    return _.clone(this._childApps);
-  },
-
-  /**
-   * Returns registered child `App`
-   *
-   * @public
-   * @method getChildApp
-   * @memberOf App
-   * @param {String} appName - Name of App to retrieve
-   * @returns {App}
-   */
-  getChildApp: function(appName) {
-    return this._childApps[appName];
-  },
-
-  /**
-   * Internal helper.  Unregisters child `App`
-   *
-   * @private
-   * @method _removeChildApp
-   * @memberOf App
-   * @param {String} appName - Name of App to unregister
-   * @returns {App}
-   */
-  _removeChildApp: function(appName) {
-    delete this._childApps[appName]._name;
-    delete this._childApps[appName];
-  },
-
-  /**
-   * Removes all childApps and returns them.
-   * The return is useful if any app is using `preventDestroy`
-   *
-   * @public
-   * @method removeChildApps
-   * @memberOf App
-   * @returns {Array}
-   */
-  removeChildApps: function(){
-    var childApps = this.getChildApps();
-
-    _.each(this._childApps, function(childApp, appName) {
-      this.removeChildApp(appName);
-    }, this);
-
-    return childApps;
-  },
-
-  /**
-   * Destroys or removes registered child `App` by name
-   * depending on `preventDestroy`
-   *
-   * @public
-   * @method removeChildApp
-   * @memberOf App
-   * @param {String} appName - Name of App to destroy
-   * @param {Object} [options.preventDestroy] - Flag to remove but prevent App destroy
-   * @returns {App}
-   */
-  removeChildApp: function(appName, options) {
-    options = _.extend({}, options);
-
-    var childApp = this.getChildApp(appName);
-
-    if(!childApp) {
+  destroy() {
+    if(this._isDestroyed) {
       return;
     }
 
-    // if preventDestroy simply unregister the child app
-    if(options.preventDestroy || _.result(childApp, 'preventDestroy')) {
-      this._removeChildApp(appName);
-    } else {
-      childApp.destroy();
-    }
+    this._isDestroyed = true;
 
-    return childApp;
+    this.stop();
+
+    Marionette.Object.prototype.destroy.apply(this, arguments);
   }
-
 });
+
+_.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin);
 
 export default App;

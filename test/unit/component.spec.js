@@ -1,15 +1,15 @@
-describe('Marionette.Toolkit.Component', function () {
-  beforeEach(function () {
+describe('Marionette.Toolkit.Component', function() {
+  beforeEach(function() {
     this.setFixtures('<div id="testRegion"></div>');
     this.el = Backbone.$('#testRegion');
     this.myRegion = new Backbone.Marionette.Region({
-      el:this.el
+      el: this.el
     });
   });
 
   // SHOWING A VIEW
-  describe('when showing a component', function () {
-    beforeEach(function () {
+  describe('when showing a component', function() {
+    beforeEach(function() {
       this.beforeShowStub = this.sinon.stub();
       this.showStub = this.sinon.stub();
       this.MyViewClass = Marionette.ItemView.extend({});
@@ -24,29 +24,29 @@ describe('Marionette.Toolkit.Component', function () {
       this.myComponent.on('show', this.showStub, function() {});
     });
 
-    describe('in a specified region "showIn()"', function () {
-      it('should show the component', function () {
+    describe('in a specified region "showIn()"', function() {
+      it('should show the component', function() {
         this.myComponent.showIn(this.myRegion);
         expect(this.myComponent._isShown).to.equal(true);
       });
 
-      it('should fire the before:show methods', function () {
+      it('should fire the before:show methods', function() {
         this.myComponent.showIn(this.myRegion);
         expect(this.beforeShowStub).to.have.been.calledOnce;
       });
 
-      it('should fire the show methods', function () {
+      it('should fire the show methods', function() {
         this.myComponent.showIn(this.myRegion);
         expect(this.showStub).to.have.been.calledOnce;
       });
 
-      it('should throw a "no defined region" error when no region is defined', function () {
+      it('should throw a "no defined region" error when no region is defined', function() {
         expect(_.bind(function() {
           this.myComponent.showIn();
         }, this)).to.throw('Component has no defined region.');
       });
 
-      it('should throw a "already been shown" error if component has been shown', function () {
+      it('should throw a "already been shown" error if component has been shown', function() {
         this.myComponent.showIn(this.myRegion);
         expect(_.bind(function() {
           this.myComponent.showIn(this.myRegion);
@@ -54,8 +54,8 @@ describe('Marionette.Toolkit.Component', function () {
       });
     });
 
-    describe('in a region on the component definition "show()"', function () {
-      it('should show the component', function () {
+    describe('in a region on the component definition "show()"', function() {
+      it('should show the component', function() {
         this.ShowComponent = this.MyComponent.extend({
           region: this.myRegion
         });
@@ -69,8 +69,8 @@ describe('Marionette.Toolkit.Component', function () {
   });
 
   // RENDERING A VIEW WITH renderView()
-  describe('when rendering a view', function () {
-    beforeEach(function () {
+  describe('when rendering a view', function() {
+    beforeEach(function() {
       this.beforeRenderStub = this.sinon.stub();
       this.renderStub = this.sinon.stub();
       this.MyViewClass = Marionette.ItemView;
@@ -86,22 +86,22 @@ describe('Marionette.Toolkit.Component', function () {
       this.myComponent.on('render:view', this.renderStub, function() {});
     });
 
-    it('should fire the before:render:view methods', function () {
+    it('should fire the before:render:view methods', function() {
       this.myComponent.renderView({
         className: 'other-component-class'
       });
       expect(this.beforeRenderStub).to.have.been.calledOnce;
     });
 
-    it('should fire the render:view methods', function () {
+    it('should fire the render:view methods', function() {
       this.myComponent.renderView({
         className: 'other-component-class'
       });
       expect(this.renderStub).to.have.been.calledOnce;
     });
 
-    describe('and checking the currentView', function () {
-      it('should have the correct className on currentView', function () {
+    describe('and checking the currentView', function() {
+      it('should have the correct className on currentView', function() {
         this.myComponent.renderView({
           className: 'my-component-class'
         });
@@ -109,17 +109,17 @@ describe('Marionette.Toolkit.Component', function () {
       });
     });
 
-    describe('with a defined ViewClass', function () {
-      it('should return the correct ViewClass', function () {
+    describe('with a defined ViewClass', function() {
+      it('should return the correct ViewClass', function() {
         this.myComponent.renderView();
-        var test = this.myComponent.currentView;
+        const test = this.myComponent.currentView;
         expect(test).to.be.instanceof(this.MyViewClass);
       });
     });
 
     // The test for mixinOptions()
-    describe('with additional options passed in', function () {
-      it('should put the options on currentView', function () {
+    describe('with additional options passed in', function() {
+      it('should put the options on currentView', function() {
         this.myComponent.renderView({
           foo: 'bar'
         });
@@ -133,8 +133,8 @@ describe('Marionette.Toolkit.Component', function () {
     beforeEach(function() {
       this.MyComponent = Marionette.Toolkit.Component.extend({
         region: this.myRegion,
-        ViewClass: function(options){
-          if(options.foo){
+        ViewClass: function(options) {
+          if(options.foo) {
             return Marionette.ItemView.extend({
               customViewOption: 'bar',
               template: _.template('<div></div>')
@@ -168,9 +168,9 @@ describe('Marionette.Toolkit.Component', function () {
   });
 
   // INSTANTIATING A COMPONENT WITH OPTIONS
-  describe('when instantiating a component', function () {
-    describe('with a customized viewEventPrefix', function () {
-      it('should trigger the correct action as defined', function () {
+  describe('when instantiating a component', function() {
+    describe('with a customized viewEventPrefix', function() {
+      it('should trigger the correct action as defined', function() {
         this.MyComponent = Marionette.Toolkit.Component.extend({
           viewEventPrefix: 'some:prefix',
           viewOptions: {
@@ -181,7 +181,7 @@ describe('Marionette.Toolkit.Component', function () {
         this.myComponent = new this.MyComponent({});
 
         this.myComponent.showIn(this.myRegion);
-        this.myComponent.on('some:prefix:render', function(){
+        this.myComponent.on('some:prefix:render', function() {
           this.testRender = true;
         });
         this.myComponent.currentView.render();
@@ -190,7 +190,7 @@ describe('Marionette.Toolkit.Component', function () {
       });
     });
 
-    describe('with defined viewOptions', function () {
+    describe('with defined viewOptions', function() {
       beforeEach(function() {
         this.MyView = Marionette.ItemView.extend({
           initialize: function(options) {
@@ -199,8 +199,8 @@ describe('Marionette.Toolkit.Component', function () {
         });
       });
 
-      describe('on the view instance', function () {
-        it('should do what...', function () {
+      describe('on the view instance', function() {
+        it('should do what...', function() {
           this.MyComponent = Marionette.Toolkit.Component.extend({
             ViewClass: this.MyView,
             region: this.myRegion,
@@ -215,28 +215,28 @@ describe('Marionette.Toolkit.Component', function () {
         });
       });
 
-      describe('as specified as a function', function () {
-        it('should do what...', function () {
+      describe('as specified as a function', function() {
+        it('should do what...', function() {
           this.MyComponent = Marionette.Toolkit.Component.extend({
-              ViewClass: this.MyView,
-              region: this.myRegion,
-              viewOptions: {
-                foo: 'bar2',
-                template: false
-              }
-            });
-            this.myComponent = new this.MyComponent();
-            this.myComponent.renderView();
-            expect(this.myComponent.currentView.test).to.equal('bar2');
+            ViewClass: this.MyView,
+            region: this.myRegion,
+            viewOptions: {
+              foo: 'bar2',
+              template: false
+            }
+          });
+          this.myComponent = new this.MyComponent();
+          this.myComponent.renderView();
+          expect(this.myComponent.currentView.test).to.equal('bar2');
         });
       });
     });
   });
 
   // DESTROYING COMPONENTS
-  describe('when destroying a component', function () {
-    describe('with a defined region', function () {
-      it('should be destroyed and region emptied', function () {
+  describe('when destroying a component', function() {
+    describe('with a defined region', function() {
+      it('should be destroyed and region emptied', function() {
         this.MyComponent = Marionette.Toolkit.Component.extend({
           region: this.myRegion
         });
@@ -245,15 +245,15 @@ describe('Marionette.Toolkit.Component', function () {
       });
     });
 
-    describe('without a defined region', function () {
-      it('should be destroyed', function () {
+    describe('without a defined region', function() {
+      it('should be destroyed', function() {
         this.myComponent = new Marionette.Toolkit.Component();
         this.myComponent.destroy();
       });
     });
 
-    describe('by showing a new view in the region', function () {
-      beforeEach(function () {
+    describe('by showing a new view in the region', function() {
+      beforeEach(function() {
         this.destroyEvent = this.sinon.stub();
         this.MyComponent = Marionette.Toolkit.Component.extend({
           viewOptions: {
@@ -265,14 +265,14 @@ describe('Marionette.Toolkit.Component', function () {
         this.myComponent.showIn(this.myRegion);
       });
 
-      it('should trigger a destroy event on the component', function () {
+      it('should trigger a destroy event on the component', function() {
         this.myRegion.show(new Marionette.ItemView({
           template: false
         }));
         expect(this.destroyEvent).to.have.been.calledOnce;
       });
 
-      it('should not trigger a destroy event on rendering a view after show', function () {
+      it('should not trigger a destroy event on rendering a view after show', function() {
         this.myComponent.renderView();
         expect(this.destroyEvent).to.have.not.been.called;
       });

@@ -1,21 +1,21 @@
 module.exports = function() {
-  var _ = require('underscore');
-  var Backbone = require('backbone');
-  var $ = require('jquery');
+  const _ = require('underscore');
+  const Backbone = require('backbone');
+  const $ = require('jquery');
   Backbone.$ = $;
-  var Marionette = require('backbone.marionette');
+  const Marionette = require('backbone.marionette');
   require('../../src/marionette.toolkit');
 
   // Set up test div
-  var $testDiv = $('#testDiv');
+  const $testDiv = $('#testDiv');
 
-  var setFixtures = function () {
-    _.each(arguments, function (content) {
+  const setFixtures = function() {
+    _.each(arguments, function(content) {
       $testDiv.append(content);
     });
   };
 
-  var clearFixtures = function () {
+  const clearFixtures = function() {
     $testDiv.empty();
   };
 
@@ -29,8 +29,8 @@ module.exports = function() {
   beforeEach(function() {
     this.sinon = global.sinon.sandbox.create();
     global.stub = this.sinon.stub.bind(this.sinon);
-    global.spy  = this.sinon.spy.bind(this.sinon);
-    this.setFixtures   = setFixtures;
+    global.spy = this.sinon.spy.bind(this.sinon);
+    this.setFixtures = setFixtures;
     this.clearFixtures = clearFixtures;
   });
 

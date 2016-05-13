@@ -1,6 +1,6 @@
 import Marionette from 'backbone.marionette';
 
-import StateClass from './state-class';
+import StateMixin from './mixins/state';
 import App from './app';
 import Component from './component';
 
@@ -8,18 +8,18 @@ import Component from './component';
  * @module Toolkit
  */
 
-var previousToolkit = Marionette.Toolkit;
+const previousToolkit = Marionette.Toolkit;
 
-var Toolkit = Marionette.Toolkit = {};
+const Toolkit = Marionette.Toolkit = {};
 
 Toolkit.noConflict = function() {
   Marionette.Toolkit = previousToolkit;
   return this;
 };
 
-Toolkit.VERSION = '<%= version %>';
+Toolkit.VERSION = '<%VERSION%>';
 
-Toolkit.StateClass = StateClass;
+Toolkit.StateMixin = StateMixin;
 
 Toolkit.App = App;
 

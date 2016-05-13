@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
-import StateClass from './state-class';
+import StateMixin from './mixins/state';
 
 /**
  * Reusable StateClass with View management boilerplate
@@ -11,7 +11,7 @@ import StateClass from './state-class';
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-var Component = StateClass.extend({
+const Component = Marionette.Object.extend({
 
   /**
    * The view class to be managed.
@@ -47,13 +47,13 @@ var Component = StateClass.extend({
    * @param {Object} [options.viewOptions] - Options hash passed to an instantiated ViewClass.
    * @param {Marionette.Region} [options.region] - The region to show the component in.
    */
-  constructor: function(stateAttrs, options){
+  constructor(stateAttrs, options) {
     options = _.extend({}, options);
 
     // Make defaults available to this
     _.extend(this, _.pick(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']));
 
-    StateClass.call(this, options);
+    this.initState(options);
 
     this._setStateDefaults(stateAttrs);
   },
@@ -77,7 +77,7 @@ var Component = StateClass.extend({
    * @memberOf Component
    * @param {Object} [stateAttrs] - Attributes to set on the state model
    */
-  _setStateDefaults: function(stateAttrs){
+  _setStateDefaults(stateAttrs) {
     this.setState(stateAttrs, { silent: true });
   },
 
@@ -91,7 +91,7 @@ var Component = StateClass.extend({
    * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
    * @returns {Component}
    */
-  showIn: function(region, viewOptions) {
+  showIn(region, viewOptions) {
     this.region = region;
 
     this.show(viewOptions);
@@ -112,7 +112,7 @@ var Component = StateClass.extend({
    * @memberOf Component
    * @returns {Component}
    */
-  show: function(viewOptions){
+  show(viewOptions) {
     if(this._isShown) {
       throw new Marionette.Error({
         name: 'ComponentShowError',
@@ -152,21 +152,21 @@ var Component = StateClass.extend({
    * @param {Object} [options] - Options that can be used to determine the ViewClass.
    * @returns {View}
    */
-  _getViewClass: function(options) {
+  _getViewClass(options) {
     options = _.extend({}, options);
 
-    var ViewClass = this.getOption('ViewClass');
+    const ViewClass = this.getOption('ViewClass');
 
-    if (ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
+    if(ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
       return ViewClass;
-    } else if (_.isFunction(ViewClass)) {
+    } else if(_.isFunction(ViewClass)) {
       return ViewClass.call(this, options);
-    } else {
-      throw new Marionette.Error({
-        name: 'InvalidViewClassError',
-        message: '"ViewClass" must be a view class or a function that returns a view class'
-      });
     }
+
+    throw new Marionette.Error({
+      name: 'InvalidViewClassError',
+      message: '"ViewClass" must be a view class or a function that returns a view class'
+    });
   },
 
   /**
@@ -180,12 +180,12 @@ var Component = StateClass.extend({
    * @param {Object} [options] - Options hash mixed into the instantiated ViewClass.
    * @returns {Component}
    */
-  renderView: function(options){
-    var ViewClass = this._getViewClass(options);
+  renderView(options) {
+    const ViewClass = this._getViewClass(options);
 
-    var viewOptions = this.mixinOptions(options);
+    const viewOptions = this.mixinOptions(options);
 
-    var view = this.buildView(ViewClass, viewOptions);
+    const view = this.buildView(ViewClass, viewOptions);
 
     // Attach current built view to component
     this.currentView = view;
@@ -219,14 +219,14 @@ var Component = StateClass.extend({
    * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
    * The instantiated ViewClass.
    */
-  _proxyViewEvents: function(view){
-    var prefix = this.getOption('viewEventPrefix');
+  _proxyViewEvents(view) {
+    const prefix = this.getOption('viewEventPrefix');
 
     view.on('all', function() {
-      var args = _.toArray(arguments);
-      var rootEvent = args[0];
+      const args = _.toArray(arguments);
+      const rootEvent = args[0];
 
-      args[0] = prefix + ':' + rootEvent;
+      args[0] = `${ prefix }:${ rootEvent }`;
       args.splice(1, 0, view);
 
       this.triggerMethod.apply(this, args);
@@ -243,8 +243,8 @@ var Component = StateClass.extend({
    * @param {Object} [options] - Additional options to mixin
    * @returns {Object}
    */
-  mixinOptions: function(options){
-    var viewOptions = _.result(this, 'viewOptions');
+  mixinOptions(options) {
+    const viewOptions = _.result(this, 'viewOptions');
 
     return _.extend({ stateModel: this.getState() }, viewOptions, options);
   },
@@ -262,7 +262,7 @@ var Component = StateClass.extend({
    * @param {Object} [viewOptions] - Options to pass to the View
    * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
    */
-  buildView: function(ViewClass, viewOptions) {
+  buildView(ViewClass, viewOptions) {
     return new ViewClass(viewOptions);
   },
 
@@ -273,9 +273,9 @@ var Component = StateClass.extend({
    * @method _destroy
    * @memberOf Component
    */
-  _destroy: function(){
+  _destroy() {
     if(this._shouldDestroy) {
-      StateClass.prototype.destroy.apply(this, arguments);
+      Marionette.Object.prototype.destroy.apply(this, arguments);
     }
   },
 
@@ -287,11 +287,11 @@ var Component = StateClass.extend({
    * @param {Object} [options] - Options passed to `region.empty`
    * @memberOf Component
    */
-  _emptyRegion: function(options){
-      if(this.region) {
-        this.stopListening(this.region, 'empty');
-        this.region.empty(options);
-      }
+  _emptyRegion(options) {
+    if(this.region) {
+      this.stopListening(this.region, 'empty');
+      this.region.empty(options);
+    }
   },
 
   /**
@@ -302,13 +302,15 @@ var Component = StateClass.extend({
    * @param {Object} [options] - Options passed to `_emptyRegion` and `destroy`
    * @memberOf Component
    */
-  destroy: function(options){
-      this._emptyRegion(options);
+  destroy(options) {
+    this._emptyRegion(options);
 
-      this._shouldDestroy = true;
+    this._shouldDestroy = true;
 
-      this._destroy(options);
+    this._destroy(options);
   }
 });
+
+_.extend(Component.prototype, StateMixin);
 
 export default Component;
