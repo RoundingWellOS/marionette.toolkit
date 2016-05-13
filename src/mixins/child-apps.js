@@ -27,7 +27,7 @@ export default {
    * }
    * ```
    */
-  _initChildApps: function(options = {}) {
+  _initChildApps(options = {}) {
     this._childApps = {};
 
     this.mergeOptions(options, ['childApps']);
@@ -66,7 +66,7 @@ export default {
    * @private
    * @method _startChildApps
    */
-  _startChildApps: function() {
+  _startChildApps() {
     _.each(this._childApps, function(childApp) {
       if(_.result(childApp, 'startWithParent')) {
         childApp.start();
@@ -80,7 +80,7 @@ export default {
    * @private
    * @method _stopChildApps
    */
-  _stopChildApps: function() {
+  _stopChildApps() {
     _.each(this._childApps, function(childApp) {
       if(_.result(childApp, 'stopWithParent')) {
         childApp.stop();
@@ -94,7 +94,7 @@ export default {
    * @private
    * @method _destroyChildApps
    */
-  _destroyChildApps: function() {
+  _destroyChildApps() {
     _.each(this._childApps, function(childApp) {
       if(!_.result(childApp, 'preventDestroy')) {
         childApp.destroy();
@@ -110,7 +110,7 @@ export default {
    * @param {Object} appConfig - `AppClass` and any other option for the `App`
    * @returns {App}
    */
-  _buildAppFromObject: function(appConfig) {
+  _buildAppFromObject(appConfig) {
     const AppClass = appConfig.AppClass;
     const options = _.omit(appConfig, 'AppClass');
 
@@ -127,7 +127,7 @@ export default {
    * @param {Object} [options] - options for the AppClass
    * @returns {App}
    */
-  _buildApp: function(AppClass, options) {
+  _buildApp(AppClass, options) {
     if(_.isFunction(AppClass)) {
       return this.buildApp(AppClass, options);
     }
@@ -146,7 +146,7 @@ export default {
    * @param {Object} [options] - options for the AppClass
    * @returns {App}
    */
-  buildApp: function(AppClass, options) {
+  buildApp(AppClass, options) {
     return new AppClass(options);
   },
 
@@ -158,7 +158,7 @@ export default {
    * @param {String} appName - Name of app to test
    * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
    */
-  _ensureAppIsUnique: function(appName) {
+  _ensureAppIsUnique(appName) {
     if(this._childApps[appName]) {
       throw new Marionette.Error({
         name: 'DuplicateChildAppError',
@@ -174,7 +174,7 @@ export default {
    * @method addChildApps
    * @param {Object} childApps - Hash of names and `AppClass` or `appConfig`
    */
-  addChildApps: function(childApps) {
+  addChildApps(childApps) {
     _.each(childApps, function(childApp, appName) {
       this.addChildApp(appName, childApp);
     }, this);
@@ -193,7 +193,7 @@ export default {
    * @throws AddChildAppError - Thrown if no childApp could be built from params
    * @returns {App}
    */
-  addChildApp: function(appName, AppClass, options) {
+  addChildApp(appName, AppClass, options) {
     this._ensureAppIsUnique(appName);
 
     const childApp = this._buildApp(AppClass, options);
@@ -226,7 +226,7 @@ export default {
    * @method getName
    * @returns {String}
    */
-  getName: function() {
+  getName() {
     return this._name;
   },
 
@@ -238,7 +238,7 @@ export default {
    * @method getChildApps
    * @returns {Array}
    */
-  getChildApps: function() {
+  getChildApps() {
     return _.clone(this._childApps);
   },
 
@@ -250,7 +250,7 @@ export default {
    * @param {String} appName - Name of App to retrieve
    * @returns {App}
    */
-  getChildApp: function(appName) {
+  getChildApp(appName) {
     return this._childApps[appName];
   },
 
@@ -262,7 +262,7 @@ export default {
    * @param {String} appName - Name of App to unregister
    * @returns {App}
    */
-  _removeChildApp: function(appName) {
+  _removeChildApp(appName) {
     delete this._childApps[appName]._name;
     delete this._childApps[appName];
   },
@@ -275,7 +275,7 @@ export default {
    * @method removeChildApps
    * @returns {Array}
    */
-  removeChildApps: function() {
+  removeChildApps() {
     const childApps = this.getChildApps();
 
     _.each(this._childApps, function(childApp, appName) {
@@ -295,7 +295,7 @@ export default {
    * @param {Object} [options.preventDestroy] - Flag to remove but prevent App destroy
    * @returns {App}
    */
-  removeChildApp: function(appName, options) {
+  removeChildApp(appName, options) {
     options = _.extend({}, options);
 
     const childApp = this.getChildApp(appName);

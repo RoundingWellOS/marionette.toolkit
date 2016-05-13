@@ -47,7 +47,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options.viewOptions] - Options hash passed to an instantiated ViewClass.
    * @param {Marionette.Region} [options.region] - The region to show the component in.
    */
-  constructor: function(stateAttrs, options) {
+  constructor(stateAttrs, options) {
     options = _.extend({}, options);
 
     // Make defaults available to this
@@ -77,7 +77,7 @@ const Component = Marionette.Object.extend({
    * @memberOf Component
    * @param {Object} [stateAttrs] - Attributes to set on the state model
    */
-  _setStateDefaults: function(stateAttrs) {
+  _setStateDefaults(stateAttrs) {
     this.setState(stateAttrs, { silent: true });
   },
 
@@ -91,7 +91,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
    * @returns {Component}
    */
-  showIn: function(region, viewOptions) {
+  showIn(region, viewOptions) {
     this.region = region;
 
     this.show(viewOptions);
@@ -112,7 +112,7 @@ const Component = Marionette.Object.extend({
    * @memberOf Component
    * @returns {Component}
    */
-  show: function(viewOptions) {
+  show(viewOptions) {
     if(this._isShown) {
       throw new Marionette.Error({
         name: 'ComponentShowError',
@@ -152,7 +152,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options] - Options that can be used to determine the ViewClass.
    * @returns {View}
    */
-  _getViewClass: function(options) {
+  _getViewClass(options) {
     options = _.extend({}, options);
 
     const ViewClass = this.getOption('ViewClass');
@@ -180,7 +180,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options] - Options hash mixed into the instantiated ViewClass.
    * @returns {Component}
    */
-  renderView: function(options) {
+  renderView(options) {
     const ViewClass = this._getViewClass(options);
 
     const viewOptions = this.mixinOptions(options);
@@ -219,7 +219,7 @@ const Component = Marionette.Object.extend({
    * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
    * The instantiated ViewClass.
    */
-  _proxyViewEvents: function(view) {
+  _proxyViewEvents(view) {
     const prefix = this.getOption('viewEventPrefix');
 
     view.on('all', function() {
@@ -243,7 +243,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options] - Additional options to mixin
    * @returns {Object}
    */
-  mixinOptions: function(options) {
+  mixinOptions(options) {
     const viewOptions = _.result(this, 'viewOptions');
 
     return _.extend({ stateModel: this.getState() }, viewOptions, options);
@@ -262,7 +262,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [viewOptions] - Options to pass to the View
    * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
    */
-  buildView: function(ViewClass, viewOptions) {
+  buildView(ViewClass, viewOptions) {
     return new ViewClass(viewOptions);
   },
 
@@ -273,7 +273,7 @@ const Component = Marionette.Object.extend({
    * @method _destroy
    * @memberOf Component
    */
-  _destroy: function() {
+  _destroy() {
     if(this._shouldDestroy) {
       Marionette.Object.prototype.destroy.apply(this, arguments);
     }
@@ -287,7 +287,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options] - Options passed to `region.empty`
    * @memberOf Component
    */
-  _emptyRegion: function(options) {
+  _emptyRegion(options) {
     if(this.region) {
       this.stopListening(this.region, 'empty');
       this.region.empty(options);
@@ -302,7 +302,7 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options] - Options passed to `_emptyRegion` and `destroy`
    * @memberOf Component
    */
-  destroy: function(options) {
+  destroy(options) {
     this._emptyRegion(options);
 
     this._shouldDestroy = true;
