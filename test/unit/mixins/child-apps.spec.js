@@ -136,7 +136,8 @@ describe('ChildAppMixin', function() {
 
         this.myApp = new this.MyApp({
           childAppOptions: {
-            myChildOption: 'bar'
+            myChildOption: 'bar',
+            bazOption: false
           }
         });
 
@@ -144,7 +145,8 @@ describe('ChildAppMixin', function() {
           cA1: Marionette.Toolkit.App,
           cA2: {
             AppClass: Marionette.Toolkit.App,
-            bazOption: true
+            bazOption: true,
+            fooOption: true
           }
         };
 

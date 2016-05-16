@@ -148,7 +148,8 @@ export default {
    * @returns {App}
    */
   buildApp(AppClass, options) {
-    options = _.extend({}, options, this.childAppOptions);
+    // options on childApp definition supersede childAppOptions
+    options = _.extend({}, this.childAppOptions, options);
 
     return new AppClass(options);
   },
