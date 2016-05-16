@@ -129,6 +129,39 @@ describe('ChildAppMixin', function() {
         });
       });
     });
+
+    describe('when passing options using childAppOptions on parent app', function() {
+      beforeEach(function() {
+        this.MyApp = Marionette.Toolkit.App;
+
+        this.myApp = new this.MyApp({
+          childAppOptions: {
+            myChildOption: 'bar',
+            bazOption: false
+          }
+        });
+
+        this.childApps = {
+          cA1: Marionette.Toolkit.App,
+          cA2: {
+            AppClass: Marionette.Toolkit.App,
+            bazOption: true,
+            fooOption: true
+          }
+        };
+
+        this.myApp.addChildApps(this.childApps);
+      });
+
+      it('should attach options to each child', function() {
+        expect(this.myApp.getChildApp('cA1').getOption('myChildOption')).to.equal('bar');
+        expect(this.myApp.getChildApp('cA2').getOption('myChildOption')).to.equal('bar');
+      });
+
+      it('should not override options passed in with childApp definition', function() {
+        expect(this.myApp.getChildApp('cA2').getOption('bazOption')).to.equal(true);
+      });
+    });
   });
 
   describe('when adding a child app', function() {
