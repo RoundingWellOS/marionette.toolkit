@@ -1,4 +1,4 @@
-describe('App Manager', function() {
+describe('ChildAppMixin', function() {
   beforeEach(function() {
     this.MyApp = Marionette.Toolkit.App.extend({
       fooOption: 'bar'
@@ -135,7 +135,7 @@ describe('App Manager', function() {
     describe('using addChildApp with an object literal', function() {
       beforeEach(function() {
         this.myApp.addChildApp('newChildApp', {
-          AppClass: this.MyApp,
+          AppClass: Marionette.Toolkit.App,
           bazOption: true
         });
       });

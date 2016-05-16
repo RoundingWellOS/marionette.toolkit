@@ -1,4 +1,4 @@
-import AbstractApp from '../../src/abstract-app';
+import App from '../../src/app';
 
 describe('App-Lifecycle', function() {
   beforeEach(function() {
@@ -7,7 +7,7 @@ describe('App-Lifecycle', function() {
     this.beforeStopStub = this.sinon.stub();
     this.stopStub = this.sinon.stub();
     this.destroyStub = this.sinon.stub();
-    this.myApp = new AbstractApp();
+    this.myApp = new App();
     this.myApp.on('before:start', this.beforeStartStub);
     this.myApp.on('start', this.startStub);
     this.myApp.on('before:stop', this.beforeStopStub);

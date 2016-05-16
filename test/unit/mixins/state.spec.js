@@ -1,9 +1,19 @@
-describe('State Class', function() {
+import Marionette from 'backbone.marionette';
+
+describe('StateMixin', function() {
   beforeEach(function() {
     this.MyModel = Backbone.Model.extend({
       foo: 'bar'
     });
-    this.MyStateClass = Marionette.Toolkit.StateClass.extend({
+
+    this.StateClass = Marionette.Object.extend();
+
+    _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+
+    this.MyStateClass = this.StateClass.extend({
+      initialize(options) {
+        this.initState(options);
+      },
       stateDefaults: {
         fooState: 'fooDefault'
       },
@@ -13,6 +23,7 @@ describe('State Class', function() {
       StateModel: this.MyModel,
       stateChanged: function() {}
     });
+
     this.myStateClass = new this.MyStateClass();
   });
 
@@ -47,7 +58,13 @@ describe('State Class', function() {
   // SETTING StateModel
   describe('when defining StateModel as a function that returns a model class', function() {
     beforeEach(function() {
-      this.MyStateClass = Marionette.Toolkit.StateClass.extend({
+      this.StateClass = Marionette.Object.extend();
+      _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+
+      this.MyStateClass = this.StateClass.extend({
+        initialize(options) {
+          this.initState(options);
+        },
         StateModel: function(options) {
           if(options.foo) {
             return Backbone.Model.extend({
@@ -57,6 +74,7 @@ describe('State Class', function() {
           return Backbone.Model;
         }
       });
+
       this.myStateClass = new this.MyStateClass({ foo: true });
     });
 
@@ -67,7 +85,13 @@ describe('State Class', function() {
 
   describe('when defining StateModel as neither a function or a class', function() {
     beforeEach(function() {
-      this.MyStateClass = Marionette.Toolkit.StateClass.extend({
+      this.StateClass = Marionette.Object.extend();
+      _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+
+      this.MyStateClass = this.StateClass.extend({
+        initialize(options) {
+          this.initState(options);
+        },
         StateModel: 'Invalid Class'
       });
     });
