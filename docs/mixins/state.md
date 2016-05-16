@@ -1,6 +1,6 @@
-# StateMixin
+# Marionette.Toolkit.StateMixin
 
-`StateMixin` is a public mixin for [`App`](./../app.md) or any Marionette class definition that uses a `Backbone.Model` for keeping state.
+`StateMixin` is a public mixin for [`App`](../app.md) or any Marionette class definition that uses a `Backbone.Model` for keeping state.
 
 Use a `StateMixin` if your object/view needs to maintain information that isn't business data.  This provides a consistent method for storing and getting state, along with triggering related events.
 
@@ -16,7 +16,7 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 
 ### Using StateMixin
 
-While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` you can extend your own class with `StateMixin` by calling `initState` in your class's `constructor` passing any desired options.
+While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` you can extend your own class with `StateMixin` by calling `initState` in your class's `initialize` passing any desired options.
 
 ```js
 var MyStateModel = Backbone.Model.extend({});
@@ -24,7 +24,7 @@ var MyStateModel = Backbone.Model.extend({});
 var myClass = Marionette.Object.extend({
   StateModel: MyStateModel
 
-  constructor(options) {
+  initialize(options) {
     this.initState(options);
   }
 });
@@ -44,7 +44,7 @@ var MyStateModel = Backbone.Model.extend({});
 var MyClass = Marionette.Toolkit.App.extend({
   StateModel: MyStateModel
 
-  constructor(options) {
+  initialize(options) {
     this.initState(options);
   }
 });
@@ -55,7 +55,7 @@ var MyClass = Marionette.Toolkit.App.extend({
 var MyStateModel = Backbone.Model.extend({});
 
 var MyClass = Marionette.Toolkit.App.extend({
-  constructor(options) {
+  initialize(options) {
     this.initState(options);
   }
 });

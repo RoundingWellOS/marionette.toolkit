@@ -4,7 +4,7 @@
 It mixes in [`StateClass`](./mixins/state-class.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
 The Component provides a consistent interface for which to package state-view-logic.
 
-## Documentation Index(#lifecycle-settings)
+## Documentation Index
 * [Using a Component](#using-a-component)
 * [Component's `ViewClass`](#components-viewclass)
   * [Component's `viewEventPrefix`](#components-vieweventprefix)
