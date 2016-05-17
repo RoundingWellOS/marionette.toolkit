@@ -127,9 +127,35 @@ describe('StateMixin', function() {
 
   describe('when destroying a state object', function() {
     it('should be gone', function() {
-      this.sinon.spy(this.myStateClass, 'stopListening');
+      this.sinon.spy(this.myStateClass._stateModel, 'stopListening');
       this.myStateClass.destroy();
-      expect(this.myStateClass.stopListening).to.have.been.calledOnce;
+      expect(this.myStateClass._stateModel.stopListening).to.have.been.calledOnce;
+    });
+  });
+
+  describe('when calling initState after initialization', function() {
+    it('should create a new _stateModel', function() {
+      const orgStateCID = this.myStateClass._stateModel.cid;
+
+      this.myStateClass.initState();
+
+      const newStateCID = this.myStateClass._stateModel.cid;
+
+      expect(newStateCID).to.not.equal(orgStateCID);
+    });
+
+    it('should remove listeners from previous _stateModel', function() {
+      const orgStateModel = this.myStateClass._stateModel;
+
+      this.sinon.spy(this.myStateClass._stateModel, 'stopListening');
+      this.sinon.spy(this.myStateClass, 'unbindEntityEvents');
+      this.sinon.spy(this.myStateClass, 'off');
+
+      this.myStateClass.initState();
+
+      expect(orgStateModel.stopListening).to.have.been.calledOnce;
+      expect(this.myStateClass.unbindEntityEvents).to.have.been.calledOnce;
+      expect(this.myStateClass.off).to.have.been.calledWith('destroy', this.myStateClass._destroyState);
     });
   });
 });

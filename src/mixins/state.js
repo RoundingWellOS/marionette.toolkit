@@ -28,11 +28,39 @@ export default {
     // Make defaults available to this
     this.mergeOptions(options, ['StateModel', 'stateEvents', 'stateDefaults']);
 
+    // Remove event handlers from previous state
+    this._removeEventHandlers();
+
     const StateModel = this._getStateModel(options);
 
     this._stateModel = new StateModel(_.result(this, 'stateDefaults'));
 
-    // Bind events from the _stateModel defined in stateEvents hash
+    this._setEventHandlers();
+  },
+
+  /**
+   * Unbind all entity events and remove any listeners on _stateModel
+   * Clean up destroy event handler
+   *
+   * @private
+   * @method _removeEventHandlers
+   */
+  _removeEventHandlers() {
+    if(!this._stateModel) return;
+
+    this.unbindEntityEvents(this._stateModel);
+    this._stateModel.stopListening();
+    this.off('destroy', this._destroyState);
+  },
+
+  /**
+   * Bind events from the _stateModel defined in stateEvents hash
+   * Setup destroy event handle
+   *
+   * @private
+   * @method _setEventHandlers
+   */
+  _setEventHandlers() {
     this.bindEntityEvents(this._stateModel, _.result(this, 'stateEvents'));
 
     this.on('destroy', this._destroyState);
