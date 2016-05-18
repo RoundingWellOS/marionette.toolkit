@@ -131,8 +131,8 @@ const App = Marionette.Object.extend({
    * @method start
    * @memberOf App
    * @param {Object} [options] - Settings for the App passed through to events
-   * @event AbstractApp#before:start - passes options
-   * @returns {AbstractApp}
+   * @event App#before:start - passes options
+   * @returns {App}
    */
   start(options) {
     this._ensureAppIsIntact();
@@ -158,7 +158,7 @@ const App = Marionette.Object.extend({
    * @method triggerStart
    * @memberOf App
    * @param {Object} [options] - Settings for the App passed through to events
-   * @event AbstractApp#start - passes options
+   * @event App#start - passes options
    * @returns
    */
   triggerStart(options) {
@@ -173,9 +173,9 @@ const App = Marionette.Object.extend({
    * @method stop
    * @memberOf App
    * @param {Object} [options] - Settings for the App passed through to events
-   * @event AbstractApp#before:stop - passes options
-   * @event AbstractApp#stop - passes options
-   * @returns {AbstractApp}
+   * @event App#before:stop - passes options
+   * @event App#stop - passes options
+   * @returns {App}
    */
   stop(options) {
     if(!this._isRunning) {
