@@ -26,14 +26,14 @@ export default {
    */
   initState(options = {}) {
     // Make defaults available to this
-    this.mergeOptions(options, ['StateModel', 'stateEvents', 'stateDefaults']);
+    this.mergeOptions(options, ['StateModel', 'stateEvents']);
 
     // Remove event handlers from previous state
     this._removeEventHandlers();
 
     const StateModel = this._getStateModel(options);
 
-    this._stateModel = new StateModel(_.result(this, 'stateDefaults'));
+    this._stateModel = new StateModel(options.state);
 
     this._setEventHandlers();
   },
