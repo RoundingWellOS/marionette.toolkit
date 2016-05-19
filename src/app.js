@@ -218,11 +218,11 @@ const App = Marionette.Object.extend({
       return;
     }
 
-    this._isDestroyed = true;
-
     this.stop();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
+
+    this._isDestroyed = true;
   }
 });
 
