@@ -14,6 +14,7 @@
   * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
+  * [App `restart`](#app-restart)
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
@@ -167,6 +168,12 @@ myApp.isRunning();
 // Nothing is logged
 myApp.start();
 ```
+
+### App `restart`
+
+This method stops the `App`'s running state.
+The `App`'s state is then reinitialized.
+Finally the `App`'s `start` method is triggered.
 
 ### App `stop`
 
