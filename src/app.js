@@ -179,6 +179,8 @@ const App = Marionette.Object.extend({
     this.stop(options);
     this.initState(options);
     this.start(options);
+
+    return this;
   },
 
   /**
