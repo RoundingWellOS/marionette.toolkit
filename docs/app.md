@@ -175,6 +175,27 @@ This method stops the `App`'s running state.
 The `App`'s state is then reinitialized.
 Finally the `App`'s `start` method is triggered.
 
+Among other options that `restart` accepts, it also takes state settings.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+myApp.start();
+
+//Pass state argument
+myApp.restart({
+  state: {
+    foo: 'bar'
+  }
+});
+
+// true
+myApp.isRunning();
+
+// bar
+this.getState('foo');
+```
+
 ### App `stop`
 
 This method stops the `App`'s running state.

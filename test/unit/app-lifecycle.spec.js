@@ -88,6 +88,20 @@ describe('App-Lifecycle', function() {
       it('should trigger start event', function() {
         expect(this.startStub).to.have.been.calledTwice;
       });
+
+      describe('passing state argument', function() {
+        beforeEach(function() {
+          this.myApp.restart({
+            state: {
+              foo: 'bar'
+            }
+          });
+        });
+
+        it('should have reinitialize state with passed in state', function() {
+          expect(this.myApp.getState('foo')).to.equal('bar');
+        });
+      });
     });
   });
 
