@@ -17,6 +17,16 @@ Toolkit.noConflict = function() {
   return this;
 };
 
+Toolkit.MixinState = function(classDefinition) {
+  let _StateMixin = StateMixin;
+
+  if(classDefinition.prototype.StateModel) {
+    _StateMixin = _.omit(StateMixin, 'StateModel');
+  }
+
+  _.extend(classDefinition.prototype, _StateMixin);
+};
+
 Toolkit.VERSION = '<%VERSION%>';
 
 Toolkit.StateMixin = StateMixin;

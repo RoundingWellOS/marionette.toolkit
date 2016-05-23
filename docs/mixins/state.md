@@ -31,6 +31,23 @@ var myClass = Marionette.Object.extend({
 
 _.extend(myClass.prototype, Marrionette.Toolkit.StateMixin)
 ```
+
+You can also use `Marionette.Toolkit.MixinState` which is a utility to mixin the `StateMixin` into any `Marionette.Object`s or `Marionette.View`s. If there is no `StateModel` definition on your class then the `StateModel` will be defined as a vanilla `Backbone.Model`. However, if you have already defined `StateModel` on your class, your `StateModel` definition **will not be overwritten**.
+
+```js
+var MyStateModel = Backbone.Model.extend({});
+
+var myClass = Marionette.Object.extend({
+  StateModel: MyStateModel
+
+  initialize(options) {
+    this.initState(options);
+  }
+});
+
+Marionette.Toolkit.MixinState(MyClass);
+```
+
 ### StateMixin's `StateModel`
 
 Define a `StateModel` on your class definition or pass as an option when calling `initState(options)`. This must be
