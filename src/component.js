@@ -4,7 +4,7 @@ import Marionette from 'backbone.marionette';
 import StateMixin from './mixins/state';
 
 /**
- * Reusable StateClass with View management boilerplate
+ * Reusable Marionette.Object with View management boilerplate
  *
  * @public
  * @class Component
@@ -38,8 +38,8 @@ const Component = Marionette.Object.extend({
   /**
    * @public
    * @constructs Component
-   * @param {Object} [stateAttrs] - Attributes to set on the state model.
    * @param {Object} [options] - Settings for the component.
+   * @param {Object} [options.state] - Attributes to set on the state model.
    * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView=} [options.ViewClass]
    * - The view class to be managed.
    * @param {String} [options.viewEventPrefix]
@@ -47,15 +47,13 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options.viewOptions] - Options hash passed to an instantiated ViewClass.
    * @param {Marionette.Region} [options.region] - The region to show the component in.
    */
-  constructor(stateAttrs, options) {
-    options = _.extend({}, options);
-
+  constructor(options = {}) {
     // Make defaults available to this
-    _.extend(this, _.pick(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']));
+    this.mergeOptions(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']);
 
     this.initState(options);
 
-    this._setStateDefaults(stateAttrs);
+    Marionette.Object.call(this, options);
   },
 
   /**
@@ -67,19 +65,6 @@ const Component = Marionette.Object.extend({
    * @default true
    */
   _shouldDestroy: true,
-
-  /**
-   * Set the state model attributes to the initial
-   * passed in attributes or any defaults set
-   *
-   * @private
-   * @method _setStateDefaults
-   * @memberOf Component
-   * @param {Object} [stateAttrs] - Attributes to set on the state model
-   */
-  _setStateDefaults(stateAttrs) {
-    this.setState(stateAttrs, { silent: true });
-  },
 
   /**
    * Set the Component's region and then show it.
