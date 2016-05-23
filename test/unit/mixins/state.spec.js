@@ -14,9 +14,6 @@ describe('StateMixin', function() {
       initialize(options) {
         this.initState(options);
       },
-      stateDefaults: {
-        fooState: 'fooDefault'
-      },
       stateEvents: {
         'change': 'stateChanged'
       },
@@ -24,11 +21,15 @@ describe('StateMixin', function() {
       stateChanged: function() {}
     });
 
-    this.myStateClass = new this.MyStateClass();
+    this.myStateClass = new this.MyStateClass({
+      state: {
+        fooState: 'fooDefault'
+      }
+    });
   });
 
   describe('when instantiating a new state object', function() {
-    it('should contain the defined stateDefaults', function() {
+    it('should contain the defined state', function() {
       expect(this.myStateClass.getState('fooState')).to.equal('fooDefault');
     });
 
