@@ -72,6 +72,7 @@ const App = Marionette.Object.extend({
    * @param {Boolean} [options.stopWithParent]
    * @param {Boolean} [options.startAfterInitialized]
    * @param {Boolean} [options.preventDestroy]
+   * @param {Object} [options.state] - Attributes to set on the state model.
    */
   constructor(options = {}) {
     _.bindAll(this, 'start', 'stop');
