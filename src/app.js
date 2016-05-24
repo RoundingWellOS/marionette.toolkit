@@ -4,6 +4,13 @@ import StateMixin from './mixins/state';
 import ChildAppsMixin from './mixins/child-apps';
 import EventListenersMixin from './mixins/event-listeners';
 
+const pickOptions = [
+  'startWithParent',
+  'stopWithParent',
+  'startAfterInitialized',
+  'preventDestroy'
+];
+
 /**
  * Marionette.Object with an `initialize` / `start` / `stop` / `destroy` lifecycle.
  *
@@ -76,13 +83,6 @@ const App = Marionette.Object.extend({
    */
   constructor(options = {}) {
     _.bindAll(this, 'start', 'stop');
-
-    const pickOptions = [
-      'startWithParent',
-      'stopWithParent',
-      'startAfterInitialized',
-      'preventDestroy'
-    ];
 
     this.mergeOptions(options, pickOptions);
 
