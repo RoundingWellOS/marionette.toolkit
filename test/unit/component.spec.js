@@ -169,6 +169,20 @@ describe('Marionette.Toolkit.Component', function() {
 
   // INSTANTIATING A COMPONENT WITH OPTIONS
   describe('when instantiating a component', function() {
+    describe('with state options', function() {
+      it('should initialize stateModel with passed in state', function() {
+        this.MyComponent = Marionette.Toolkit.Component.extend();
+
+        this.myComponent = new this.MyComponent({
+          state: {
+            foo: 'bar'
+          }
+        });
+
+        expect(this.myComponent.getState('foo')).to.equal('bar');
+      });
+    });
+
     describe('with a customized viewEventPrefix', function() {
       it('should trigger the correct action as defined', function() {
         this.MyComponent = Marionette.Toolkit.Component.extend({
