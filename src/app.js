@@ -4,7 +4,7 @@ import StateMixin from './mixins/state';
 import ChildAppsMixin from './mixins/child-apps';
 import EventListenersMixin from './mixins/event-listeners';
 
-const pickOptions = [
+const ClassOptions = [
   'startWithParent',
   'stopWithParent',
   'startAfterInitialized',
@@ -84,7 +84,7 @@ const App = Marionette.Object.extend({
   constructor(options = {}) {
     _.bindAll(this, 'start', 'stop');
 
-    this.mergeOptions(options, pickOptions);
+    this.mergeOptions(options, ClassOptions);
 
     this.initState(options);
     this._initChildApps(options);
