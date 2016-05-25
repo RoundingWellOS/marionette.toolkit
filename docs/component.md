@@ -1,7 +1,7 @@
 # Marionette.Toolkit.Component
 
 `Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component).
-It mixes in [`StateClass`](./mixins/state-class.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
+It mixes in [`StateMixin`](./mixins/state.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
 The Component provides a consistent interface for which to package state-view-logic.
 
 ## Documentation Index
@@ -87,6 +87,20 @@ Marionette.Toolkit.Component.extend({
 
 The `ViewClass` can be provided in the component definition or
 in the constructor function call, to get a component instance.
+
+You can also manage the state of the ViewClass by mixing in the [`StateMixin`](./mixins/state.md) into your view.
+
+This can be done by using the `Marionette.Toolkit.MixinState` Utility.
+
+```js
+var MyViewClass = Marionette.ItemView.extend({});
+
+Marionette.Toolkit.MixinState(MyViewClass);
+
+Marionette.Toolkit.Component.extend({
+  ViewClass: MyViewClass
+});
+```
 
 ### Component's `viewEventPrefix`
 
@@ -351,7 +365,7 @@ var view = myComponent.currentView;
 
 ### Component `mixinOptions`
 
-Mixes options passed to the method with the Component's [`viewOptions`](#components-viewoptions) and the `stateModel`
+Mixes options passed to the method with the Component's [`viewOptions`](#components-viewoptions) and the current component `state`.
 This function is used internally by [`renderView`](#component-renderview)
 however you can override this function if you need to dynamically build the view options hash.
 
@@ -359,7 +373,7 @@ however you can override this function if you need to dynamically build the view
 mixinOptions: function(options){
   var viewOptions = _.result(this, 'viewOptions');
 
-  return _.extend({ stateModel: this.getState() }, viewOptions, options);
+  return _.extend({ state: this.getState().attributes }, viewOptions, options);
 }
 ```
 
