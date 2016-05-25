@@ -223,7 +223,7 @@ const Component = Marionette.Object.extend({
   },
 
   /**
-   * Mixin stateModel from StateClass with any other viewOptions
+   * Mixin initial State with any other viewOptions
    *
    * @public
    * @abstract
@@ -235,7 +235,7 @@ const Component = Marionette.Object.extend({
   mixinOptions(options) {
     const viewOptions = _.result(this, 'viewOptions');
 
-    return _.extend({ stateModel: this.getState() }, viewOptions, options);
+    return _.extend({ state: this.getState().attributes }, viewOptions, options);
   },
 
   /**
