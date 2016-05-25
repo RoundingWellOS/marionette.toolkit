@@ -2,6 +2,11 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 
+const ClassOptions = [
+  'StateModel',
+  'stateEvents'
+];
+
  /**
  * This provides methods used for keeping state using a Backbone.Model. It's meant to
  * be used with either a Marionette.Object or Backbone.View.
@@ -26,7 +31,7 @@ export default {
    */
   initState(options = {}) {
     // Make defaults available to this
-    this.mergeOptions(options, ['StateModel', 'stateEvents']);
+    this.mergeOptions(options, ClassOptions);
 
     // Remove event handlers from previous state
     this._removeEventHandlers();

@@ -1,6 +1,11 @@
 import _ from 'underscore';
 import Marionette from 'backbone.marionette';
 
+const ClassOptions = [
+  'childApps',
+  'childAppOptions'
+];
+
  /**
  * This provides methods used for "App Manager" functionality - the adding and removing child `App`s. It's not meant to
  * be used directly.
@@ -31,7 +36,7 @@ export default {
   _initChildApps(options = {}) {
     this._childApps = {};
 
-    this.mergeOptions(options, ['childApps', 'childAppOptions']);
+    this.mergeOptions(options, ClassOptions);
 
     let childApps = this.childApps;
 

@@ -3,6 +3,12 @@ import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import StateMixin from './mixins/state';
 
+const ClassOpions = [
+  'ViewClass',
+  'viewEventPrefix',
+  'viewOptions',
+  'region'
+];
 /**
  * Reusable Marionette.Object with View management boilerplate
  *
@@ -49,7 +55,7 @@ const Component = Marionette.Object.extend({
    */
   constructor(options = {}) {
     // Make defaults available to this
-    this.mergeOptions(options, ['viewEventPrefix', 'ViewClass', 'viewOptions', 'region']);
+    this.mergeOptions(options, ClassOpions);
 
     this.initState(options);
 
@@ -137,10 +143,8 @@ const Component = Marionette.Object.extend({
    * @param {Object} [options] - Options that can be used to determine the ViewClass.
    * @returns {View}
    */
-  _getViewClass(options) {
-    options = _.extend({}, options);
-
-    const ViewClass = this.getOption('ViewClass');
+  _getViewClass(options = {}) {
+    const ViewClass = this.ViewClass;
 
     if(ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
       return ViewClass;
@@ -205,7 +209,7 @@ const Component = Marionette.Object.extend({
    * The instantiated ViewClass.
    */
   _proxyViewEvents(view) {
-    const prefix = this.getOption('viewEventPrefix');
+    const prefix = this.viewEventPrefix;
 
     view.on('all', function() {
       const args = _.toArray(arguments);
