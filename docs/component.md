@@ -26,24 +26,22 @@ The Component provides a consistent interface for which to package state-view-lo
 ## Using a Component
 
 The component is built to work out of the box.
-When instantiating a component it takes two optional parameters, the initial state and options.
-If there is no initial state to set, simply pass `null`, or `{}`.
+When instantiating a component you can pass various options including `ViewClass` or initial component `state`.
 
 ```js
 var MyComponentView = Marionette.ItemView.extend({
   template: _.template('<div>Hello Component</div>')
 });
 
-var initialState = {
-  fooState: 'bar'
-};
-
 var options = {
   fooOption: 'baz',
-  ViewClass: MyComponentView
+  ViewClass: MyComponentView,
+  state: {
+    fooState: 'bar'
+  }
 };
 
-var myComponent = new Marionette.Toolkit.Component(initialState, options);
+var myComponent = new Marionette.Toolkit.Component(options);
 
 myComponent.getState('fooState') === 'bar';
 
