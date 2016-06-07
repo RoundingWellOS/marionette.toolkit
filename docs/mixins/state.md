@@ -8,7 +8,7 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 
 * [Using StateMixin](#using-statemixin)
 * [StateMixin's `StateModel`](#statemixins-statemodel)
-* [StateMixin's `stateDefaults`](#statemixins-statedefaults)
+* [StateMixin's `StateModel` `defaults`](#statemixins-statemodel-defaults)
 * [StateMixin's `stateEvents`](#statemixins-stateevents)
 * [StateMixin API](#statemixin-api)
   * [Setting State `setState`](#setting-state)
@@ -108,15 +108,16 @@ new MyToolKitApp({
 });
 ```
 
-### StateMixin's `stateDefaults`
+### StateMixin's `StateModel` `defaults`
 
-`stateDefaults` can be a hash or function on the definition
-or passed as an option when instantiating to define the initial default state.
+Because the `StateModel` of the `StateMixin` has to be a `Backbone.Model`, it has access to model `defaults`. `defaults` should be defined on the `StateModel` definition.
 
 ```js
 var MyToolKitApp = Marionette.Toolkit.App.extend({
-  stateDefaults: {
-    fooState: 'bar'
+  StateModel: {
+    defaults: {
+      fooState: 'bar'
+    }
   }
 });
 
@@ -154,7 +155,7 @@ implementations of `modelEvents` and `collectionEvents` in the [Marionette.View]
 ### Setting State
 
 `StateMixin` has a `setState` method that exposes the `Backbone.Model.set`
-for the `StateClass`'s attached `StateModel`.  Implementation will match [Backbone.Model.set](http://backbonejs.org/#Model-set) documentation.
+for the `StateMixin`'s attached `StateModel`.  Implementation will match [Backbone.Model.set](http://backbonejs.org/#Model-set) documentation.
 
 ```js
 var MyToolKitApp = new Marionette.Toolkit.App({
@@ -170,10 +171,33 @@ var MyToolKitApp = new Marionette.Toolkit.App({
 myToolKitApp.setState('foo', 'bar');
 ```
 
+### Resetting State
+
+`StateMixin` has a `resetState` method that sets the `StateModel` instance attributes back to the defined defaults.  Implementation will match [Backbone.Model.defaults](http://backbonejs.org/#Model-defaults) documentation.
+
+```js
+var MyToolKitApp = new Marionette.Toolkit.App({
+    StateModel: {
+      defaults: {
+        'foo': 'bar'
+      }
+    }
+});
+
+// This will trigger the "change:foo" event and log "alert!" to the console.
+myToolKitApp.setState('foo', 'hello');
+
+console.log(this.getState('foo')); // hello
+
+myToolKitApp.resetState();
+
+console.log(this.getState('foo')); // bar
+```
+
 ### Getting State
 
 `StateMixin` has a `getState` method that exposes the `Backbone.Model.get`
-for the `StateClass`'s attached `StateModel`.  Implementation will match [Backbone.Model.get](http://backbonejs.org/#Model-get) documentation with the
+for the `Statemixin`'s attached `StateModel`.  Implementation will match [Backbone.Model.get](http://backbonejs.org/#Model-get) documentation with the
 exception that not passing any attribute to "get" will return the state model
 instance.
 
@@ -189,8 +213,8 @@ var myToolKitApp = new Marionette.Toolkit.App({
 });
 
 // returns "bar"
-myStateClass.getState('foo');
+myToolKitApp.getState('foo');
 
-// returns myStateClass's MyStateModel instance.
-myStateClass.getState();
+// returns myToolKitApp's MyStateModel instance.
+myToolKitApp.getState();
 ```

@@ -25,8 +25,8 @@ export default {
   /**
    * @public
    * @method initState
-   * @param {Object} [options] - Settings for the stateClass.
-   * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to stateClass.
+   * @param {Object} [options] - Settings for the StateMixin.
+   * @param {Object} [options.stateEvents] - Event hash bound from _stateModel to StateMixin.
    * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
    */
   initState(options = {}) {
@@ -74,7 +74,7 @@ export default {
   },
 
   /**
-   * Get the StateClass StateModel class.
+   * Get the StateMixin StateModel class.
    * Checks if the `StateModel` is a model class (the common case)
    * Then check if it's a function (which we assume that returns a model class)
    *
@@ -108,6 +108,21 @@ export default {
    */
   setState() {
     return this._stateModel.set.apply(this._stateModel, arguments);
+  },
+
+
+  /**
+   *  Reset _stateModel to defined defaults
+   *
+   * @public
+   * @method resetStateDefaults
+   * @param {Object} [newState] - Hash of any number of key value pairs.
+   * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
+   */
+  resetStateDefaults() {
+    const defaults = _.result(this._stateModel, 'defaults');
+
+    return this._stateModel.set(defaults);
   },
 
   /**
