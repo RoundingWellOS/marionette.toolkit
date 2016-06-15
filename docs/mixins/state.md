@@ -7,11 +7,12 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 ## Documentation Index
 
 * [Using StateMixin](#using-statemixin)
+* [Setting default state](#setting-default-state)
 * [StateMixin's `StateModel`](#statemixins-statemodel)
-* [StateMixin's `StateModel` `defaults`](#statemixins-statemodel-defaults)
 * [StateMixin's `stateEvents`](#statemixins-stateevents)
 * [StateMixin API](#statemixin-api)
   * [Setting State `setState`](#setting-state)
+  * [Resetting State `resetStateDefaults`](#resetting-state-defaults)
   * [Getting State `getState`](#getting-state)
 
 ### Using StateMixin
@@ -46,6 +47,24 @@ var myClass = Marionette.Object.extend({
 });
 
 Marionette.Toolkit.MixinState(MyClass);
+```
+
+### Setting default state
+
+Because the `StateModel` of the `StateMixin` has to be a `Backbone.Model`, it has access to model `defaults`. `defaults` should be defined on the `StateModel` definition.
+
+```js
+var MyToolKitApp = Marionette.Toolkit.App.extend({
+  StateModel: {
+    defaults: {
+      fooState: 'bar'
+    }
+  }
+});
+
+var myToolkitApp = new MyToolKitApp();
+
+myToolkitApp.getState('fooState') === 'bar';
 ```
 
 ### StateMixin's `StateModel`
@@ -108,24 +127,6 @@ new MyToolKitApp({
 });
 ```
 
-### StateMixin's `StateModel` `defaults`
-
-Because the `StateModel` of the `StateMixin` has to be a `Backbone.Model`, it has access to model `defaults`. `defaults` should be defined on the `StateModel` definition.
-
-```js
-var MyToolKitApp = Marionette.Toolkit.App.extend({
-  StateModel: {
-    defaults: {
-      fooState: 'bar'
-    }
-  }
-});
-
-var myToolkitApp = new MyToolKitApp();
-
-myToolkitApp.getState('fooState') === 'bar';
-```
-
 ### StateMixin's `stateEvents`
 
 `StateMixin` can bind directly to state events in a declarative manner:
@@ -173,7 +174,7 @@ myToolKitApp.setState('foo', 'bar');
 
 ### Resetting State
 
-`StateMixin` has a `resetState` method that sets the `StateModel` instance attributes back to the defined defaults.  Implementation will match [Backbone.Model.defaults](http://backbonejs.org/#Model-defaults) documentation.
+`StateMixin` has a `resetStateDefaults` method that sets the `StateModel` instance attributes back to the [defined defaults](#setting-default-state).  Implementation will match [Backbone.Model.defaults](http://backbonejs.org/#Model-defaults) documentation.
 
 ```js
 var MyToolKitApp = new Marionette.Toolkit.App({
@@ -189,7 +190,7 @@ myToolKitApp.setState('foo', 'hello');
 
 console.log(this.getState('foo')); // hello
 
-myToolKitApp.resetState();
+myToolKitApp.resetStateDefaults();
 
 console.log(this.getState('foo')); // bar
 ```
