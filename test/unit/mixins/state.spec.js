@@ -56,6 +56,82 @@ describe('StateMixin', function() {
     });
   });
 
+  describe.only('when resetting a state on a state object using resetStateDefaults', function() {
+    beforeEach(function() {
+      this.StateClass = Marionette.Object.extend();
+      _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+    });
+
+    describe('when defaults is defined as an object', function() {
+      it('should reset state defined in defaults object', function() {
+        const myStateModel = Backbone.Model.extend({
+          defaults: {
+            hello: 'bar'
+          }
+        });
+
+        this.MyStateClass = this.StateClass.extend({
+          initialize(options) {
+            this.initState(options);
+          },
+          StateModel: myStateModel
+        });
+
+        this.myStateClass = new this.MyStateClass();
+
+        this.myStateClass.setState('hello', 'world');
+        this.myStateClass.resetStateDefaults();
+
+        expect(this.myStateClass.getState().attributes).to.deep.equal({ hello: 'bar' });
+      });
+    });
+
+    describe('when defaults is defined as a function', function() {
+      it('should reset state returned in defaults function', function() {
+        const myStateModel = Backbone.Model.extend({
+          defaults() {
+            return {
+              hello: 'bar'
+            };
+          }
+        });
+
+        this.MyStateClass = this.StateClass.extend({
+          initialize(options) {
+            this.initState(options);
+          },
+          StateModel: myStateModel
+        });
+
+        this.myStateClass = new this.MyStateClass();
+
+        this.myStateClass.setState('hello', 'world');
+        this.myStateClass.resetStateDefaults();
+
+        expect(this.myStateClass.getState().attributes).to.deep.equal({ hello: 'bar' });
+      });
+    });
+    describe('when defaults is not defined', function() {
+      it('should not reset state', function() {
+        const myStateModel = Backbone.Model.extend();
+
+        this.MyStateClass = this.StateClass.extend({
+          initialize(options) {
+            this.initState(options);
+          },
+          StateModel: myStateModel
+        });
+
+        this.myStateClass = new this.MyStateClass();
+
+        this.myStateClass.setState('hello', 'world');
+        this.myStateClass.resetStateDefaults();
+
+        expect(this.myStateClass.getState().attributes).to.deep.equal({ hello: 'world' });
+      });
+    });
+  });
+
   // SETTING StateModel
   describe('when defining StateModel as a function that returns a model class', function() {
     beforeEach(function() {

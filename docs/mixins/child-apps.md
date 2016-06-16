@@ -3,18 +3,17 @@
 `ChildAppsMixin` is a private mixin for [`App`](./../app.md). It adds functionality to add or remove child Apps to a parent App and connects the child App lifecycle with the parent App lifecycle.
 
 ## Documentation Index
-* [ChildAppsMixin's Lifecycle Settings](#apps-lifecycle-settings)
+* [ChildAppsMixin's Lifecycle Settings](#childappsmixins-lifecycle-settings)
 * [ChildAppsMixin's `childApps`](#apps-childapps)
-* [ChildAppsMixin API](#app-api)
-  * [ChildAppsMixin `buildApp`](#app-buildapp)
-  * [ChildAppsMixin `addChildApp`](#app-addchildapp)
-  * [ChildAppsMixin `addChildApps`](#app-addchildapps)
-  * [ChildAppsMixin `getName`](#app-getName)
-  * [ChildAppsMixin `getChildApp`](#app-getchildapp)
-  * [ChildAppsMixin `getChildApps`](#app-getchildapps)
-  * [ChildAppsMixin `removeChildApp`](#app-removechildapp)
-  * [ChildAppsMixin `removeChildApps`](#app-removechildapps)
-  * [ChildAppsMixin `removeChildApp`](#app-removechildapp)
+* [ChildAppsMixin API](#childappsmixin-api)
+  * [ChildAppsMixin `buildApp`](#childappsmixin-buildapp)
+  * [ChildAppsMixin `addChildApp`](#childappsmixin-addchildapp)
+  * [ChildAppsMixin `addChildApps`](#childappsmixin-addchildapps)
+  * [ChildAppsMixin `getName`](#childappsmixin-getname)
+  * [ChildAppsMixin `getChildApp`](#childappsmixin-getchildapp)
+  * [ChildAppsMixin `getChildApps`](#childappsmixin-getchildapps)
+  * [ChildAppsMixin `removeChildApp`](#childappsmixin-removechildapp)
+  * [ChildAppsMixin `removeChildApps`](#childappsmixin-removechildapps)
 
 ## ChildAppsMixin's Lifecycle Settings
 
