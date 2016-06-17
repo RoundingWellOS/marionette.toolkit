@@ -1,3 +1,37 @@
+#### v1.0.0
+
+* `StateMixin`:
+  * Replaces `StateClass` and is now a POJO instead of a `Marionette.object`
+  * Can now be mixed into any `Marionette.Object` or `Marionette.View`
+  * `stateDefaults` has been removed in favor of state being passed in `options` hash
+  * `initState` adds ability to reinitialize state at any point during the life-time of `Marionette.object` / `Marionette.View`
+  * `resetStateDefaults` adds ability to reset state defined in defaults
+  * `destroyState` has been replaced by `_destoryState` to privatize state deletion
+* `ChildAppsMixin`:
+  * Now handles the adding and removing of childApps
+  * Adds functionality to share options with all children via `childAppsOptions`
+* `EventListenerMixin` now handles `App` event-listener functionality
+* `Marionette.Toolkit.MixinState` is a utiltiy function created to make it easy to mix `StateMixin` into any `Marionette.object` or `Marionette.View`
+* `AbstractApp` has been removed and functionality moved into `App`
+* `App`:
+  * Now extends Marionette.Object and not `StateClass` as `AbstractApp` previously did
+  * It now mixes in `StateMixin`, `ChildAppsMixin`, and `EventListenerMixin`
+  * An app can now be restarted and have it's state reinitialized via `restart`
+  * `_isDestroyed` is now the last action of `destroy` method to align with Marionette v3
+* `Component`:
+  * Now extends a `Marionette.Object` and not `StateClass`
+  * It now mixes in `StateMixin`
+  * Stop passing entire `stateModel` to `currentView` in favor of passing only `attributes`
+* Improve `ES6` usage
+* Dependency:
+  * Change `dependencies` to `peerdependencies`
+  * Update to `Node` v4 and several other updates
+* Build process updates:
+  * Remove `_buildPackages` and `NPM` deploy functionality as project will no longer publish packages individually
+  * Replace `Browserify` build process with `Rollup`
+  * Move from `JSHint` to `ESLint`
+* Test and Documentation updates
+
 #### v0.4.2
 
 * Deprecate modularized classes.
