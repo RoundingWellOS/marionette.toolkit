@@ -1,7 +1,7 @@
 # Marionette.Toolkit.Component
 
 `Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component).
-It is an extension of [`StateClass`](./state-class.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
+It mixes in [`StateMixin`](./mixins/state.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
 The Component provides a consistent interface for which to package state-view-logic.
 
 ## Documentation Index
@@ -26,24 +26,22 @@ The Component provides a consistent interface for which to package state-view-lo
 ## Using a Component
 
 The component is built to work out of the box.
-When instantiating a component it takes two optional parameters, the initial state and options.
-If there is no initial state to set, simply pass `null`, or `{}`.
+When instantiating a component you can pass various options including `ViewClass` or initial component `state`.
 
 ```js
 var MyComponentView = Marionette.ItemView.extend({
   template: _.template('<div>Hello Component</div>')
 });
 
-var initialState = {
-  fooState: 'bar'
-};
-
 var options = {
   fooOption: 'baz',
-  ViewClass: MyComponentView
+  ViewClass: MyComponentView,
+  state: {
+    fooState: 'bar'
+  }
 };
 
-var myComponent = new Marionette.Toolkit.Component(initialState, options);
+var myComponent = new Marionette.Toolkit.Component(options);
 
 myComponent.getState('fooState') === 'bar';
 
@@ -87,6 +85,20 @@ Marionette.Toolkit.Component.extend({
 
 The `ViewClass` can be provided in the component definition or
 in the constructor function call, to get a component instance.
+
+You can also manage the state of the ViewClass by mixing in the [`StateMixin`](./mixins/state.md) into your view.
+
+This can be done by using the `Marionette.Toolkit.MixinState` Utility.
+
+```js
+var MyViewClass = Marionette.ItemView.extend({});
+
+Marionette.Toolkit.MixinState(MyViewClass);
+
+Marionette.Toolkit.Component.extend({
+  ViewClass: MyViewClass
+});
+```
 
 ### Component's `viewEventPrefix`
 
@@ -351,7 +363,7 @@ var view = myComponent.currentView;
 
 ### Component `mixinOptions`
 
-Mixes options passed to the method with the Component's [`viewOptions`](#components-viewoptions) and the `stateModel`
+Mixes options passed to the method with the Component's [`viewOptions`](#components-viewoptions) and the current component `state`.
 This function is used internally by [`renderView`](#component-renderview)
 however you can override this function if you need to dynamically build the view options hash.
 
@@ -359,7 +371,7 @@ however you can override this function if you need to dynamically build the view
 mixinOptions: function(options){
   var viewOptions = _.result(this, 'viewOptions');
 
-  return _.extend({ stateModel: this.getState() }, viewOptions, options);
+  return _.extend({ state: this.getState().attributes }, viewOptions, options);
 }
 ```
 
@@ -379,5 +391,4 @@ buildView: function(ViewClass, viewOptions){
 ### Component `destroy`
 
 Calling `destroy` will empty the `Component`'s `region` and destroy the `Component`.
-Destroying the `Component` calls `destroy` on the [`StateClass`](./state-class.md#destroying-a-stateclass)
 A destroyed `Component` instance should not be reused.

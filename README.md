@@ -12,15 +12,17 @@ for complex large scale application problems.  This toolkit was
 built from scripts open sourced from [RoundingWell.com](http://roundingwell.com).
 
 ## Documentation
-  [StateClass](./docs/state-class.md) - `Marionette.Object` with a `Backbone.Model` for keeping state.
+  [App](./docs/app.md) - An extension of `Marionette.Object`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.
 
-  [Component](./docs/component.md) - Reusable `StateClass` with `View` management boilerplate
+  [Component](./docs/component.md) - Provides a consistent interface for which to package state-view-logic.
 
-  [AbstractApp](./docs/abstract-app.md) - Object including a start/stop lifecycle and running event registry.
+  [Asnyc App start](./docs/async-app-start.md) - How to easily start apps asynchronously.
 
-  [App](./docs/app.md) - `AbstractApp` with mixed in "App Manager" for adding and removing child `App`s
+  [StateMixin](./docs/mixins/state.md) - JavaScript Object with a `Backbone.Model` for keeping state.
 
-  [Asnyc App start](./docs/async-app-start.md) - How to easily start apps asynchronously
+  [ChildAppsMixin](./docs/mixins/child-apps.md) - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.
+
+  [EventListernersMixin](./docs/mixins/event-listeners.md) - Binds events to the `App` while running and removed (and only those) when the `App` is stopped.
 
 
 ## Getting Help

@@ -1,4 +1,4 @@
-describe('App-running-events', function() {
+describe('EventListenersMixin', function() {
   beforeEach(function() {
     this.fooStub = this.sinon.stub();
     this.barStub = this.sinon.stub();
@@ -28,8 +28,8 @@ describe('App-running-events', function() {
     });
   });
 
-  describe('when triggering an event with once()', function () {
-    it('should not be triggered after stop()', function () {
+  describe('when triggering an event with once()', function() {
+    it('should not be triggered after stop()', function() {
       this.myApp.start();
       this.myApp.once('foo', this.fooStub);
       this.myApp.stop();
@@ -81,5 +81,4 @@ describe('App-running-events', function() {
       expect(this.fooStub).to.have.been.calledOnce;
     });
   });
-
 });
