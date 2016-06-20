@@ -89,4 +89,4 @@ create summarized and documented feature requests (preferably with the feature i
 
 ===
 
-This library is © 2015 RoundingWell. Distributed under MIT license.
+This library is © 2016 RoundingWell. Distributed under MIT license.
