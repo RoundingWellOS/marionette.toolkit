@@ -19,7 +19,7 @@ const ClassOptions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const App = Marionette.Object.extend({
+const App = Marionette.Application.extend({
 
   /**
    * Internal flag indiciate when `App` has started but has not yet stopped.
