@@ -17,14 +17,14 @@ const ClassOpions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const Component = Marionette.Object.extend({
+const Component = Marionette.Application.extend({
 
   /**
    * The view class to be managed.
    * @type {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
    * @default Marionette.ItemView
    */
-  ViewClass: Marionette.ItemView,
+  ViewClass: Marionette.View,
 
   /**
    * Used as the prefix for events forwarded from
