@@ -56,7 +56,7 @@ describe('StateMixin', function() {
     });
   });
 
-  describe.only('when resetting a state on a state object using resetStateDefaults', function() {
+  describe('when resetting a state on a state object using resetStateDefaults', function() {
     beforeEach(function() {
       this.StateClass = Marionette.Object.extend();
       _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
@@ -225,13 +225,13 @@ describe('StateMixin', function() {
       const orgStateModel = this.myStateClass._stateModel;
 
       this.sinon.spy(this.myStateClass._stateModel, 'stopListening');
-      this.sinon.spy(this.myStateClass, 'unbindEntityEvents');
+      this.sinon.spy(this.myStateClass, 'unbindEvents');
       this.sinon.spy(this.myStateClass, 'off');
 
       this.myStateClass.initState();
 
       expect(orgStateModel.stopListening).to.have.been.calledOnce;
-      expect(this.myStateClass.unbindEntityEvents).to.have.been.calledOnce;
+      expect(this.myStateClass.unbindEvents).to.have.been.calledOnce;
       expect(this.myStateClass.off).to.have.been.calledWith('destroy', this.myStateClass._destroyState);
     });
   });
