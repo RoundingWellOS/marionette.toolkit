@@ -190,7 +190,7 @@ const Component = Marionette.Application.extend({
     this._shouldDestroy = false;
 
     // Show the view in the region
-    this.getRegion().show(view);
+    this.showView(view);
 
     this._shouldDestroy = true;
 

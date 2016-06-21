@@ -219,8 +219,6 @@ const App = Marionette.Application.extend({
     this.stop();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
-
-    this._isDestroyed = true;
   }
 });
 
