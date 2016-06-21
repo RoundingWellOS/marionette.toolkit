@@ -31,15 +31,6 @@ const App = Marionette.Application.extend({
   _isRunning: false,
 
   /**
-   * Internal flag indiciate when `App` has been destroyed
-   *
-   * @private
-   * @type {Boolean}
-   * @default false
-   */
-  _isDestroyed: false,
-
-  /**
    * Set to true if a parent `App` should not be able to destroy this `App`.
    *
    * @type {Boolean|Function}
@@ -89,7 +80,7 @@ const App = Marionette.Application.extend({
     this.initState(options);
     this._initChildApps(options);
 
-    Marionette.Object.call(this, options);
+    Marionette.Application.call(this, options);
 
     if(_.result(this, 'startAfterInitialized')) {
       this.start(options);
@@ -211,18 +202,6 @@ const App = Marionette.Application.extend({
     this._stopRunningEvents();
 
     return this;
-  },
-
-  /**
-   * Gets the value of internal `_isDestroyed` flag
-   *
-   * @public
-   * @method isDestroyed
-   * @memberOf App
-   * @returns {Boolean}
-   */
-  isDestroyed() {
-    return this._isDestroyed;
   },
 
   /**
