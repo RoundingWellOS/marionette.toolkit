@@ -59,7 +59,7 @@ const Component = Marionette.Application.extend({
 
     this.initState(options);
 
-    Marionette.Object.call(this, options);
+    Marionette.Application.call(this, options);
   },
 
   /**
@@ -83,7 +83,7 @@ const Component = Marionette.Application.extend({
    * @returns {Component}
    */
   showIn(region, viewOptions) {
-    this.region = region;
+    this._region = region;
 
     this.show(viewOptions);
 
@@ -104,6 +104,8 @@ const Component = Marionette.Application.extend({
    * @returns {Component}
    */
   show(viewOptions) {
+    const region = this.getRegion();
+
     if(this._isShown) {
       throw new Marionette.Error({
         name: 'ComponentShowError',
@@ -111,7 +113,7 @@ const Component = Marionette.Application.extend({
       });
     }
 
-    if(!this.region) {
+    if(!region) {
       throw new Marionette.Error({
         name: 'ComponentRegionError',
         message: 'Component has no defined region.'
@@ -127,7 +129,7 @@ const Component = Marionette.Application.extend({
 
     // Destroy the component if the region is emptied because
     // it destroys the view
-    this.listenTo(this.region, 'empty', this._destroy);
+    this.listenTo(region, 'empty', this._destroy);
 
     return this;
   },
@@ -188,7 +190,7 @@ const Component = Marionette.Application.extend({
     this._shouldDestroy = false;
 
     // Show the view in the region
-    this.region.show(view);
+    this.getRegion().show(view);
 
     this._shouldDestroy = true;
 
@@ -277,9 +279,11 @@ const Component = Marionette.Application.extend({
    * @memberOf Component
    */
   _emptyRegion(options) {
-    if(this.region) {
-      this.stopListening(this.region, 'empty');
-      this.region.empty(options);
+    const region = this.getRegion();
+
+    if(region) {
+      this.stopListening(region, 'empty');
+      region.empty(options);
     }
   },
 
