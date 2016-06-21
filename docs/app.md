@@ -18,7 +18,6 @@
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
-  * [App `isDestroyed`](#app-isdestroyed)
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
@@ -263,21 +262,6 @@ myApp.isDestroyed() === false;
 myApp.destroy();
 
 myApp.isRunning() === false;
-myApp.isDestroyed() === true;
-
-```
-
-### App `isDestroyed`
-
-Returns a Boolean indicating whether or not the `App` is destroyed.  Destroyed `App`s cannot be started or used.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-myApp.isDestroyed() === false;
-
-myApp.destroy();
-
 myApp.isDestroyed() === true;
 
 ```
