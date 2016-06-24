@@ -1,6 +1,6 @@
 # Marionette.Toolkit.App
 
-`Marionette.Toolkit.App` is an extension of `Marionette.Object`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle. `App` has several mixins:
+`Marionette.Toolkit.App` is an extension of `Marionette.Application`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle. `App` has several mixins:
 
 * [`StateMixin`](./mixins/state.md) to maintain application state.
 * [`EventListernersMixin`](./mixins/event-listeners.md) to bind all events to an `App` while running (and only those) will be remove when stopped.

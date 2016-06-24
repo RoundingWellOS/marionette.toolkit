@@ -12,9 +12,9 @@ for complex large scale application problems.  This toolkit was
 built from scripts open sourced from [RoundingWell.com](http://roundingwell.com).
 
 ## Documentation
-  [App](./docs/app.md) - An extension of `Marionette.Object`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.
+  [App](./docs/app.md) - An extension of `Marionette.Application`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.
 
-  [Component](./docs/component.md) - Provides a consistent interface for which to package state-view-logic.
+  [Component](./docs/component.md) - An extension of `Marionette.Application`. Provides a consistent interface for which to package state-view-logic.
 
   [Asnyc App start](./docs/async-app-start.md) - How to easily start apps asynchronously.
 
@@ -60,14 +60,10 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 #### Compatibility and Requirements
 
-Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 2.2.0+ as it utilizes [`Marionette.Error`](https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js) and extends
-[`Marionette.Object`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md)
+Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 3.0.0+ as it utilizes [`Marionette.Error`](https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js) and extends
+[`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/next/docs/marionette.application.md)
 
-It's possible this library would work with earlier versions by manually adding `Marionette.Error` and shimming
-`Marionette.Object = Marionette.Controller;`
-
-
-This library is tested with v2.2+ and a mix of underscore and lodash versions.
+This library is tested with v3.0+ and a mix of underscore v1.8 and lodash v1.3.3 versions.
 
 Marionette.Toolkit supports IE8+ and modern browsers.
 

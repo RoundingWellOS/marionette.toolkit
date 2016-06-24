@@ -1,7 +1,6 @@
 # Marionette.Toolkit.Component
 
-`Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component).
-It mixes in [`StateMixin`](./mixins/state.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
+`Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component) and is an extension of `Marionette.Application`. It mixes in [`StateMixin`](./mixins/state.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
 The Component provides a consistent interface for which to package state-view-logic.
 
 ## Documentation Index
