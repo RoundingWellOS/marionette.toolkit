@@ -28,7 +28,7 @@ The component is built to work out of the box.
 When instantiating a component you can pass various options including `ViewClass` or initial component `state`.
 
 ```js
-var MyComponentView = Marionette.ItemView.extend({
+var MyComponentView = Marionette.View.extend({
   template: _.template('<div>Hello Component</div>')
 });
 
@@ -55,10 +55,10 @@ myComponent.showIn(someRegion);
 Specify a `ViewClass` in your component definition. This can be any
 `Backbone.View` or `Marionette.View` type. This must be
 a view definition, not an instance.  If you do not specify a
-`ViewClass`, a vanilla `Marionette.ItemView` definition will be used.
+`ViewClass`, a vanilla `Marionette.View` definition will be used.
 
 ```js
-var MyViewClass = Marionette.ItemView.extend({});
+var MyViewClass = Marionette.View.extend({});
 
 Marionette.Toolkit.Component.extend({
   ViewClass: MyViewClass
@@ -70,14 +70,14 @@ returned by this method is the `ViewClass` class that will be instantiated.
 When defined as a function, it will receive the `options` passed to [`renderView`](#component-renderview).
 
 ```js
-var MyViewClass = Marionette.ItemView.extend({});
+var MyViewClass = Marionette.View.extend({});
 
 Marionette.Toolkit.Component.extend({
   ViewClass: function(options){
     if(options.foo){
       return MyViewClass;
     }
-    return Marionette.ItemView;
+    return Marionette.View;
   }
 });
 ```
@@ -90,7 +90,7 @@ You can also manage the state of the ViewClass by mixing in the [`StateMixin`](.
 This can be done by using the `Marionette.Toolkit.MixinState` Utility.
 
 ```js
-var MyViewClass = Marionette.ItemView.extend({});
+var MyViewClass = Marionette.View.extend({});
 
 Marionette.Toolkit.MixinState(MyViewClass);
 
@@ -132,7 +132,7 @@ a `viewOptions` definition on your component as an object literal. This will
 be passed to the constructor of your view as part of the `options`.
 
 ```js
-var MyView = Marionette.ItemView.extend({
+var MyView = Marionette.View.extend({
   initialize: function(options) {
     console.log(options.foo); // => "bar"
   }
@@ -251,7 +251,7 @@ That is, if a current view triggers "do:something", the
 component will then trigger "childview:do:something".
 
 ```js
-var MyItemView = Marionette.ItemView.extend({
+var MyView = Marionette.View.extend({
   triggers: {
     'click button': 'do:something'
   }
@@ -259,7 +259,7 @@ var MyItemView = Marionette.ItemView.extend({
 
 // get the collection view in place
 var myComponent = new Marionette.Toolkit.Component(null, {
-  ViewClass: MyItemView,
+  ViewClass: MyView,
 
   onViewDoSomething: function(currentView, args*) {
     console.log("I said, 'do something!'");

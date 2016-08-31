@@ -21,8 +21,8 @@ const Component = Marionette.Application.extend({
 
   /**
    * The view class to be managed.
-   * @type {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
-   * @default Marionette.ItemView
+   * @type {Mn.View|Mn.CollectionView}
+   * @default Marionette.View
    */
   ViewClass: Marionette.View,
 
@@ -46,7 +46,7 @@ const Component = Marionette.Application.extend({
    * @constructs Component
    * @param {Object} [options] - Settings for the component.
    * @param {Object} [options.state] - Attributes to set on the state model.
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView=} [options.ViewClass]
+   * @param {Mn.View|Mn.CollectionView} [options.ViewClass]
    * - The view class to be managed.
    * @param {String} [options.viewEventPrefix]
    * - Used as the prefix for events forwarded from the component's view to the component
@@ -207,7 +207,7 @@ const Component = Marionette.Application.extend({
    * @private
    * @method _proxyViewEvents
    * @memberOf Component
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
+   * @param {Mn.View|Mn.CollectionView} view -
    * The instantiated ViewClass.
    */
   _proxyViewEvents(view) {
@@ -248,10 +248,10 @@ const Component = Marionette.Application.extend({
    * @abstract
    * @method buildView
    * @memberOf Component
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass -
+   * @param {Mn.View|Mn.CollectionView} ViewClass -
    * The view class to instantiate.
    * @param {Object} [viewOptions] - Options to pass to the View
-   * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
+   * @returns {Mn.View|Mn.CollectionView}
    */
   buildView(ViewClass, viewOptions) {
     return new ViewClass(viewOptions);
