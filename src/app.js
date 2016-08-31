@@ -19,7 +19,7 @@ const ClassOptions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const App = Marionette.Object.extend({
+const App = Marionette.Application.extend({
 
   /**
    * Internal flag indiciate when `App` has started but has not yet stopped.
@@ -29,15 +29,6 @@ const App = Marionette.Object.extend({
    * @default false
    */
   _isRunning: false,
-
-  /**
-   * Internal flag indiciate when `App` has been destroyed
-   *
-   * @private
-   * @type {Boolean}
-   * @default false
-   */
-  _isDestroyed: false,
 
   /**
    * Set to true if a parent `App` should not be able to destroy this `App`.
@@ -89,7 +80,7 @@ const App = Marionette.Object.extend({
     this.initState(options);
     this._initChildApps(options);
 
-    Marionette.Object.call(this, options);
+    Marionette.Application.call(this, options);
 
     if(_.result(this, 'startAfterInitialized')) {
       this.start(options);
@@ -214,18 +205,6 @@ const App = Marionette.Object.extend({
   },
 
   /**
-   * Gets the value of internal `_isDestroyed` flag
-   *
-   * @public
-   * @method isDestroyed
-   * @memberOf App
-   * @returns {Boolean}
-   */
-  isDestroyed() {
-    return this._isDestroyed;
-  },
-
-  /**
    * Stops the `App` and sets it destroyed.
    *
    * @public
@@ -240,8 +219,6 @@ const App = Marionette.Object.extend({
     this.stop();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
-
-    this._isDestroyed = true;
   }
 });
 

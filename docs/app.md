@@ -1,6 +1,6 @@
 # Marionette.Toolkit.App
 
-`Marionette.Toolkit.App` is an extension of `Marionette.Object`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle. `App` has several mixins:
+`Marionette.Toolkit.App` is an extension of `Marionette.Application`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle. `App` has several mixins:
 
 * [`StateMixin`](./mixins/state.md) to maintain application state.
 * [`EventListernersMixin`](./mixins/event-listeners.md) to bind all events to an `App` while running (and only those) will be remove when stopped.
@@ -18,7 +18,6 @@
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
-  * [App `isDestroyed`](#app-isdestroyed)
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
@@ -263,21 +262,6 @@ myApp.isDestroyed() === false;
 myApp.destroy();
 
 myApp.isRunning() === false;
-myApp.isDestroyed() === true;
-
-```
-
-### App `isDestroyed`
-
-Returns a Boolean indicating whether or not the `App` is destroyed.  Destroyed `App`s cannot be started or used.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-myApp.isDestroyed() === false;
-
-myApp.destroy();
-
 myApp.isDestroyed() === true;
 
 ```

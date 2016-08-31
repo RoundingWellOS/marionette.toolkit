@@ -55,7 +55,7 @@ export default {
   _removeEventHandlers() {
     if(!this._stateModel) return;
 
-    this.unbindEntityEvents(this._stateModel);
+    this.unbindEvents(this._stateModel);
     this._stateModel.stopListening();
     this.off('destroy', this._destroyState);
   },
@@ -68,7 +68,7 @@ export default {
    * @method _setEventHandlers
    */
   _setEventHandlers() {
-    this.bindEntityEvents(this._stateModel, _.result(this, 'stateEvents'));
+    this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
 
     this.on('destroy', this._destroyState);
   },
