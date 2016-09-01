@@ -340,4 +340,65 @@ describe('ChildAppMixin', function() {
       });
     });
   });
+
+  describe('startChildApp', function() {
+    before(function() {
+      const childApps = {
+        cA1: Marionette.Toolkit.App,
+        cA2: Marionette.Toolkit.App.extend({
+          onStart(options) {
+            this.mergeOptions(options, ['region']);
+          }
+        }),
+        cA3: Marionette.Toolkit.App
+      };
+
+      this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+    });
+
+    it('should start specified childApp', function() {
+      this.myApp.startChildApp('cA1');
+
+      expect(this.myApp.getChildApp('cA1').isRunning()).to.be.true;
+    });
+
+    it('should start childApp with options', function() {
+      this.myApp.startChildApp('cA2', { region: 'regionName' });
+
+      expect(this.myApp.getChildApp('cA2').getOption('region')).to.eq('regionName');
+    });
+
+    it('should return childApp instance', function() {
+      const spy = sinon.spy(this.myApp, 'startChildApp');
+      const childApp = this.myApp.getChildApp('cA1');
+
+      expect(spy.returned(childApp));
+    });
+  });
+
+  describe('stopChildApp', function() {
+    before(function() {
+      const childApps = {
+        cA1: Marionette.Toolkit.App,
+        cA2: Marionette.Toolkit.App,
+        cA3: Marionette.Toolkit.App
+      };
+
+      this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+      this.myApp.startChildApp('cA1');
+    });
+
+    it('should stop specified childApp', function() {
+      this.myApp.stopChildApp('cA1');
+
+      expect(this.myApp.getChildApp('cA1').isRunning()).to.be.false;
+    });
+
+    it('should return childApp instance', function() {
+      const spy = sinon.spy(this.myApp, 'stopChildApp');
+      const childApp = this.myApp.getChildApp('cA1');
+
+      expect(spy.returned(childApp));
+    });
+  });
 });
