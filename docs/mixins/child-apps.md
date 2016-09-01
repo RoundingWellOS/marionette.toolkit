@@ -14,6 +14,8 @@
   * [ChildAppsMixin `getChildApps`](#childappsmixin-getchildapps)
   * [ChildAppsMixin `removeChildApp`](#childappsmixin-removechildapp)
   * [ChildAppsMixin `removeChildApps`](#childappsmixin-removechildapps)
+  * [ChildAppsMixin `startChildApp`](#childappsmixin-startChildApp)
+  * [ChildAppsMixin `stopChildApp`](#childappsmixin-stopChildApp)
 
 ## ChildAppsMixin's Lifecycle Settings
 
@@ -222,3 +224,55 @@ myApp.removeChildApps();
 ```
 
 This will destroy all childApps (that don't have preventDestroy set to true), and remove them.
+
+### ChildAppsMixin `startChildApp`
+
+You can quickly start a specific childApp from an
+App instance by calling the `startChildApp`
+method and passing the childApp name and any options.
+
+```js
+var childApps = {
+   cA1: Marionette.Toolkit.App.extend({
+     onStart(options) {
+       this.mergeOptions(options, ['foo']);
+     }
+   })
+};
+
+var myApp = new Marionette.Toolkit.App({ childApps: childApps });
+
+myApp.startChildApp('cA1', { foo: 'bar' });
+
+var childAppInstance = myApp.getChildApp('cA1');
+
+// true
+console.log(childAppInstance.isRunning());
+
+// bar
+console.log(childAppInstance.getOption('foo'));
+```
+
+Note: The childApp instance is returned for chaining.
+
+### ChildAppsMixin `stopChildApp`
+
+You can quickly stop a specific childApp from an
+App instance by calling the `stopChildApp`
+method and passing the childApp name.
+
+```js
+var myApp = new Marionette.Toolkit.App({ childApps: { cA1: Marionette.Toolkit.App } });
+
+myApp.startChildApp('cA1');
+
+// true
+console.log(myApp.getChildApp('cA1').isRunning());
+
+myApp.stopChildApp('cA1');
+
+// false
+console.log(myApp.getChildApp('cA1').isRunning());
+```
+
+Note: The childApp instance is returned for chaining.
