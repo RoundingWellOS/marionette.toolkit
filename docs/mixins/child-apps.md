@@ -253,7 +253,7 @@ console.log(childAppInstance.isRunning());
 console.log(childAppInstance.getOption('foo'));
 ```
 
-Note: The childApp instance is returned for chaining.
+Note: The parentApp instance is returned for chaining.
 
 ### ChildAppsMixin `stopChildApp`
 
@@ -275,4 +275,4 @@ myApp.stopChildApp('cA1');
 console.log(myApp.getChildApp('cA1').isRunning());
 ```
 
-Note: The childApp instance is returned for chaining.
+Note: The parentApp instance is returned for chaining.

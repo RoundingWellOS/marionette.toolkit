@@ -368,11 +368,12 @@ describe('ChildAppMixin', function() {
       expect(this.myApp.getChildApp('cA2').getOption('region')).to.eq('regionName');
     });
 
-    it('should return childApp instance', function() {
+    it('should return parentApp instance', function() {
       const spy = sinon.spy(this.myApp, 'startChildApp');
-      const childApp = this.myApp.getChildApp('cA1');
 
-      expect(spy.returned(childApp));
+      this.myApp.startChildApp('cA1');
+
+      expect(spy.returned(this.myApp)).to.be.true;
     });
   });
 
@@ -394,11 +395,12 @@ describe('ChildAppMixin', function() {
       expect(this.myApp.getChildApp('cA1').isRunning()).to.be.false;
     });
 
-    it('should return childApp instance', function() {
+    it('should return parentApp instance', function() {
       const spy = sinon.spy(this.myApp, 'stopChildApp');
-      const childApp = this.myApp.getChildApp('cA1');
 
-      expect(spy.returned(childApp));
+      this.myApp.stopChildApp('cA1');
+
+      expect(spy.returned(this.myApp)).to.be.true;
     });
   });
 });
