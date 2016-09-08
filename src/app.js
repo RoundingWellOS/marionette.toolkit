@@ -159,24 +159,6 @@ const App = Marionette.Application.extend({
   },
 
   /**
-   * "Restarts the app" by first stoping app, reinitializing state, and then starting the app again
-   *
-   *
-   * @public
-   * @method restart
-   * @memberOf App
-   * @param {Object} [options] - Settings for the App passed through to events
-   * @returns {App}
-   */
-  restart(options) {
-    this.stop(options);
-    this.initState(options);
-    this.start(options);
-
-    return this;
-  },
-
-  /**
    * Sets the app lifecycle to not running.
    * Removes any listeners added during the running state
    *

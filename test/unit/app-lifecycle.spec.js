@@ -70,39 +70,6 @@ describe('App-Lifecycle', function() {
         expect(this.stopStub).to.have.not.been.calledTwice;
       });
     });
-
-    describe('and restarting the application', function() {
-      beforeEach(function() {
-        this.sinon.spy(this.myApp, 'initState');
-        this.myApp.restart();
-      });
-
-      it('should call stop', function() {
-        expect(this.stopStub).to.have.been.calledOnce;
-      });
-
-      it('should reinitialize state', function() {
-        expect(this.myApp.initState).to.have.been.calledOnce;
-      });
-
-      it('should trigger start event', function() {
-        expect(this.startStub).to.have.been.calledTwice;
-      });
-
-      describe('passing state argument', function() {
-        beforeEach(function() {
-          this.myApp.restart({
-            state: {
-              foo: 'bar'
-            }
-          });
-        });
-
-        it('should have reinitialize state with passed in state', function() {
-          expect(this.myApp.getState('foo')).to.equal('bar');
-        });
-      });
-    });
   });
 
   describe('when an application is yet to be destroyed', function() {
