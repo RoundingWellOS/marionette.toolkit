@@ -77,7 +77,6 @@ const App = Marionette.Application.extend({
 
     this.mergeOptions(options, ClassOptions);
 
-    this.initState(options);
     this._initChildApps(options);
 
     Marionette.Application.call(this, options);
@@ -132,6 +131,8 @@ const App = Marionette.Application.extend({
     if(this._isRunning) {
       return this;
     }
+
+    this.initState(options);
 
     this.triggerMethod('before:start', options);
 
