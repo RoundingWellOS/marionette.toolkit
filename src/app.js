@@ -132,15 +132,33 @@ const App = Marionette.Application.extend({
       return this;
     }
 
-    this.initState(options);
-
     this.triggerMethod('before:start', options);
+
+    const opts = _.extend({}, options);
+    opts.state = this.getInitState(opts.state);
+
+    this.initState(opts);
 
     this._isRunning = true;
 
-    this.triggerStart(options);
+    this.triggerStart(opts);
 
     return this;
+  },
+
+  /**
+   * Extends passed in state.
+   * Override to extend state
+   *
+   * @public
+   * @method getInitState
+   * @memberOf App
+   * @param {Object} [state] - initial app state 
+   * @returns extended state
+   */
+
+  getInitState(state) {
+    return state;
   },
 
   /**
