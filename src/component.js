@@ -135,6 +135,18 @@ const Component = Marionette.Object.extend({
   },
 
   /**
+   * Returns component region.
+   *
+   * @public
+   * @method getRegion
+   * @memberOf Component
+   * @returns Component region
+   */
+  getRegion() {
+    return this.region;
+  },
+
+  /**
    * Get the Component ViewClass class.
    * Checks if the `ViewClass` is a view class (the common case)
    * Then check if it's a function (which we assume that returns a view class)
@@ -301,18 +313,6 @@ const Component = Marionette.Object.extend({
     this._shouldDestroy = true;
 
     this._destroy(options);
-  },
-
-  /**
-   * Returns component region.
-   *
-   * @public
-   * @method getRegion
-   * @memberOf Component
-   * @returns Component region
-   */
-  getRegion() {
-    return this.region;
   }
 });
 
