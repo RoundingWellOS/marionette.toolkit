@@ -17,7 +17,7 @@ const ClassOpions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const Component = Marionette.Application.extend({
+const Component = Marionette.Object.extend({
 
   /**
    * The view class to be managed.
@@ -59,7 +59,7 @@ const Component = Marionette.Application.extend({
 
     this.initState(options);
 
-    Marionette.Application.call(this, options);
+    Marionette.Object.call(this, options);
   },
 
   /**
