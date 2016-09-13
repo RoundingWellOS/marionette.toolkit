@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v1.0.0
+ * @version v2.0.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -68,7 +68,7 @@
     _removeEventHandlers: function _removeEventHandlers() {
       if (!this._stateModel) return;
 
-      this.unbindEntityEvents(this._stateModel);
+      this.unbindEvents(this._stateModel);
       this._stateModel.stopListening();
       this.off('destroy', this._destroyState);
     },
@@ -82,7 +82,7 @@
      * @method _setEventHandlers
      */
     _setEventHandlers: function _setEventHandlers() {
-      this.bindEntityEvents(this._stateModel, _$1.result(this, 'stateEvents'));
+      this.bindEvents(this._stateModel, _$1.result(this, 'stateEvents'));
 
       this.on('destroy', this._destroyState);
     },
@@ -199,7 +199,6 @@
      * }
      * ```
      */
-
     _initChildApps: function _initChildApps() {
       var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
@@ -264,6 +263,35 @@
           childApp.stop();
         }
       });
+    },
+
+
+    /**
+     * Starts `childApp`
+     *
+     * @param {String} appName - Name of childApp to start
+     * @param {object} options - Start options for app
+     * @public
+     * @method startChildApp
+     */
+    startChildApp: function startChildApp(appName, options) {
+      this.getChildApp(appName).start(options);
+
+      return this;
+    },
+
+
+    /**
+     * Stops `childApp`
+     *
+     * @param {String} appName - Name of childApp to stop
+     * @public
+     * @method stopChildApp
+     */
+    stopChildApp: function stopChildApp(appName) {
+      this.getChildApp(appName).stop();
+
+      return this;
     },
 
 
@@ -522,7 +550,6 @@
      * @private
      * @method _stopRunningEvents
      */
-
     _stopRunningEvents: function _stopRunningEvents() {
       _$1.each(this._runningEvents, function (args) {
         this.off.apply(this, args);
@@ -596,17 +623,17 @@
     }
   };
 
-  var ClassOptions$1 = ['startWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy'];
+  var ClassOptions$1 = ['startWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel'];
 
   /**
-   * Marionette.Object with an `initialize` / `start` / `stop` / `destroy` lifecycle.
+   * Marionette.Application with an `initialize` / `start` / `stop` / `destroy` lifecycle.
    *
    * @public
    * @class App
    * @memberOf Toolkit
    * @memberOf Marionette
    */
-  var App = Marionette.Object.extend({
+  var App = Marionette.Application.extend({
 
     /**
      * Internal flag indiciate when `App` has started but has not yet stopped.
@@ -616,15 +643,6 @@
      * @default false
      */
     _isRunning: false,
-
-    /**
-     * Internal flag indiciate when `App` has been destroyed
-     *
-     * @private
-     * @type {Boolean}
-     * @default false
-     */
-    _isDestroyed: false,
 
     /**
      * Set to true if a parent `App` should not be able to destroy this `App`.
@@ -675,10 +693,9 @@
 
       this.mergeOptions(options, ClassOptions$1);
 
-      this.initState(options);
       this._initChildApps(options);
 
-      Marionette.Object.call(this, options);
+      Marionette.Application.call(this, options);
 
       if (_$1.result(this, 'startAfterInitialized')) {
         this.start(options);
@@ -736,11 +753,32 @@
 
       this.triggerMethod('before:start', options);
 
+      var opts = _$1.extend({}, options);
+      opts.state = this.getInitState(opts.state);
+
+      this.initState(opts);
+
       this._isRunning = true;
 
-      this.triggerStart(options);
+      this.triggerStart(opts);
 
       return this;
+    },
+
+
+    /**
+     * Returns state.
+     * Override to extend state
+     *
+     * @public
+     * @method getInitState
+     * @memberOf App
+     * @param {Object} [state] - initial app state
+     * @returns state
+     */
+
+    getInitState: function getInitState(state) {
+      return state;
     },
 
 
@@ -757,25 +795,6 @@
      */
     triggerStart: function triggerStart(options) {
       this.triggerMethod('start', options);
-    },
-
-
-    /**
-     * "Restarts the app" by first stoping app, reinitializing state, and then starting the app again
-     *
-     *
-     * @public
-     * @method restart
-     * @memberOf App
-     * @param {Object} [options] - Settings for the App passed through to events
-     * @returns {App}
-     */
-    restart: function restart(options) {
-      this.stop(options);
-      this.initState(options);
-      this.start(options);
-
-      return this;
     },
 
 
@@ -810,19 +829,6 @@
 
 
     /**
-     * Gets the value of internal `_isDestroyed` flag
-     *
-     * @public
-     * @method isDestroyed
-     * @memberOf App
-     * @returns {Boolean}
-     */
-    isDestroyed: function isDestroyed() {
-      return this._isDestroyed;
-    },
-
-
-    /**
      * Stops the `App` and sets it destroyed.
      *
      * @public
@@ -837,14 +843,12 @@
       this.stop();
 
       Marionette.Object.prototype.destroy.apply(this, arguments);
-
-      this._isDestroyed = true;
     }
   });
 
   _$1.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin);
 
-  var ClassOpions = ['ViewClass', 'viewEventPrefix', 'viewOptions', 'region'];
+  var ClassOptions$3 = ['ViewClass', 'viewEventPrefix', 'viewOptions', 'region'];
   /**
    * Reusable Marionette.Object with View management boilerplate
    *
@@ -857,10 +861,10 @@
 
     /**
      * The view class to be managed.
-     * @type {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
-     * @default Marionette.ItemView
+     * @type {Mn.View|Mn.CollectionView}
+     * @default Marionette.View
      */
-    ViewClass: Marionette.ItemView,
+    ViewClass: Marionette.View,
 
     /**
      * Used as the prefix for events forwarded from
@@ -882,7 +886,7 @@
      * @constructs Component
      * @param {Object} [options] - Settings for the component.
      * @param {Object} [options.state] - Attributes to set on the state model.
-     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView=} [options.ViewClass]
+     * @param {Mn.View|Mn.CollectionView} [options.ViewClass]
      * - The view class to be managed.
      * @param {String} [options.viewEventPrefix]
      * - Used as the prefix for events forwarded from the component's view to the component
@@ -893,7 +897,7 @@
       var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
       // Make defaults available to this
-      this.mergeOptions(options, ClassOpions);
+      this.mergeOptions(options, ClassOptions$3);
 
       this.initState(options);
 
@@ -944,6 +948,8 @@
      * @returns {Component}
      */
     show: function show(viewOptions) {
+      var region = this.getRegion();
+
       if (this._isShown) {
         throw new Marionette.Error({
           name: 'ComponentShowError',
@@ -951,7 +957,7 @@
         });
       }
 
-      if (!this.region) {
+      if (!region) {
         throw new Marionette.Error({
           name: 'ComponentRegionError',
           message: 'Component has no defined region.'
@@ -967,9 +973,22 @@
 
       // Destroy the component if the region is emptied because
       // it destroys the view
-      this.listenTo(this.region, 'empty', this._destroy);
+      this.listenTo(region, 'empty', this._destroy);
 
       return this;
+    },
+
+
+    /**
+     * Returns component region.
+     *
+     * @public
+     * @method getRegion
+     * @memberOf Component
+     * @returns Component region
+     */
+    getRegion: function getRegion() {
+      return this.region;
     },
 
 
@@ -1032,7 +1051,7 @@
       this._shouldDestroy = false;
 
       // Show the view in the region
-      this.region.show(view);
+      this.getRegion().show(view);
 
       this._shouldDestroy = true;
 
@@ -1050,7 +1069,7 @@
      * @private
      * @method _proxyViewEvents
      * @memberOf Component
-     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
+     * @param {Mn.View|Mn.CollectionView} view -
      * The instantiated ViewClass.
      */
     _proxyViewEvents: function _proxyViewEvents(view) {
@@ -1093,10 +1112,10 @@
      * @abstract
      * @method buildView
      * @memberOf Component
-     * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass -
+     * @param {Mn.View|Mn.CollectionView} ViewClass -
      * The view class to instantiate.
      * @param {Object} [viewOptions] - Options to pass to the View
-     * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
+     * @returns {Mn.View|Mn.CollectionView}
      */
     buildView: function buildView(ViewClass, viewOptions) {
       return new ViewClass(viewOptions);
@@ -1126,9 +1145,11 @@
      * @memberOf Component
      */
     _emptyRegion: function _emptyRegion(options) {
-      if (this.region) {
-        this.stopListening(this.region, 'empty');
-        this.region.empty(options);
+      var region = this.getRegion();
+
+      if (region) {
+        this.stopListening(region, 'empty');
+        region.empty(options);
       }
     },
 
@@ -1175,7 +1196,7 @@
     _.extend(classDefinition.prototype, _StateMixin);
   };
 
-  Toolkit.VERSION = '1.0.0';
+  Toolkit.VERSION = '2.0.0';
 
   Toolkit.StateMixin = StateMixin;
 
