@@ -8,7 +8,8 @@ const ClassOptions = [
   'startWithParent',
   'stopWithParent',
   'startAfterInitialized',
-  'preventDestroy'
+  'preventDestroy',
+  'StateClass'
 ];
 
 /**
