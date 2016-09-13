@@ -86,19 +86,6 @@ var MyClass = Marionette.Toolkit.App.extend({
 });
 ```
 
-#### Passed as Option on Initialization
-```js
-var MyStateModel = Backbone.Model.extend({});
-
-var MyClass = Marionette.Toolkit.App.extend({
-  initialize(options) {
-    this.initState(options);
-  }
-});
-
-var myClass = new MyClass(MyStateModel);
-```
-
 You can also define `StateModel` as a function. In this form, the value
 returned by this method is the `StateModel` class that will be instantiated.
 When defined as a function, it will receive the `options` passed to the `constructor`.
@@ -116,6 +103,8 @@ Marionette.Toolkit.App.extend({
 });
 ```
 
+#### Passed as Option on Initialization
+
 Alternatively, you can specify a `StateModel` in the options for
 the `constructor`:
 
@@ -124,6 +113,28 @@ var MyToolKitApp = Marionette.Toolkit.App.extend({...});
 
 new MyToolKitApp({
   StateModel: MyStateModel
+});
+```
+
+### StateMixin's `State`
+
+Optionally define a `state` attributes object on your class initialization or pass as an option when calling `initState(options)`.
+
+```js
+var MyStateModel = Backbone.Model.extend({});
+
+var MyClass = Marionette.Toolkit.App.extend({
+  StateModel: MyStateModel
+
+  initialize(options) {
+    this.initState(options);
+  }
+});
+
+new MyToolKitApp({
+  state: {
+    foo: 'bar'
+  }
 });
 ```
 
