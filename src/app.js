@@ -8,7 +8,8 @@ const ClassOptions = [
   'startWithParent',
   'stopWithParent',
   'startAfterInitialized',
-  'preventDestroy'
+  'preventDestroy',
+  'StateModel'
 ];
 
 /**
@@ -77,7 +78,6 @@ const App = Marionette.Application.extend({
 
     this.mergeOptions(options, ClassOptions);
 
-    this.initState(options);
     this._initChildApps(options);
 
     Marionette.Application.call(this, options);
@@ -135,11 +135,31 @@ const App = Marionette.Application.extend({
 
     this.triggerMethod('before:start', options);
 
+    const opts = _.extend({}, options);
+    opts.state = this.getInitState(opts.state);
+
+    this.initState(opts);
+
     this._isRunning = true;
 
-    this.triggerStart(options);
+    this.triggerStart(opts);
 
     return this;
+  },
+
+  /**
+   * Returns state.
+   * Override to extend state
+   *
+   * @public
+   * @method getInitState
+   * @memberOf App
+   * @param {Object} [state] - initial app state
+   * @returns state
+   */
+
+  getInitState(state) {
+    return state;
   },
 
   /**
@@ -155,24 +175,6 @@ const App = Marionette.Application.extend({
    */
   triggerStart(options) {
     this.triggerMethod('start', options);
-  },
-
-  /**
-   * "Restarts the app" by first stoping app, reinitializing state, and then starting the app again
-   *
-   *
-   * @public
-   * @method restart
-   * @memberOf App
-   * @param {Object} [options] - Settings for the App passed through to events
-   * @returns {App}
-   */
-  restart(options) {
-    this.stop(options);
-    this.initState(options);
-    this.start(options);
-
-    return this;
   },
 
   /**

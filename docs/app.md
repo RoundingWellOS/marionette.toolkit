@@ -14,13 +14,14 @@
   * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
-  * [App `restart`](#app-restart)
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
+* [Application State](#application-state)
+  * [App `getInitState`](#app-getInitState)
 
 ## Lifecycle Settings
 
@@ -168,33 +169,6 @@ myApp.isRunning();
 myApp.start();
 ```
 
-### App `restart`
-
-This method stops the `App`'s running state.
-The `App`'s state is then reinitialized.
-Finally the `App`'s `start` method is triggered.
-
-Among other options that `restart` accepts, it also takes state settings.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-myApp.start();
-
-//Pass state argument
-myApp.restart({
-  state: {
-    foo: 'bar'
-  }
-});
-
-// true
-myApp.isRunning();
-
-// bar
-this.getState('foo');
-```
-
 ### App `stop`
 
 This method stops the `App`'s running state.
@@ -330,4 +304,18 @@ myApp.on('before:stop', function(options){
 myApp.on('stop', function(options){
   // ...
 });
+```
+
+## Application State
+
+### App `getInitState`
+
+Override `getInitState` to modify state object passed into the App constructor.
+
+```js
+getInitState(state){
+  const modState = _.extend({}, {foo: 'bar'}, state);
+
+  return return modState;
+}
 ```
