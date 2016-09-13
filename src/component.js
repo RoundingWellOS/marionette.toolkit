@@ -3,7 +3,7 @@ import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import StateMixin from './mixins/state';
 
-const ClassOpions = [
+const ClassOptions = [
   'ViewClass',
   'viewEventPrefix',
   'viewOptions',
@@ -17,7 +17,7 @@ const ClassOpions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const Component = Marionette.Application.extend({
+const Component = Marionette.Object.extend({
 
   /**
    * The view class to be managed.
@@ -55,11 +55,11 @@ const Component = Marionette.Application.extend({
    */
   constructor(options = {}) {
     // Make defaults available to this
-    this.mergeOptions(options, ClassOpions);
+    this.mergeOptions(options, ClassOptions);
 
     this.initState(options);
 
-    Marionette.Application.call(this, options);
+    Marionette.Object.call(this, options);
   },
 
   /**
@@ -83,7 +83,7 @@ const Component = Marionette.Application.extend({
    * @returns {Component}
    */
   showIn(region, viewOptions) {
-    this._region = region;
+    this.region = region;
 
     this.show(viewOptions);
 
@@ -190,7 +190,7 @@ const Component = Marionette.Application.extend({
     this._shouldDestroy = false;
 
     // Show the view in the region
-    this.showView(view);
+    this.getRegion().show(view);
 
     this._shouldDestroy = true;
 
@@ -301,6 +301,18 @@ const Component = Marionette.Application.extend({
     this._shouldDestroy = true;
 
     this._destroy(options);
+  },
+
+  /**
+   * Returns component region.
+   *
+   * @public
+   * @method getRegion
+   * @memberOf Component
+   * @returns Component region
+   */
+  getRegion() {
+    return this.region;
   }
 });
 

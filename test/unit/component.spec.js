@@ -68,6 +68,26 @@ describe('Marionette.Toolkit.Component', function() {
     });
   });
 
+  // RETRIVING A COMPONENT'S region
+  describe('when retriving a component\'s region', function() {
+    beforeEach(function() {
+      this.renderStub = this.sinon.stub();
+      this.MyViewClass = Marionette.View;
+      this.MyComponent = Marionette.Toolkit.Component.extend({
+        region: this.myRegion,
+        ViewClass: this.MyViewClass,
+        viewOptions: {
+          template: _.template('<div></div>')
+        }
+      });
+      this.myComponent = new this.MyComponent();
+    });
+
+    it('should return component region', function() {
+      expect(this.myComponent.getRegion()).to.deep.eq(this.myRegion);
+    });
+  });
+
   // RENDERING A VIEW WITH renderView()
   describe('when rendering a view', function() {
     beforeEach(function() {
