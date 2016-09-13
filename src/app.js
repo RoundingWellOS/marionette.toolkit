@@ -9,7 +9,7 @@ const ClassOptions = [
   'stopWithParent',
   'startAfterInitialized',
   'preventDestroy',
-  'StateClass'
+  'StateModel'
 ];
 
 /**
