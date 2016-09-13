@@ -1,9 +1,9 @@
 # Marionette.Toolkit.App
 
-`Marionette.Toolkit.App` is an extension of `Marionette.Object`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle. `App` has several mixins:
+`Marionette.Toolkit.App` is an extension of `Marionette.Application`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle. `App` has several mixins:
 
 * [`StateMixin`](./mixins/state.md) to maintain application state.
-* [`EventListernersMixin`](./mixins/event-listeners.md) to bind all events to an `App` while running (and only those) will be remove when stopped.
+* [`EventListenersMixin`](./mixins/event-listeners.md) to bind all events to an `App` while running (and only those) will be remove when stopped.
 * [`ChildAppsMixin`](./mixins/child-apps.md) to manage the addition and removal of child `App`s and relating the child `App` lifecycle with the parent `App` lifecycle.
 
 ## Documentation Index
@@ -14,14 +14,14 @@
   * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
-  * [App `restart`](#app-restart)
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
-  * [App `isDestroyed`](#app-isdestroyed)
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
+* [Application State](#application-state)
+  * [App `getInitState`](#app-getInitState)
 
 ## Lifecycle Settings
 
@@ -145,21 +145,28 @@ This method sets the `App` to its running state.
 Events added after `start` are registered for removal `onStop`.
 This triggers ["before:start" / "start" events](#beforestart--start-events).
 
+Initial state can be passed as an option to `start`.
+
 ```js
 var myApp = new Marionette.Toolkit.App();
 
 myApp.on('start', function(options){
   console.log('My App Started!');
   options.foo === true;
+  this.getState('bar') === 'baz';
 });
 
 // false
 myApp.isRunning();
 
+var initialState = {
+  bar: 'baz'
+};
 
 // "My App Started!" logged
 myApp.start({
-  foo: true
+  foo: true,
+  state: initialState
 });
 
 // true
@@ -167,33 +174,6 @@ myApp.isRunning();
 
 // Nothing is logged
 myApp.start();
-```
-
-### App `restart`
-
-This method stops the `App`'s running state.
-The `App`'s state is then reinitialized.
-Finally the `App`'s `start` method is triggered.
-
-Among other options that `restart` accepts, it also takes state settings.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-myApp.start();
-
-//Pass state argument
-myApp.restart({
-  state: {
-    foo: 'bar'
-  }
-});
-
-// true
-myApp.isRunning();
-
-// bar
-this.getState('foo');
 ```
 
 ### App `stop`
@@ -267,21 +247,6 @@ myApp.isDestroyed() === true;
 
 ```
 
-### App `isDestroyed`
-
-Returns a Boolean indicating whether or not the `App` is destroyed.  Destroyed `App`s cannot be started or used.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-myApp.isDestroyed() === false;
-
-myApp.destroy();
-
-myApp.isDestroyed() === true;
-
-```
-
 ## Lifecycle Events
 
 ### `before:start` / `start` events
@@ -346,4 +311,20 @@ myApp.on('before:stop', function(options){
 myApp.on('stop', function(options){
   // ...
 });
+```
+
+## Application State
+
+Application state can be passed to [App `start`](#app-start) as an option. The state is maintained while the app is running.
+
+### App `getInitState`
+
+Override `getInitState` to modify state object passed into the App constructor.
+
+```js
+getInitState(state){
+  const modState = _.extend({}, {foo: 'bar'}, state);
+
+  return return modState;
+}
 ```

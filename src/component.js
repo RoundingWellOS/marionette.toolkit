@@ -3,7 +3,7 @@ import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import StateMixin from './mixins/state';
 
-const ClassOpions = [
+const ClassOptions = [
   'ViewClass',
   'viewEventPrefix',
   'viewOptions',
@@ -21,10 +21,10 @@ const Component = Marionette.Object.extend({
 
   /**
    * The view class to be managed.
-   * @type {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
-   * @default Marionette.ItemView
+   * @type {Mn.View|Mn.CollectionView}
+   * @default Marionette.View
    */
-  ViewClass: Marionette.ItemView,
+  ViewClass: Marionette.View,
 
   /**
    * Used as the prefix for events forwarded from
@@ -46,7 +46,7 @@ const Component = Marionette.Object.extend({
    * @constructs Component
    * @param {Object} [options] - Settings for the component.
    * @param {Object} [options.state] - Attributes to set on the state model.
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView=} [options.ViewClass]
+   * @param {Mn.View|Mn.CollectionView} [options.ViewClass]
    * - The view class to be managed.
    * @param {String} [options.viewEventPrefix]
    * - Used as the prefix for events forwarded from the component's view to the component
@@ -55,7 +55,7 @@ const Component = Marionette.Object.extend({
    */
   constructor(options = {}) {
     // Make defaults available to this
-    this.mergeOptions(options, ClassOpions);
+    this.mergeOptions(options, ClassOptions);
 
     this.initState(options);
 
@@ -104,6 +104,8 @@ const Component = Marionette.Object.extend({
    * @returns {Component}
    */
   show(viewOptions) {
+    const region = this.getRegion();
+
     if(this._isShown) {
       throw new Marionette.Error({
         name: 'ComponentShowError',
@@ -111,7 +113,7 @@ const Component = Marionette.Object.extend({
       });
     }
 
-    if(!this.region) {
+    if(!region) {
       throw new Marionette.Error({
         name: 'ComponentRegionError',
         message: 'Component has no defined region.'
@@ -127,9 +129,21 @@ const Component = Marionette.Object.extend({
 
     // Destroy the component if the region is emptied because
     // it destroys the view
-    this.listenTo(this.region, 'empty', this._destroy);
+    this.listenTo(region, 'empty', this._destroy);
 
     return this;
+  },
+
+  /**
+   * Returns component region.
+   *
+   * @public
+   * @method getRegion
+   * @memberOf Component
+   * @returns Component region
+   */
+  getRegion() {
+    return this.region;
   },
 
   /**
@@ -188,7 +202,7 @@ const Component = Marionette.Object.extend({
     this._shouldDestroy = false;
 
     // Show the view in the region
-    this.region.show(view);
+    this.getRegion().show(view);
 
     this._shouldDestroy = true;
 
@@ -205,7 +219,7 @@ const Component = Marionette.Object.extend({
    * @private
    * @method _proxyViewEvents
    * @memberOf Component
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} view -
+   * @param {Mn.View|Mn.CollectionView} view -
    * The instantiated ViewClass.
    */
   _proxyViewEvents(view) {
@@ -246,10 +260,10 @@ const Component = Marionette.Object.extend({
    * @abstract
    * @method buildView
    * @memberOf Component
-   * @param {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView} ViewClass -
+   * @param {Mn.View|Mn.CollectionView} ViewClass -
    * The view class to instantiate.
    * @param {Object} [viewOptions] - Options to pass to the View
-   * @returns {Mn.ItemView|Mn.CollectionView|Mn.CompositeView|Mn.LayoutView}
+   * @returns {Mn.View|Mn.CollectionView}
    */
   buildView(ViewClass, viewOptions) {
     return new ViewClass(viewOptions);
@@ -277,9 +291,11 @@ const Component = Marionette.Object.extend({
    * @memberOf Component
    */
   _emptyRegion(options) {
-    if(this.region) {
-      this.stopListening(this.region, 'empty');
-      this.region.empty(options);
+    const region = this.getRegion();
+
+    if(region) {
+      this.stopListening(region, 'empty');
+      region.empty(options);
     }
   },
 

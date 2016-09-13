@@ -8,18 +8,19 @@ const ClassOptions = [
   'startWithParent',
   'stopWithParent',
   'startAfterInitialized',
-  'preventDestroy'
+  'preventDestroy',
+  'StateModel'
 ];
 
 /**
- * Marionette.Object with an `initialize` / `start` / `stop` / `destroy` lifecycle.
+ * Marionette.Application with an `initialize` / `start` / `stop` / `destroy` lifecycle.
  *
  * @public
  * @class App
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const App = Marionette.Object.extend({
+const App = Marionette.Application.extend({
 
   /**
    * Internal flag indiciate when `App` has started but has not yet stopped.
@@ -29,15 +30,6 @@ const App = Marionette.Object.extend({
    * @default false
    */
   _isRunning: false,
-
-  /**
-   * Internal flag indiciate when `App` has been destroyed
-   *
-   * @private
-   * @type {Boolean}
-   * @default false
-   */
-  _isDestroyed: false,
 
   /**
    * Set to true if a parent `App` should not be able to destroy this `App`.
@@ -86,10 +78,9 @@ const App = Marionette.Object.extend({
 
     this.mergeOptions(options, ClassOptions);
 
-    this.initState(options);
     this._initChildApps(options);
 
-    Marionette.Object.call(this, options);
+    Marionette.Application.call(this, options);
 
     if(_.result(this, 'startAfterInitialized')) {
       this.start(options);
@@ -144,11 +135,31 @@ const App = Marionette.Object.extend({
 
     this.triggerMethod('before:start', options);
 
+    const opts = _.extend({}, options);
+    opts.state = this.getInitState(opts.state);
+
+    this.initState(opts);
+
     this._isRunning = true;
 
-    this.triggerStart(options);
+    this.triggerStart(opts);
 
     return this;
+  },
+
+  /**
+   * Returns state.
+   * Override to extend state
+   *
+   * @public
+   * @method getInitState
+   * @memberOf App
+   * @param {Object} [state] - initial app state
+   * @returns state
+   */
+
+  getInitState(state) {
+    return state;
   },
 
   /**
@@ -164,24 +175,6 @@ const App = Marionette.Object.extend({
    */
   triggerStart(options) {
     this.triggerMethod('start', options);
-  },
-
-  /**
-   * "Restarts the app" by first stoping app, reinitializing state, and then starting the app again
-   *
-   *
-   * @public
-   * @method restart
-   * @memberOf App
-   * @param {Object} [options] - Settings for the App passed through to events
-   * @returns {App}
-   */
-  restart(options) {
-    this.stop(options);
-    this.initState(options);
-    this.start(options);
-
-    return this;
   },
 
   /**
@@ -214,18 +207,6 @@ const App = Marionette.Object.extend({
   },
 
   /**
-   * Gets the value of internal `_isDestroyed` flag
-   *
-   * @public
-   * @method isDestroyed
-   * @memberOf App
-   * @returns {Boolean}
-   */
-  isDestroyed() {
-    return this._isDestroyed;
-  },
-
-  /**
    * Stops the `App` and sets it destroyed.
    *
    * @public
@@ -240,8 +221,6 @@ const App = Marionette.Object.extend({
     this.stop();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
-
-    this._isDestroyed = true;
   }
 });
 

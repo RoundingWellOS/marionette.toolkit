@@ -95,6 +95,33 @@ export default {
   },
 
   /**
+   * Starts `childApp`
+   *
+   * @param {String} appName - Name of childApp to start
+   * @param {object} options - Start options for app
+   * @public
+   * @method startChildApp
+   */
+  startChildApp(appName, options) {
+    this.getChildApp(appName).start(options);
+
+    return this;
+  },
+
+  /**
+   * Stops `childApp`
+   *
+   * @param {String} appName - Name of childApp to stop
+   * @public
+   * @method stopChildApp
+   */
+  stopChildApp(appName) {
+    this.getChildApp(appName).stop();
+
+    return this;
+  },
+
+  /**
    * Destroys `childApps` if allowed by child
    *
    * @private

@@ -17,7 +17,7 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 
 ### Using StateMixin
 
-While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` you can extend your own class with `StateMixin` by calling `initState` in your class's `initialize` passing any desired options.
+While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` and `Marionette.Toolkit.Component`, you can extend your own class with `StateMixin` by calling `initState` in your class's `initialize` passing any desired options.
 
 ```js
 var MyStateModel = Backbone.Model.extend({});
@@ -77,7 +77,7 @@ specify a `StateModel`, a vanilla `Backbone.Model` definition will be used.
 ```js
 var MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Toolkit.App.extend({
+var MyClass = Marionette.Object.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -90,13 +90,15 @@ var MyClass = Marionette.Toolkit.App.extend({
 ```js
 var MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Toolkit.App.extend({
+var MyClass = Marionette.Object.extend({
   initialize(options) {
     this.initState(options);
   }
 });
 
-var myClass = new MyClass(MyStateModel);
+var myClass = new MyClass({
+  StateModel: MyStateModel
+});
 ```
 
 You can also define `StateModel` as a function. In this form, the value
@@ -116,6 +118,8 @@ Marionette.Toolkit.App.extend({
 });
 ```
 
+#### Passed as Option on Initialization
+
 Alternatively, you can specify a `StateModel` in the options for
 the `constructor`:
 
@@ -124,6 +128,28 @@ var MyToolKitApp = Marionette.Toolkit.App.extend({...});
 
 new MyToolKitApp({
   StateModel: MyStateModel
+});
+```
+
+### StateMixin's `State`
+
+Optionally define a `state` attributes object on your class initialization or pass as an option when calling `initState(options)`.
+
+```js
+var MyStateModel = Backbone.Model.extend({});
+
+var MyClass = Marionette.Object.extend({
+  StateModel: MyStateModel
+
+  initialize(options) {
+    this.initState(options);
+  }
+});
+
+new MyClass({
+  state: {
+    foo: 'bar'
+  }
 });
 ```
 
