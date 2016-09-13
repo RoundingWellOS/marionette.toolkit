@@ -1,3 +1,23 @@
+#### v2.0.0
+
+* `App`
+  * The `App` now extends `Marionette.Application`
+    * **Breaking Changes:**
+      * Move `initState` from `App` constructor to `start`
+      * Remove `restartState` functionality
+    * Add `getInitState` functionality to allow user to override and modify state on App `start`
+    * Remove `isDestroyed` functionality and `isDestroyed` flag as this is now supported in `Marionette.Application`
+    * Allow user to pass in `StateModel` during `App` initialization via `ClassOptions`
+* `Component`
+  * ViewClass now uses `Marionette.View` instead of deprecated `Marionette.ItemView`
+  * Add `getRegion` functionality
+* `StateMixin`
+  * Now uses `unbindEvents` instead of `unbindEntityEvents`
+* `ChildAppsMixin`
+  * Add `startChildApp`/`stopChildApp` functionality
+* Dependency
+  * Update and hard-set various dependencies, including Marionette, Backbone, and underscore
+
 #### v1.0.0
 
 * `StateMixin`:
