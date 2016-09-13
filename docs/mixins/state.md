@@ -17,7 +17,7 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 
 ### Using StateMixin
 
-While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` you can extend your own class with `StateMixin` by calling `initState` in your class's `initialize` passing any desired options.
+While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` and `Marionette.Toolkit.Component`, you can extend your own class with `StateMixin` by calling `initState` in your class's `initialize` passing any desired options.
 
 ```js
 var MyStateModel = Backbone.Model.extend({});
@@ -77,7 +77,7 @@ specify a `StateModel`, a vanilla `Backbone.Model` definition will be used.
 ```js
 var MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Toolkit.App.extend({
+var MyClass = Marionette.Object.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -90,7 +90,7 @@ var MyClass = Marionette.Toolkit.App.extend({
 ```js
 var MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Toolkit.App.extend({
+var MyClass = Marionette.Object.extend({
   initialize(options) {
     this.initState(options);
   }
@@ -138,7 +138,7 @@ Optionally define a `state` attributes object on your class initialization or pa
 ```js
 var MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Toolkit.App.extend({
+var MyClass = Marionette.Object.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -146,7 +146,7 @@ var MyClass = Marionette.Toolkit.App.extend({
   }
 });
 
-new MyToolKitApp({
+new MyClass({
   state: {
     foo: 'bar'
   }

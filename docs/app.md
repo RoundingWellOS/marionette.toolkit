@@ -145,21 +145,28 @@ This method sets the `App` to its running state.
 Events added after `start` are registered for removal `onStop`.
 This triggers ["before:start" / "start" events](#beforestart--start-events).
 
+Initial state can be passed as an option to `start`.
+
 ```js
 var myApp = new Marionette.Toolkit.App();
 
 myApp.on('start', function(options){
   console.log('My App Started!');
   options.foo === true;
+  this.getState('bar') === 'baz';
 });
 
 // false
 myApp.isRunning();
 
+var initialState = {
+  bar: 'baz'
+};
 
 // "My App Started!" logged
 myApp.start({
-  foo: true
+  foo: true,
+  state: initialState
 });
 
 // true
@@ -307,6 +314,8 @@ myApp.on('stop', function(options){
 ```
 
 ## Application State
+
+Application state can be passed to [App `start`](#app-start) as an option. The state is maintained while the app is running.
 
 ### App `getInitState`
 

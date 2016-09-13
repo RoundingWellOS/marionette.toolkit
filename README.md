@@ -14,11 +14,11 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 ## Documentation
   [App](./docs/app.md) - An extension of `Marionette.Application`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.
 
-  [Component](./docs/component.md) - An extension of `Marionette.Application`. Provides a consistent interface for which to package state-view-logic.
+  [Component](./docs/component.md) - An extension of `Marionette.Object`. Provides a consistent interface for which to package state-view-logic.
 
   [Asnyc App start](./docs/async-app-start.md) - How to easily start apps asynchronously.
 
-  [StateMixin](./docs/mixins/state.md) - JavaScript Object with a `Backbone.Model` for keeping state.
+  [StateMixin](./docs/mixins/state.md) - JavaScript Object with a `Backbone.Model` for keeping state.  Used by both the App and Component but can be applied to any Marionette Class.
 
   [ChildAppsMixin](./docs/mixins/child-apps.md) - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.
 
@@ -63,9 +63,9 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 3.0.0+ as it utilizes [`Marionette.Error`](https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js) and extends
 [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/next/docs/marionette.application.md)
 
-This library is tested with v3.0+ and a mix of underscore v1.8 and lodash v1.3.3 versions.
+This library is tested with Marionette v3.0+
 
-Marionette.Toolkit supports IE8+ and modern browsers.
+Marionette.Toolkit supports IE9+ and modern browsers.
 
 
 ## How to Contribute

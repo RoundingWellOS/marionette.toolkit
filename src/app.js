@@ -13,7 +13,7 @@ const ClassOptions = [
 ];
 
 /**
- * Marionette.Object with an `initialize` / `start` / `stop` / `destroy` lifecycle.
+ * Marionette.Application with an `initialize` / `start` / `stop` / `destroy` lifecycle.
  *
  * @public
  * @class App
