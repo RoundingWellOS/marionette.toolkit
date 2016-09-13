@@ -147,14 +147,14 @@ const App = Marionette.Application.extend({
   },
 
   /**
-   * Extends passed in state.
+   * Returns state.
    * Override to extend state
    *
    * @public
    * @method getInitState
    * @memberOf App
-   * @param {Object} [state] - initial app state 
-   * @returns extended state
+   * @param {Object} [state] - initial app state
+   * @returns state
    */
 
   getInitState(state) {

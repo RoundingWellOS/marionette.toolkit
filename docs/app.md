@@ -20,6 +20,8 @@
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
+* [Application State](#application-state)
+  * [App `getInitState`](#app-getInitState)
 
 ## Lifecycle Settings
 
@@ -302,4 +304,18 @@ myApp.on('before:stop', function(options){
 myApp.on('stop', function(options){
   // ...
 });
+```
+
+## Application State
+
+### App `getInitState`
+
+Override `getInitState` to modify state object passed into the App constructor.
+
+```js
+getInitState(state){
+  const modState = _.extend({}, {foo: 'bar'}, state);
+
+  return return modState;
+}
 ```
