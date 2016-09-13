@@ -22,7 +22,7 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 
   [ChildAppsMixin](./docs/mixins/child-apps.md) - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.
 
-  [EventListernersMixin](./docs/mixins/event-listeners.md) - Binds events to the `App` while running and removed (and only those) when the `App` is stopped.
+  [EventListenersMixin](./docs/mixins/event-listeners.md) - Binds events to the `App` while running and removed (and only those) when the `App` is stopped.
 
 
 ## Getting Help

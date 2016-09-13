@@ -1,6 +1,6 @@
-# EventListernersMixin
+# EventListenersMixin
 
-`EventListernersMixin` is a private mixin for [`App`](../app.md). It adds functionality to binds events to the `App` while running and removed (and only those) when the `App` is stopped.
+`EventListenersMixin` is a private mixin for [`App`](../app.md). It adds functionality to binds events to the `App` while running and removed (and only those) when the `App` is stopped.
 
 ## Documentation Index
 
