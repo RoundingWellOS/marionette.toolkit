@@ -5,7 +5,7 @@
     * **Breaking Changes:**
       * Move `initState` from `App` constructor to `start`
       * Remove `restartState` functionality
-    * Add `getInitState` functionality to allow user to override and modify state on App initialization
+    * Add `getInitState` functionality to allow user to override and modify state on App `start`
     * Remove `isDestroyed` functionality and `isDestroyed` flag as this is now supported in `Marionette.Application`
     * Allow user to pass in `StateModel` during `App` initialization via `ClassOptions`
 * `Component`
