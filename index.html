@@ -35,17 +35,17 @@ built from scripts open sourced from <a href="http://roundingwell.com">RoundingW
 <h2>
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
 
-<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/app.md">App</a> - An extension of <code>Marionette.Object</code>. Its purpose is to provide an object with a <code>initialize</code>/<code>start</code>/<code>stop</code>/<code>destroy</code> lifecycle.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/app.md">App</a> - An extension of <code>Marionette.Application</code>. Its purpose is to provide an object with a <code>initialize</code>/<code>start</code>/<code>stop</code>/<code>destroy</code> lifecycle.</p>
 
-<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/component.md">Component</a> - Provides a consistent interface for which to package state-view-logic.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/component.md">Component</a> - An extension of <code>Marionette.Object</code>. Provides a consistent interface for which to package state-view-logic.</p>
 
 <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/async-app-start.md">Asnyc App start</a> - How to easily start apps asynchronously.</p>
 
-<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/state.md">StateMixin</a> - JavaScript Object with a <code>Backbone.Model</code> for keeping state.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/state.md">StateMixin</a> - JavaScript Object with a <code>Backbone.Model</code> for keeping state.  Used by both the App and Component but can be applied to any Marionette Class.</p>
 
 <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/child-apps.md">ChildAppsMixin</a> - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.</p>
 
-<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/event-listeners.md">EventListernersMixin</a> - Binds events to the <code>App</code> while running and removed (and only those) when the <code>App</code> is stopped.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/event-listeners.md">EventListenersMixin</a> - Binds events to the <code>App</code> while running and removed (and only those) when the <code>App</code> is stopped.</p>
 
 <h2>
 <a id="getting-help" class="anchor" href="#getting-help" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Help</h2>
@@ -86,15 +86,12 @@ Everyone there is happy to discuss design patterns.</p>
 <h4>
 <a id="compatibility-and-requirements" class="anchor" href="#compatibility-and-requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compatibility and Requirements</h4>
 
-<p>Marionette.Toolkit currently requires <a href="http://marionettejs.com">Marionette</a> 2.2.0+ as it utilizes <a href="https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js"><code>Marionette.Error</code></a> and extends
-<a href="https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.object.md"><code>Marionette.Object</code></a></p>
+<p>Marionette.Toolkit currently requires <a href="http://marionettejs.com">Marionette</a> 3.0.0+ as it utilizes <a href="https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js"><code>Marionette.Error</code></a> and extends
+<a href="https://github.com/marionettejs/backbone.marionette/blob/next/docs/marionette.application.md"><code>Marionette.Application</code></a></p>
 
-<p>It's possible this library would work with earlier versions by manually adding <code>Marionette.Error</code> and shimming
-<code>Marionette.Object = Marionette.Controller;</code></p>
+<p>This library is tested with Marionette v3.0+</p>
 
-<p>This library is tested with v2.2+ and a mix of underscore and lodash versions.</p>
-
-<p>Marionette.Toolkit supports IE8+ and modern browsers.</p>
+<p>Marionette.Toolkit supports IE9+ and modern browsers.</p>
 
 <h2>
 <a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to Contribute</h2>
