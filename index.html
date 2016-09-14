@@ -1,33 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title>Marionette.toolkit by RoundingWellOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>Marionette.toolkit by RoundingWellOS</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Marionette.toolkit</h1>
-        <h2>A collection of opinionated extensions for Backbone.Marionette to help with large scale application architecture.</h2>
-        <a href="https://github.com/RoundingWellOS/marionette.toolkit" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+    <section class="page-header">
+      <h1 class="project-name">Marionette.toolkit</h1>
+      <h2 class="project-tagline">A collection of opinionated extensions for Backbone.Marionette to help with large scale application architecture.</h2>
+      <a href="https://github.com/RoundingWellOS/marionette.toolkit" class="btn">View on GitHub</a>
+      <a href="https://github.com/RoundingWellOS/marionette.toolkit/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/RoundingWellOS/marionette.toolkit/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+    <section class="main-content">
+      <h1>
 <a id="marionettetoolkit" class="anchor" href="#marionettetoolkit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Marionette.Toolkit</h1>
 
 <p><a href="https://travis-ci.org/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/travis/RoundingWellOS/marionette.toolkit/master.svg?style=flat&amp;amp;label=travis" alt="Travis Status"></a> <a href="https://codeclimate.com/github/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/codeclimate/github/RoundingWellOS/marionette.toolkit.svg?style=flat" alt="Code Climate Score"></a> <a href="https://codeclimate.com/github/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/codeclimate/coverage/github/RoundingWellOS/marionette.toolkit.svg?style=flat" alt="Coverage"></a> <a href="https://david-dm.org/RoundingWellOS/marionette.toolkit"><img src="http://img.shields.io/david/RoundingWellOS/marionette.toolkit.svg?style=flat" alt="Dependency Status"></a></p>
@@ -43,17 +35,17 @@ built from scripts open sourced from <a href="http://roundingwell.com">RoundingW
 <h2>
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
 
-          <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/app.md">App</a> - An extension of <code>Marionette.Object</code>. Its purpose is to provide an object with a <code>initialize</code>/<code>start</code>/<code>stop</code>/<code>destroy</code> lifecycle.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/app.md">App</a> - An extension of <code>Marionette.Object</code>. Its purpose is to provide an object with a <code>initialize</code>/<code>start</code>/<code>stop</code>/<code>destroy</code> lifecycle.</p>
 
-          <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/component.md">Component</a> - Provides a consistent interface for which to package state-view-logic.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/component.md">Component</a> - Provides a consistent interface for which to package state-view-logic.</p>
 
-          <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/async-app-start.md">Asnyc App start</a> - How to easily start apps asynchronously.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/async-app-start.md">Asnyc App start</a> - How to easily start apps asynchronously.</p>
 
-          <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/state.md">StateMixin</a> - JavaScript Object with a <code>Backbone.Model</code> for keeping state.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/state.md">StateMixin</a> - JavaScript Object with a <code>Backbone.Model</code> for keeping state.</p>
 
-          <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/child-apps.md">ChildAppsMixin</a> - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/child-apps.md">ChildAppsMixin</a> - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.</p>
 
-          <p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/event-listeners.md">EventListernersMixin</a> - Binds events to the <code>App</code> while running and removed (and only those) when the <code>App</code> is stopped.</p>
+<p><a href="https://github.com/RoundingWellOS/marionette.toolkit/tree/master/docs/mixins/event-listeners.md">EventListernersMixin</a> - Binds events to the <code>App</code> while running and removed (and only those) when the <code>App</code> is stopped.</p>
 
 <h2>
 <a id="getting-help" class="anchor" href="#getting-help" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Help</h2>
@@ -123,24 +115,14 @@ create summarized and documented feature requests (preferably with the feature i
 <h1></h1>
 
 <p>This library is © 2016 RoundingWell. Distributed under MIT license.</p>
-        </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/RoundingWellOS/marionette.toolkit/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/RoundingWellOS/marionette.toolkit/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/RoundingWellOS/marionette.toolkit">Marionette.toolkit</a> is maintained by <a href="https://github.com/RoundingWellOS">RoundingWellOS</a>.</span>
 
-          <p class="repo-owner"><a href="https://github.com/RoundingWellOS/marionette.toolkit"></a> is maintained by <a href="https://github.com/RoundingWellOS">RoundingWellOS</a>.</p>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+    </section>
 
             <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
