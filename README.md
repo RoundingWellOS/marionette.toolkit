@@ -60,10 +60,8 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 
 #### Compatibility and Requirements
 
-Marionette.Toolkit currently requires [Marionette](http://marionettejs.com) 3.0.0+ as it utilizes [`Marionette.Error`](https://github.com/marionettejs/backbone.marionette/blob/v2.2.0/src/marionette.error.js) and extends
+Marionette.Toolkit currently requires and is tested with [Marionette](http://marionettejs.com) 3.0.0+ as it extends
 [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/next/docs/marionette.application.md)
-
-This library is tested with Marionette v3.0+
 
 Marionette.Toolkit supports IE9+ and modern browsers.
 
