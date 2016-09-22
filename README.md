@@ -16,7 +16,7 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 
   [Component](./docs/component.md) - An extension of `Marionette.Object`. Provides a consistent interface for which to package state-view-logic.
 
-  [Asnyc App start](./docs/async-app-start.md) - How to easily start apps asynchronously.
+  [Async App start](./docs/async-app-start.md) - How to easily start apps asynchronously.
 
   [StateMixin](./docs/mixins/state.md) - JavaScript Object with a `Backbone.Model` for keeping state.  Used by both the App and Component but can be applied to any Marionette Class.
 
