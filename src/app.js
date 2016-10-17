@@ -198,10 +198,10 @@ const App = Marionette.Application.extend({
 
     this._isRunning = false;
 
-    this.triggerMethod('stop', options);
-
     this._stopRunningListeners();
     this._stopRunningEvents();
+
+    this.triggerMethod('stop', options);
 
     return this;
   },
