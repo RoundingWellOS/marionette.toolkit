@@ -74,8 +74,6 @@ const App = Marionette.Application.extend({
    * @param {Object} [options.state] - Attributes to set on the state model.
    */
   constructor(options = {}) {
-    _.bindAll(this, 'start', 'stop');
-
     this.mergeOptions(options, ClassOptions);
 
     this._initChildApps(options);
