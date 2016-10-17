@@ -1,18 +1,15 @@
 language: node_js
 node_js:
-  - "4"
+  - "6"
 sudo: false
 cache:
   directories:
     - node_modules
-env:
-  matrix:
-    - UNDERSCORE=1.8 BACKBONE=1.3.3 MARIONETTE=3.0.0
 before_install:
   - npm config set ca ""
 install:
-  - curl -L https://rawgit.com/marionettejs/travis-ci-setup/master/ci.sh | bash
+  - npm install && npm install travis-ci
 script: "gulp coverage"
 after_success:
-  - if [[ $MAINRUN == true ]]; then npm install -g codeclimate-test-reporter; fi
-  - if [[ $MAINRUN == true ]]; then codeclimate-test-reporter < coverage/lcov.info
+  - npm install -g codeclimate-test-reporter;
+  - codeclimate-test-reporter < coverage/lcov.info
