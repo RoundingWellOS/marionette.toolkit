@@ -98,7 +98,7 @@ export default {
    * Starts `childApp`
    *
    * @param {String} appName - Name of childApp to start
-   * @param {object} options - Start options for app
+   * @param {Object} options - Start options for app
    * @public
    * @method startChildApp
    */
