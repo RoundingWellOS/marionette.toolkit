@@ -1,6 +1,6 @@
 import App from '../../src/app';
 
-describe.only('App StateModel', function() {
+describe('App StateModel', function() {
   describe('when passing StateModel on Toolkit.App definition', function() {
     before(function() {
       this.MyModel = Backbone.Model.extend({
