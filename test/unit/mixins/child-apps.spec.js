@@ -38,22 +38,6 @@ describe('ChildAppMixin', function() {
         });
       });
 
-      describe('addChildApps', function() {
-        beforeEach(function() {
-          this.sinon.spy(this.myApp, 'addChildApps');
-
-          this.myApp.addChildApps();
-        });
-
-        it('should be called', function() {
-          expect(this.myApp.addChildApps.called).to.be.true;
-        });
-
-        it('should have no arguments', function() {
-          expect(this.myApp.addChildApps.calledWith(this.childApps)).to.be.false;
-        });
-      });
-
       describe('addChildApp function', function() {
         it('should raise an error message', function() {
           const errMessage = 'App build failed.  Incorrect configuration.';
@@ -89,8 +73,10 @@ describe('ChildAppMixin', function() {
             cA2: Marionette.Toolkit.App,
             cA3: Marionette.Toolkit.App
           };
-          this.sinon.spy(this.myApp, '_initChildApps');
-          this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+          const MyApp = Marionette.Toolkit.App.extend();
+
+          this.sinon.spy(MyApp.prototype, '_initChildApps');
+          this.myApp = new MyApp({ childApps: childApps });
 
           expect(this.myApp._initChildApps.called);
           expect(_.keys(this.myApp._childApps)).to.have.length(3);
