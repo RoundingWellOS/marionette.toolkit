@@ -1,3 +1,14 @@
+#### v3.0.0
+
+* `App`
+  * Add `setRegion` to modify an App's region
+    * All `region` to be passed to `App#start`
+  * `start` and `stop` are no longer binded to the App
+  * the stop event is triggered after clearing running events
+* General
+  * Support lodash v4
+  * Fixed an underscore import
+
 #### v2.0.0
 
 * `App`
