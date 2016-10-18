@@ -16,9 +16,9 @@ export default {
    * @method _stopRunningEvents
    */
   _stopRunningEvents() {
-    _.each(this._runningEvents, function(args) {
+    _.each(this._runningEvents, _.bind(function(args) {
       this.off.apply(this, args);
-    }, this);
+    }, this));
   },
 
   /**
@@ -28,9 +28,9 @@ export default {
    * @method _stopRunningListeners
    */
   _stopRunningListeners() {
-    _.each(this._runningListeningTo, function(args) {
+    _.each(this._runningListeningTo, _.bind(function(args) {
       this.stopListening.apply(this, args);
-    }, this);
+    }, this));
   },
 
   /**

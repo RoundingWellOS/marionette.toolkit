@@ -211,9 +211,9 @@ export default {
    * @param {Object} childApps - Hash of names and `AppClass` or `appConfig`
    */
   addChildApps(childApps) {
-    _.each(childApps, function(childApp, appName) {
+    _.each(childApps, _.bind(function(childApp, appName) {
       this.addChildApp(appName, childApp);
-    }, this);
+    }, this));
   },
 
   /**
@@ -314,9 +314,9 @@ export default {
   removeChildApps() {
     const childApps = this.getChildApps();
 
-    _.each(this._childApps, function(childApp, appName) {
+    _.each(this._childApps, _.bind(function(childApp, appName) {
       this.removeChildApp(appName);
-    }, this);
+    }, this));
 
     return childApps;
   },
