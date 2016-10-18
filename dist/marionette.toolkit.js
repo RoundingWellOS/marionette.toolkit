@@ -1,18 +1,18 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v2.0.0
+ * @version v3.0.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('backbone.marionette'), require('underscore'), require('backbone')) :
-  typeof define === 'function' && define.amd ? define(['backbone.marionette', 'underscore', 'backbone'], factory) :
-  (global.Marionette = global.Marionette || {}, global.Marionette.Toolkit = factory(global.Marionette,global._,global.Backbone));
-}(this, function (Marionette,_$1,Backbone) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('underscore'), require('backbone.marionette'), require('backbone')) :
+  typeof define === 'function' && define.amd ? define(['underscore', 'backbone.marionette', 'backbone'], factory) :
+  (global.Marionette = global.Marionette || {}, global.Marionette.Toolkit = factory(global._,global.Marionette,global.Backbone));
+}(this, function (_,Marionette,Backbone) { 'use strict';
 
+  _ = 'default' in _ ? _['default'] : _;
   Marionette = 'default' in Marionette ? Marionette['default'] : Marionette;
-  _$1 = 'default' in _$1 ? _$1['default'] : _$1;
   Backbone = 'default' in Backbone ? Backbone['default'] : Backbone;
 
   var ClassOptions = ['StateModel', 'stateEvents'];
@@ -40,7 +40,7 @@
      * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
      */
     initState: function initState() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       // Make defaults available to this
       this.mergeOptions(options, ClassOptions);
@@ -82,7 +82,7 @@
      * @method _setEventHandlers
      */
     _setEventHandlers: function _setEventHandlers() {
-      this.bindEvents(this._stateModel, _$1.result(this, 'stateEvents'));
+      this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
 
       this.on('destroy', this._destroyState);
     },
@@ -101,7 +101,7 @@
     _getStateModel: function _getStateModel(options) {
       if (this.StateModel.prototype instanceof Backbone.Model || this.StateModel === Backbone.Model) {
         return this.StateModel;
-      } else if (_$1.isFunction(this.StateModel)) {
+      } else if (_.isFunction(this.StateModel)) {
         return this.StateModel.call(this, options);
       }
 
@@ -136,7 +136,7 @@
      * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
      */
     resetStateDefaults: function resetStateDefaults() {
-      var defaults = _$1.result(this._stateModel, 'defaults');
+      var defaults = _.result(this._stateModel, 'defaults');
 
       return this._stateModel.set(defaults);
     },
@@ -200,7 +200,7 @@
      * ```
      */
     _initChildApps: function _initChildApps() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       this._childApps = {};
 
@@ -209,7 +209,7 @@
       var childApps = this.childApps;
 
       if (childApps) {
-        if (_$1.isFunction(childApps)) {
+        if (_.isFunction(childApps)) {
           childApps = childApps.call(this, options);
         }
 
@@ -243,8 +243,8 @@
      * @method _startChildApps
      */
     _startChildApps: function _startChildApps() {
-      _$1.each(this._childApps, function (childApp) {
-        if (_$1.result(childApp, 'startWithParent')) {
+      _.each(this._childApps, function (childApp) {
+        if (_.result(childApp, 'startWithParent')) {
           childApp.start();
         }
       });
@@ -258,8 +258,8 @@
      * @method _stopChildApps
      */
     _stopChildApps: function _stopChildApps() {
-      _$1.each(this._childApps, function (childApp) {
-        if (_$1.result(childApp, 'stopWithParent')) {
+      _.each(this._childApps, function (childApp) {
+        if (_.result(childApp, 'stopWithParent')) {
           childApp.stop();
         }
       });
@@ -270,7 +270,7 @@
      * Starts `childApp`
      *
      * @param {String} appName - Name of childApp to start
-     * @param {object} options - Start options for app
+     * @param {Object} options - Start options for app
      * @public
      * @method startChildApp
      */
@@ -302,8 +302,8 @@
      * @method _destroyChildApps
      */
     _destroyChildApps: function _destroyChildApps() {
-      _$1.each(this._childApps, function (childApp) {
-        if (!_$1.result(childApp, 'preventDestroy')) {
+      _.each(this._childApps, function (childApp) {
+        if (!_.result(childApp, 'preventDestroy')) {
           childApp.destroy();
         }
       });
@@ -320,7 +320,7 @@
      */
     _buildAppFromObject: function _buildAppFromObject(appConfig) {
       var AppClass = appConfig.AppClass;
-      var options = _$1.omit(appConfig, 'AppClass');
+      var options = _.omit(appConfig, 'AppClass');
 
       return this.buildApp(AppClass, options);
     },
@@ -337,10 +337,10 @@
      * @returns {App}
      */
     _buildApp: function _buildApp(AppClass, options) {
-      if (_$1.isFunction(AppClass)) {
+      if (_.isFunction(AppClass)) {
         return this.buildApp(AppClass, options);
       }
-      if (_$1.isObject(AppClass)) {
+      if (_.isObject(AppClass)) {
         return this._buildAppFromObject(AppClass);
       }
     },
@@ -358,7 +358,7 @@
      */
     buildApp: function buildApp(AppClass, options) {
       // options on childApp definition supersede childAppOptions
-      options = _$1.extend({}, this.childAppOptions, options);
+      options = _.extend({}, this.childAppOptions, options);
 
       return new AppClass(options);
     },
@@ -390,9 +390,9 @@
      * @param {Object} childApps - Hash of names and `AppClass` or `appConfig`
      */
     addChildApps: function addChildApps(childApps) {
-      _$1.each(childApps, function (childApp, appName) {
+      _.each(childApps, _.bind(function (childApp, appName) {
         this.addChildApp(appName, childApp);
-      }, this);
+      }, this));
     },
 
 
@@ -426,9 +426,9 @@
       this._childApps[appName] = childApp;
 
       // When the app is destroyed remove the cached app.
-      childApp.on('destroy', _$1.partial(this._removeChildApp, appName), this);
+      childApp.on('destroy', _.partial(this._removeChildApp, appName), this);
 
-      if (this.isRunning() && _$1.result(childApp, 'startWithParent')) {
+      if (this.isRunning() && _.result(childApp, 'startWithParent')) {
         childApp.start();
       }
 
@@ -456,7 +456,7 @@
      * @returns {Array}
      */
     getChildApps: function getChildApps() {
-      return _$1.clone(this._childApps);
+      return _.clone(this._childApps);
     },
 
 
@@ -498,9 +498,9 @@
     removeChildApps: function removeChildApps() {
       var childApps = this.getChildApps();
 
-      _$1.each(this._childApps, function (childApp, appName) {
+      _.each(this._childApps, _.bind(function (childApp, appName) {
         this.removeChildApp(appName);
-      }, this);
+      }, this));
 
       return childApps;
     },
@@ -517,7 +517,7 @@
      * @returns {App}
      */
     removeChildApp: function removeChildApp(appName, options) {
-      options = _$1.extend({}, options);
+      options = _.extend({}, options);
 
       var childApp = this.getChildApp(appName);
 
@@ -526,7 +526,7 @@
       }
 
       // if preventDestroy simply unregister the child app
-      if (options.preventDestroy || _$1.result(childApp, 'preventDestroy')) {
+      if (options.preventDestroy || _.result(childApp, 'preventDestroy')) {
         this._removeChildApp(appName);
       } else {
         childApp.destroy();
@@ -551,9 +551,9 @@
      * @method _stopRunningEvents
      */
     _stopRunningEvents: function _stopRunningEvents() {
-      _$1.each(this._runningEvents, function (args) {
+      _.each(this._runningEvents, _.bind(function (args) {
         this.off.apply(this, args);
-      }, this);
+      }, this));
     },
 
 
@@ -564,9 +564,9 @@
      * @method _stopRunningListeners
      */
     _stopRunningListeners: function _stopRunningListeners() {
-      _$1.each(this._runningListeningTo, function (args) {
+      _.each(this._runningListeningTo, _.bind(function (args) {
         this.stopListening.apply(this, args);
-      }, this);
+      }, this));
     },
 
 
@@ -687,9 +687,7 @@
      * @param {Object} [options.state] - Attributes to set on the state model.
      */
     constructor: function constructor() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-      _$1.bindAll(this, 'start', 'stop');
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       this.mergeOptions(options, ClassOptions$1);
 
@@ -697,7 +695,7 @@
 
       Marionette.Application.call(this, options);
 
-      if (_$1.result(this, 'startAfterInitialized')) {
+      if (_.result(this, 'startAfterInitialized')) {
         this.start(options);
       }
     },
@@ -751,9 +749,12 @@
         return this;
       }
 
+      var opts = _.extend({}, options);
+
+      this.setRegion(opts.region);
+
       this.triggerMethod('before:start', options);
 
-      var opts = _$1.extend({}, options);
       opts.state = this.getInitState(opts.state);
 
       this.initState(opts);
@@ -761,6 +762,27 @@
       this._isRunning = true;
 
       this.triggerStart(opts);
+
+      return this;
+    },
+
+
+    /**
+     * Set the Application's Region after instantiation
+     *
+     * @public
+     * @method setRegion
+     * @memberOf App
+     * @param {Region} [region] - Region to use with the app
+     * @returns {App}
+     */
+
+    setRegion: function setRegion(region) {
+      if (!region) {
+        return this;
+      }
+
+      this._region = region;
 
       return this;
     },
@@ -819,10 +841,10 @@
 
       this._isRunning = false;
 
-      this.triggerMethod('stop', options);
-
       this._stopRunningListeners();
       this._stopRunningEvents();
+
+      this.triggerMethod('stop', options);
 
       return this;
     },
@@ -846,7 +868,7 @@
     }
   });
 
-  _$1.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin);
+  _.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin);
 
   var ClassOptions$3 = ['ViewClass', 'viewEventPrefix', 'viewOptions', 'region'];
   /**
@@ -894,7 +916,7 @@
      * @param {Marionette.Region} [options.region] - The region to show the component in.
      */
     constructor: function constructor() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       // Make defaults available to this
       this.mergeOptions(options, ClassOptions$3);
@@ -1004,13 +1026,13 @@
      * @returns {View}
      */
     _getViewClass: function _getViewClass() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       var ViewClass = this.ViewClass;
 
       if (ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
         return ViewClass;
-      } else if (_$1.isFunction(ViewClass)) {
+      } else if (_.isFunction(ViewClass)) {
         return ViewClass.call(this, options);
       }
 
@@ -1076,7 +1098,7 @@
       var prefix = this.viewEventPrefix;
 
       view.on('all', function () {
-        var args = _$1.toArray(arguments);
+        var args = _.toArray(arguments);
         var rootEvent = args[0];
 
         args[0] = prefix + ':' + rootEvent;
@@ -1098,9 +1120,9 @@
      * @returns {Object}
      */
     mixinOptions: function mixinOptions(options) {
-      var viewOptions = _$1.result(this, 'viewOptions');
+      var viewOptions = _.result(this, 'viewOptions');
 
-      return _$1.extend({ state: this.getState().attributes }, viewOptions, options);
+      return _.extend({ state: this.getState().attributes }, viewOptions, options);
     },
 
 
@@ -1171,7 +1193,7 @@
     }
   });
 
-  _$1.extend(Component.prototype, StateMixin);
+  _.extend(Component.prototype, StateMixin);
 
   /**
    * @module Toolkit
@@ -1196,7 +1218,7 @@
     _.extend(classDefinition.prototype, _StateMixin);
   };
 
-  Toolkit.VERSION = '2.0.0';
+  Toolkit.VERSION = '3.0.0';
 
   Toolkit.StateMixin = StateMixin;
 
