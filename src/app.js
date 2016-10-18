@@ -131,9 +131,12 @@ const App = Marionette.Application.extend({
       return this;
     }
 
+    const opts = _.extend({}, options);
+
+    this.setRegion(opts.region);
+
     this.triggerMethod('before:start', options);
 
-    const opts = _.extend({}, options);
     opts.state = this.getInitState(opts.state);
 
     this.initState(opts);
@@ -141,6 +144,26 @@ const App = Marionette.Application.extend({
     this._isRunning = true;
 
     this.triggerStart(opts);
+
+    return this;
+  },
+
+  /**
+   * Set the Application's Region after instantiation
+   *
+   * @public
+   * @method setRegion
+   * @memberOf App
+   * @param {Region} [region] - Region to use with the app
+   * @returns {App}
+   */
+
+  setRegion(region) {
+    if(!region) {
+      return this;
+    }
+
+    this._region = region;
 
     return this;
   },
