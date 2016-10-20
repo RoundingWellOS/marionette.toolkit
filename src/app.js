@@ -219,10 +219,12 @@ const App = Marionette.Application.extend({
 
     this._isRunning = false;
 
+    this.triggerMethod('stop', options);
+
+    // Running events are cleaned up after stop so that
+    // `stop` event handlers still fire
     this._stopRunningListeners();
     this._stopRunningEvents();
-
-    this.triggerMethod('stop', options);
 
     return this;
   },
