@@ -44,7 +44,7 @@ describe('App-Lifecycle', function() {
       });
     });
 
-    describe('and stopping the application', function() {
+    describe('when stopping the application', function() {
       beforeEach(function() {
         this.myApp.stop();
       });
@@ -68,6 +68,19 @@ describe('App-Lifecycle', function() {
 
       it('should NOT stop the application if the application has already been stopped and not call stop twice', function() {
         expect(this.stopStub).to.have.not.been.calledTwice;
+      });
+    });
+
+
+    describe('when stop listener is a running listener', function() {
+      beforeEach(function() {
+        this.stopRunStub = this.sinon.stub();
+        this.myApp.on('stop', this.stopRunStub);
+        this.myApp.stop();
+      });
+
+      it('should trigger the stop event', function() {
+        expect(this.stopRunStub).to.have.been.calledOnce;
       });
     });
   });
