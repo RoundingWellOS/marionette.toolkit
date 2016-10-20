@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v3.0.0
+ * @version v3.0.1
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -841,10 +841,12 @@
 
       this._isRunning = false;
 
+      this.triggerMethod('stop', options);
+
+      // Running events are cleaned up after stop so that
+      // `stop` event handlers still fire
       this._stopRunningListeners();
       this._stopRunningEvents();
-
-      this.triggerMethod('stop', options);
 
       return this;
     },
@@ -1218,7 +1220,7 @@
     _.extend(classDefinition.prototype, _StateMixin);
   };
 
-  Toolkit.VERSION = '3.0.0';
+  Toolkit.VERSION = '3.0.1';
 
   Toolkit.StateMixin = StateMixin;
 

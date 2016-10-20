@@ -1,3 +1,8 @@
+#### v3.0.1
+
+* `App`
+  * Revert the stop event is triggered after clearing running events
+
 #### v3.0.0
 
 * `App`
