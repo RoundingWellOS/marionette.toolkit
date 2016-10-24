@@ -24,7 +24,9 @@
 * [Application Region](#application-region)
   * [App `setRegion`](#app-setregion)
 * [Application State](#application-state)
-  * [App `getInitState`](#app-getInitState)
+  * [App `getInitState`](#app-getinitstate)
+  * [App `StateModel`](#app-statemodel)
+  * [App `stateEvents`](#app-stateevents)
 
 ## Using Toolkit App
 
@@ -345,4 +347,29 @@ getInitState(state){
 
   return return modState;
 }
+```
+
+### App `StateModel`
+
+A [`StateModel`](./mixins/state.md#statemixins-statemodel) class can be passed to App instantiation as an option or defined on the App.
+
+```js
+var myApp = new MyApp({
+  StateModel: MyStateModel
+});
+```
+
+### App `stateEvents`
+
+A [`stateEvents`](./mixins/state.md#statemixins-stateevents) hash can be passed to App instantiation as an option or defined on the App.
+
+```js
+var MyApp = Marionette.Toolkit.App.extend({
+  stateEvents: {
+    'change': 'onChangeState'
+  }
+  onChangeState: function() {
+    // Handle state change event
+  }
+});
 ```
