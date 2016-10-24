@@ -18,6 +18,25 @@ describe('App', function() {
     });
   });
 
+  describe('when passing stateEvents on Toolkit.App definition', function() {
+    before(function() {
+      this.onChangeStub = this.sinon.stub();
+
+      this.myApp = new App({
+        stateEvents: {
+          'change': this.onChangeStub
+        }
+      });
+
+      this.myApp.start();
+    });
+
+    it('should successfully user stateEvents', function() {
+      this.myApp.setState('foo', 'bar');
+      expect(this.onChangeStub).to.have.been.calledOnce;
+    });
+  });
+
   describe('#setRegion', function() {
     beforeEach(function() {
       this.MyApp = App.extend();
