@@ -83,4 +83,99 @@ describe('App', function() {
       });
     });
   });
+
+  describe('#showChildView', function() {
+    beforeEach(function() {
+      const MyApp = App.extend();
+
+      this.sinon.spy(MyApp.prototype, 'showChildView');
+
+      this.myApp = new MyApp({
+        region: new Marionette.Region({ el: $('<div>')[0] })
+      });
+    });
+
+    describe('when the app region has a view', function() {
+      beforeEach(function() {
+        const myView = new Marionette.View({
+          regions: {
+            someRegion: 'div'
+          },
+          template: _.template('<div></div>')
+        });
+
+        this.sinon.spy(myView, 'showChildView');
+
+        this.myApp.showView(myView);
+
+        this.view = new Marionette.View({ template: false });
+
+        this.myApp.showChildView('someRegion', this.view, 'foo');
+      });
+
+      it('should return the child view', function() {
+        expect(this.myApp.showChildView.returned(this.view)).to.be.true;
+      });
+
+      it('should call showChildView on the app\'s view', function() {
+        expect(this.myApp.getView().showChildView).to.have.been.calledWith('someRegion', this.view, 'foo');
+      });
+    });
+
+    describe('when the app region does not have a view', function() {
+      it('should return false', function() {
+        this.myApp.showChildView('someRegion', new Marionette.View());
+        expect(this.myApp.showChildView.returned(false)).to.be.true;
+      });
+    });
+  });
+
+  describe('#getChildView', function() {
+    beforeEach(function() {
+      const MyApp = App.extend();
+
+      this.sinon.spy(MyApp.prototype, 'getChildView');
+
+      this.myApp = new MyApp({
+        region: new Marionette.Region({ el: $('<div>')[0] })
+      });
+    });
+
+
+    describe('when the app region has a view', function() {
+      beforeEach(function() {
+        const myView = new Marionette.View({
+          regions: {
+            someRegion: 'div'
+          },
+          template: _.template('<div></div>')
+        });
+
+        this.sinon.spy(myView, 'getChildView');
+
+        this.myApp.showView(myView);
+
+        this.view = new Marionette.View({ template: false });
+
+        this.myApp.showChildView('someRegion', this.view);
+
+        this.myApp.getChildView('someRegion');
+      });
+
+      it('should return the child view', function() {
+        expect(this.myApp.getChildView.returned(this.view)).to.be.true;
+      });
+
+      it('should call showChildView on the app\'s view', function() {
+        expect(this.myApp.getView().getChildView).to.have.been.calledWith('someRegion');
+      });
+    });
+
+    describe('when the app region does not have a view', function() {
+      it('should return false', function() {
+        this.myApp.getChildView('someRegion');
+        expect(this.myApp.getChildView.returned(false)).to.be.true;
+      });
+    });
+  });
 });
