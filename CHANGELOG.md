@@ -1,3 +1,10 @@
+#### v3.1.0
+
+* `App`
+  * Fix `stateEvents` when passed at App instantiation
+  * Fix leaky lingering `stateEvents` after App stop
+  * Add App `showChildView` / `getChildView`
+
 #### v3.0.1
 
 * `App`
