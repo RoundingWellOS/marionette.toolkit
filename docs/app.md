@@ -24,7 +24,12 @@
 * [Application Region](#application-region)
   * [App `setRegion`](#app-setregion)
 * [Application State](#application-state)
-  * [App `getInitState`](#app-getInitState)
+  * [App `getInitState`](#app-getinitstate)
+  * [App `StateModel`](#app-statemodel)
+  * [App `stateEvents`](#app-stateevents)
+* [Application View](#application-view)
+  * [App `showChildView`](#app-showchildview)
+  * [App `getChildView`](#app-getchildview)
 
 ## Using Toolkit App
 
@@ -345,4 +350,59 @@ getInitState(state){
 
   return return modState;
 }
+```
+
+### App `StateModel`
+
+A [`StateModel`](./mixins/state.md#statemixins-statemodel) class can be passed to App instantiation as an option or defined on the App.
+
+```js
+var myApp = new MyApp({
+  StateModel: MyStateModel
+});
+```
+
+### App `stateEvents`
+
+A [`stateEvents`](./mixins/state.md#statemixins-stateevents) hash can be passed to App instantiation as an option or defined on the App.
+
+```js
+var MyApp = Marionette.Toolkit.App.extend({
+  stateEvents: {
+    'change': 'onChangeState'
+  }
+  onChangeState: function() {
+    // Handle state change event
+  }
+});
+```
+
+## Application View
+
+A [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md) can have an associated view shown in its region with `showView`. Toolkit takes this a step further and proxies that view's `showChildView` and `getChildView`. This is simply sugar for common patterns.
+
+### App `showChildView`
+
+This method will help when a region from the App's view is needed.
+
+It has the same API as a `Marionette.View`'s `showChildView` and returns the show view.
+
+```js
+myApp.showChildView('fooRegion', myChildView, 'fooArg');
+
+//is equivalent to
+myApp.getView().getRegion('fooRegion').show(myChildView, 'fooArg');
+```
+
+### App `getChildView`
+
+Like `showChildView`, `getChildView` is a helper for getting a view shown in a region belonging to the App's view.
+
+It has the same API as a `Marionette.View`'s `getChildView`.
+
+```js
+myApp.getChildView('fooRegion');
+
+//is equivalent to
+myApp.getView().getRegion('fooRegion').currentView;
 ```

@@ -9,7 +9,8 @@ const ClassOptions = [
   'stopWithParent',
   'startAfterInitialized',
   'preventDestroy',
-  'StateModel'
+  'StateModel',
+  'stateEvents'
 ];
 
 /**
@@ -139,9 +140,9 @@ const App = Marionette.Application.extend({
 
     opts.state = this.getInitState(opts.state);
 
-    this.initState(opts);
-
     this._isRunning = true;
+
+    this.initState(opts);
 
     this.triggerStart(opts);
 

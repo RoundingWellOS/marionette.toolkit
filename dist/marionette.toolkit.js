@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v3.0.1
+ * @version v3.1.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -533,6 +533,52 @@
       }
 
       return childApp;
+    },
+
+
+    /**
+     * Shows a view in the region of the app's view
+     *
+     * @public
+     * @method showChildView
+     * @param {String} regionName - Name of region to show in
+     * @param {View} view - Child view instance
+     * @param {...args} Additional args that get passed along
+     * @returns {View} - Child view instance
+     */
+    showChildView: function showChildView(regionName, view) {
+      var appView = this.getView();
+
+      if (!appView) {
+        return false;
+      }
+
+      for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        args[_key - 2] = arguments[_key];
+      }
+
+      appView.showChildView.apply(appView, [regionName, view].concat(args));
+
+      return view;
+    },
+
+
+    /**
+     * Returns view from the App view by region name.
+     *
+     * @public
+     * @method getChildView
+     * @param {String} regionName - Name of region to get view from
+     * @returns {View}
+     */
+    getChildView: function getChildView(regionName) {
+      var appView = this.getView();
+
+      if (!appView) {
+        return false;
+      }
+
+      return appView.getChildView(regionName);
     }
   };
 
@@ -623,7 +669,7 @@
     }
   };
 
-  var ClassOptions$1 = ['startWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel'];
+  var ClassOptions$1 = ['startWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel', 'stateEvents'];
 
   /**
    * Marionette.Application with an `initialize` / `start` / `stop` / `destroy` lifecycle.
@@ -757,9 +803,9 @@
 
       opts.state = this.getInitState(opts.state);
 
-      this.initState(opts);
-
       this._isRunning = true;
+
+      this.initState(opts);
 
       this.triggerStart(opts);
 
@@ -1220,7 +1266,7 @@
     _.extend(classDefinition.prototype, _StateMixin);
   };
 
-  Toolkit.VERSION = '3.0.1';
+  Toolkit.VERSION = '3.1.0';
 
   Toolkit.StateMixin = StateMixin;
 

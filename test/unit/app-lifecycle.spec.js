@@ -7,7 +7,12 @@ describe('App-Lifecycle', function() {
     this.beforeStopStub = this.sinon.stub();
     this.stopStub = this.sinon.stub();
     this.destroyStub = this.sinon.stub();
-    this.myApp = new App();
+    this.onChangeStub = this.sinon.stub();
+    this.myApp = new App({
+      stateEvents: {
+        'change': this.onChangeStub
+      }
+    });
     this.myApp.on('before:start', this.beforeStartStub);
     this.myApp.on('start', this.startStub);
     this.myApp.on('before:stop', this.beforeStopStub);
@@ -68,6 +73,15 @@ describe('App-Lifecycle', function() {
 
       it('should NOT stop the application if the application has already been stopped and not call stop twice', function() {
         expect(this.stopStub).to.have.not.been.calledTwice;
+      });
+    });
+
+
+    describe('when triggering a stateEvent after app stop', function() {
+      it('should not call the stateEvent', function() {
+        this.myApp.stop();
+        this.myApp.setState('foo', 'bar');
+        expect(this.onChangeStub).to.have.not.been.called;
       });
     });
 
