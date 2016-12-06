@@ -9,7 +9,8 @@ const ClassOptions = [
   'stopWithParent',
   'startAfterInitialized',
   'preventDestroy',
-  'StateModel'
+  'StateModel',
+  'stateEvents'
 ];
 
 /**
@@ -139,9 +140,9 @@ const App = Marionette.Application.extend({
 
     opts.state = this.getInitState(opts.state);
 
-    this.initState(opts);
-
     this._isRunning = true;
+
+    this.initState(opts);
 
     this.triggerStart(opts);
 
@@ -244,6 +245,46 @@ const App = Marionette.Application.extend({
     this.stop();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
+  },
+
+  /**
+   * Shows a view in the region of the app's view
+   *
+   * @public
+   * @method showChildView
+   * @param {String} regionName - Name of region to show in
+   * @param {View} view - Child view instance
+   * @param {...args} Additional args that get passed along
+   * @returns {View} - Child view instance
+   */
+  showChildView(regionName, view, ...args) {
+    const appView = this.getView();
+
+    if(!appView) {
+      return false;
+    }
+
+    appView.showChildView(regionName, view, ...args);
+
+    return view;
+  },
+
+  /**
+   * Returns view from the App view by region name.
+   *
+   * @public
+   * @method getChildView
+   * @param {String} regionName - Name of region to get view from
+   * @returns {View}
+   */
+  getChildView(regionName) {
+    const appView = this.getView();
+
+    if(!appView) {
+      return false;
+    }
+
+    return appView.getChildView(regionName);
   }
 });
 
