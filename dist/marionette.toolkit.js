@@ -533,52 +533,6 @@
       }
 
       return childApp;
-    },
-
-
-    /**
-     * Shows a view in the region of the app's view
-     *
-     * @public
-     * @method showChildView
-     * @param {String} regionName - Name of region to show in
-     * @param {View} view - Child view instance
-     * @param {...args} Additional args that get passed along
-     * @returns {View} - Child view instance
-     */
-    showChildView: function showChildView(regionName, view) {
-      var appView = this.getView();
-
-      if (!appView) {
-        return false;
-      }
-
-      for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-        args[_key - 2] = arguments[_key];
-      }
-
-      appView.showChildView.apply(appView, [regionName, view].concat(args));
-
-      return view;
-    },
-
-
-    /**
-     * Returns view from the App view by region name.
-     *
-     * @public
-     * @method getChildView
-     * @param {String} regionName - Name of region to get view from
-     * @returns {View}
-     */
-    getChildView: function getChildView(regionName) {
-      var appView = this.getView();
-
-      if (!appView) {
-        return false;
-      }
-
-      return appView.getChildView(regionName);
     }
   };
 
@@ -799,9 +753,9 @@
 
       this.setRegion(opts.region);
 
-      this.triggerMethod('before:start', options);
-
       opts.state = this.getInitState(opts.state);
+
+      this.triggerMethod('before:start', options);
 
       this._isRunning = true;
 
@@ -913,6 +867,52 @@
       this.stop();
 
       Marionette.Object.prototype.destroy.apply(this, arguments);
+    },
+
+
+    /**
+     * Shows a view in the region of the app's view
+     *
+     * @public
+     * @method showChildView
+     * @param {String} regionName - Name of region to show in
+     * @param {View} view - Child view instance
+     * @param {...args} Additional args that get passed along
+     * @returns {View} - Child view instance
+     */
+    showChildView: function showChildView(regionName, view) {
+      var appView = this.getView();
+
+      if (!appView) {
+        return false;
+      }
+
+      for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        args[_key - 2] = arguments[_key];
+      }
+
+      appView.showChildView.apply(appView, [regionName, view].concat(args));
+
+      return view;
+    },
+
+
+    /**
+     * Returns view from the App view by region name.
+     *
+     * @public
+     * @method getChildView
+     * @param {String} regionName - Name of region to get view from
+     * @returns {View}
+     */
+    getChildView: function getChildView(regionName) {
+      var appView = this.getView();
+
+      if (!appView) {
+        return false;
+      }
+
+      return appView.getChildView(regionName);
     }
   });
 
