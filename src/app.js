@@ -136,9 +136,9 @@ const App = Marionette.Application.extend({
 
     this.setRegion(opts.region);
 
-    this.triggerMethod('before:start', options);
-
     opts.state = this.getInitState(opts.state);
+
+    this.triggerMethod('before:start', options);
 
     this._isRunning = true;
 
