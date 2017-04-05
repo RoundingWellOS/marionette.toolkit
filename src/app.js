@@ -157,13 +157,14 @@ const App = Marionette.Application.extend({
    * @public
    * @method restart
    * @memberOf App
-   * @param {Object} [options] - Settings for the App passed through to events
    * @event App#before:start - passes options
    * @returns {App}
    */
   restart() {
     const stateAttributes = this.getState().attributes;
     this.stop().start({ state: stateAttributes });
+
+    return this;
   },
 
   /**
