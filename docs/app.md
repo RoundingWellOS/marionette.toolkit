@@ -193,8 +193,8 @@ myApp.start();
 
 ### App `restart`
 
-This method sets the `App` to a not running state, then sets it to a running state.
-The previous state attributes will be preserved in the new running state.
+This method saves the current state of the app before stopping it.
+It then starts the app again with the preserved state attributes.
 
 ```js
 var myApp = new Marionette.Toolkit.App();
