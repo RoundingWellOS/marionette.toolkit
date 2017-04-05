@@ -37,6 +37,26 @@ describe('App', function() {
     });
   });
 
+  describe('when restarting the app', function() {
+    before(function() {
+      this.myApp = new App({
+        state: {
+          'foo': 'bar'
+        }
+      });
+
+      this.myApp.start();
+
+      this.myApp.setState('foo', 'baz');
+
+      this.myApp.restart();
+    });
+
+    it('should maintain the previous app\'s state', function() {
+      expect(this.myApp.getState('foo')).to.equal('baz');
+    });
+  });
+
   describe('#setRegion', function() {
     beforeEach(function() {
       this.MyApp = App.extend();

@@ -15,6 +15,7 @@
   * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
+  * [App `restart`](#app-restart)
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
@@ -188,6 +189,31 @@ myApp.isRunning();
 
 // Nothing is logged
 myApp.start();
+```
+
+### App `restart`
+
+This method sets the `App` to a not running state, then sets it to a running state.
+The previous state attributes will be preserved in the new running state.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+var initialState = {
+  foo: 'bar'
+};
+
+myApp.start({
+  state: initialState
+});
+
+myApp.setState('foo', 'baz');
+
+// Nothing is logged
+myApp.restart();
+
+// will return 'baz'
+myApp.getState('foo');
 ```
 
 ### App `stop`

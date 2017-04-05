@@ -149,6 +149,23 @@ const App = Marionette.Application.extend({
     return this;
   },
 
+
+  /**
+   * Sets the app lifecycle to not running
+   * then sets the app lifecycle to running with ending state
+   *
+   * @public
+   * @method restart
+   * @memberOf App
+   * @param {Object} [options] - Settings for the App passed through to events
+   * @event App#before:start - passes options
+   * @returns {App}
+   */
+  restart() {
+    const stateAttributes = this.getState().attributes;
+    this.stop().start({ state: stateAttributes });
+  },
+
   /**
    * Set the Application's Region after instantiation
    *
