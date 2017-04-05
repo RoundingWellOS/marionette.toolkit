@@ -101,25 +101,39 @@ describe('App-Lifecycle', function() {
 
   describe('when restarting the app', function() {
     beforeEach(function() {
-      this.startSpy = sinon.spy(function(options) {
-        return this.getState().attributes;
+      this.beforeStartSpy = sinon.spy(function(options) {
+        return options.state;
       });
 
-      this.myApp.on('start', this.startSpy);
+      this.myApp.on('before:start', this.beforeStartSpy);
 
       this.myApp.start({
         state: { 'foo': 'bar' }
       });
     });
 
+    it('should be stopped', function() {
+      this.myApp.restart();
+
+      expect(this.stopStub).to.have.been.calledOnce;
+    });
+
+    it('should trigger start event twice', function() {
+      expect(this.startStub).to.have.been.calledOnce;
+
+      this.myApp.restart();
+
+      expect(this.startStub).to.have.been.calledTwice;
+    });
+
     it('should maintain the previous app\'s state', function() {
-      expect(this.startSpy.returned({ foo: 'bar' })).to.be.true;
+      expect(this.beforeStartSpy.returned({ foo: 'bar' })).to.be.true;
 
       this.myApp.setState('foo', 'baz');
 
       this.myApp.restart();
 
-      expect(this.startSpy.returned({ foo: 'baz' })).to.be.true;
+      expect(this.beforeStartSpy.returned({ foo: 'baz' })).to.be.true;
     });
   });
 
