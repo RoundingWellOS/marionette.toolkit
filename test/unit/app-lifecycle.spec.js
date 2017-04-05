@@ -99,6 +99,30 @@ describe('App-Lifecycle', function() {
     });
   });
 
+  describe('when restarting the app', function() {
+    beforeEach(function() {
+      this.startSpy = sinon.spy(function(options) {
+        return this.getState().attributes;
+      });
+
+      this.myApp.on('start', this.startSpy);
+
+      this.myApp.start({
+        state: { 'foo': 'bar' }
+      });
+    });
+
+    it('should maintain the previous app\'s state', function() {
+      expect(this.startSpy.returned({ foo: 'bar' })).to.be.true;
+
+      this.myApp.setState('foo', 'baz');
+
+      this.myApp.restart();
+
+      expect(this.startSpy.returned({ foo: 'baz' })).to.be.true;
+    });
+  });
+
   describe('when an application is yet to be destroyed', function() {
     it('should have isDestroyed() to return false', function() {
       expect(this.myApp.isDestroyed()).to.equal(false);
