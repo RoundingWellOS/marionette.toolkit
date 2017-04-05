@@ -199,21 +199,23 @@ It then starts the app again with the preserved state attributes.
 ```js
 var myApp = new Marionette.Toolkit.App();
 
+myApp.on('before:start', function(options) {
+    console.log(options.state);
+});
+
 var initialState = {
   foo: 'bar'
 };
 
+// logs { foo: 'bar' }
 myApp.start({
   state: initialState
 });
 
 myApp.setState('foo', 'baz');
 
-// Nothing is logged
+// logs { foo: 'baz' }
 myApp.restart();
-
-// will return 'baz'
-myApp.getState('foo');
 ```
 
 ### App `stop`
