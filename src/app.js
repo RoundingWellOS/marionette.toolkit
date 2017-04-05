@@ -125,26 +125,24 @@ const App = Marionette.Application.extend({
    * @event App#before:start - passes options
    * @returns {App}
    */
-  start(options) {
+  start(options = {}) {
     this._ensureAppIsIntact();
 
     if(this._isRunning) {
       return this;
     }
 
-    const opts = _.extend({}, options);
+    this.setRegion(options.region);
 
-    this.setRegion(opts.region);
+    this._initState(options);
 
     this.triggerMethod('before:start', options);
 
-    opts.state = this.getInitState(opts.state);
-
     this._isRunning = true;
 
-    this.initState(opts);
+    this.delegateStateEvents();
 
-    this.triggerStart(opts);
+    this.triggerStart(options);
 
     return this;
   },
@@ -167,21 +165,6 @@ const App = Marionette.Application.extend({
     this._region = region;
 
     return this;
-  },
-
-  /**
-   * Returns state.
-   * Override to extend state
-   *
-   * @public
-   * @method getInitState
-   * @memberOf App
-   * @param {Object} [state] - initial app state
-   * @returns state
-   */
-
-  getInitState(state) {
-    return state;
   },
 
   /**

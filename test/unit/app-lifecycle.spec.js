@@ -22,11 +22,16 @@ describe('App-Lifecycle', function() {
 
   describe('when starting the application', function() {
     beforeEach(function() {
+      this.sinon.spy(this.myApp, 'delegateStateEvents');
       this.myApp.start();
     });
 
     it('should trigger before:start event', function() {
       expect(this.beforeStartStub).to.have.been.calledOnce;
+    });
+
+    it('should delegate state events', function() {
+      expect(this.myApp.delegateStateEvents).to.be.calledOnce;
     });
 
     it('should trigger start event', function() {

@@ -57,9 +57,11 @@ const Component = Marionette.Object.extend({
     // Make defaults available to this
     this.mergeOptions(options, ClassOptions);
 
-    this.initState(options);
+    this._initState(options);
 
     Marionette.Object.call(this, options);
+
+    this.delegateStateEvents();
   },
 
   /**

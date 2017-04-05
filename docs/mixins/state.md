@@ -14,6 +14,8 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
   * [Setting State `setState`](#setting-state)
   * [Resetting State `resetStateDefaults`](#resetting-state-defaults)
   * [Getting State `getState`](#getting-state)
+  * [Binding State Events `delegateStateEvents`](#binding-events)
+  * [Unbinding State Events `undelegateStateEvents`](#unbinding-events)
 
 ### Using StateMixin
 
@@ -244,4 +246,60 @@ myToolKitApp.getState('foo');
 
 // returns myToolKitApp's MyStateModel instance.
 myToolKitApp.getState();
+```
+
+### Binding State Events
+
+`StateMixin` has a `delegateStateEvents` that will bind all events specified
+in the `stateEvents` option. Implementation matches [Backbone.View.delegateEvents](http://backbonejs.org/#View-delegateEvents).
+
+```js
+var MyToolKitApp = new Marionette.Toolkit.App({
+    stateEvents: {
+      'change:foo': 'alert'
+    },
+    alert: function(){
+      console.log('alert!');
+    }
+});
+
+// This will trigger the "change:foo" event and log "alert!" to the console.
+myToolKitApp.setState('foo', 'bar');
+
+myToolKitApp.undelegateStateEvents();
+
+// This will still trigger the `change:foo` event, but will NOT log 'alert!'
+// in the console
+myToolKitApp.setState('foo', 'baz');
+
+myToolKitApp.delegateStateEvents();
+
+// This will trigger the "change:foo" event and log "alert!" to the console
+// once again.
+myToolKitApp.setState('foo', 'bar');
+
+```
+
+### Unbinding State Events
+
+`StateMixin` has a `undelegateStateEvents` that will unbind all event listeners
+specified on the `StateModel` option. Implementation matches [Backbone.View.undelegateEvents](http://backbonejs.org/#View-undelegateEvents).
+
+```js
+var MyToolKitApp = new Marionette.Toolkit.App({
+    stateEvents: {
+      'change:foo': 'alert'
+    },
+    alert: function(){
+      console.log('alert!');
+    }
+});
+
+// This will trigger the "change:foo" event and log "alert!" to the console.
+myToolKitApp.setState('foo', 'bar');
+
+myToolKitApp.undelegateStateEvents();
+
+// This will still trigger the `change:foo` event, but will NOT log 'alert!' in the console
+myToolKitApp.setState('foo', 'baz');
 ```

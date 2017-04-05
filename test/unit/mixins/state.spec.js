@@ -132,6 +132,41 @@ describe('StateMixin', function() {
     });
   });
 
+  describe('when binding/unbinding state events', function() {
+    describe('when undelegateStateEvents is called', function() {
+      it('should call unbindEvents', function() {
+        this.sinon.spy(this.myStateClass, 'unbindEvents');
+        this.myStateClass.undelegateStateEvents();
+
+        expect(this.myStateClass.unbindEvents).to.have.been.calledOnce;
+      });
+
+      it('should return the _stateModel', function() {
+        expect(this.myStateClass.getState()).to.deep.equal(this.myStateClass._stateModel);
+      });
+    });
+
+    describe('when delegateStateEvents is called', function() {
+      it('should call undelegateStateEvents', function() {
+        this.sinon.spy(this.myStateClass, 'undelegateStateEvents');
+        this.myStateClass.delegateStateEvents();
+
+        expect(this.myStateClass.undelegateStateEvents).to.have.been.calledOnce;
+      });
+
+      it('should call bindEvents', function() {
+        this.sinon.spy(this.myStateClass, 'bindEvents');
+        this.myStateClass.delegateStateEvents();
+
+        expect(this.myStateClass.bindEvents).to.have.been.calledOnce;
+      });
+
+      it('should return the _stateModel', function() {
+        expect(this.myStateClass.getState()).to.deep.equal(this.myStateClass._stateModel);
+      });
+    });
+  });
+
   // SETTING StateModel
   describe('when defining StateModel as a function that returns a model class', function() {
     beforeEach(function() {
@@ -227,11 +262,13 @@ describe('StateMixin', function() {
       this.sinon.spy(this.myStateClass._stateModel, 'stopListening');
       this.sinon.spy(this.myStateClass, 'unbindEvents');
       this.sinon.spy(this.myStateClass, 'off');
+      this.sinon.spy(this.myStateClass, 'delegateStateEvents');
 
       this.myStateClass.initState();
 
       expect(orgStateModel.stopListening).to.have.been.calledOnce;
-      expect(this.myStateClass.unbindEvents).to.have.been.calledOnce;
+      expect(this.myStateClass.delegateStateEvents).to.have.been.calledOnce;
+      expect(this.myStateClass.unbindEvents).to.have.been.calledTwice;
       expect(this.myStateClass.off).to.have.been.calledWith('destroy', this.myStateClass._destroyState);
     });
   });
