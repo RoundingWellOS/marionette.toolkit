@@ -101,12 +101,6 @@ describe('App-Lifecycle', function() {
 
   describe('when restarting the app', function() {
     beforeEach(function() {
-      this.beforeStartSpy = sinon.spy(function(options) {
-        return options.state;
-      });
-
-      this.myApp.on('before:start', this.beforeStartSpy);
-
       this.myApp.start({
         state: { 'foo': 'bar' }
       });
@@ -127,13 +121,13 @@ describe('App-Lifecycle', function() {
     });
 
     it('should maintain the previous app\'s state', function() {
-      expect(this.beforeStartSpy.returned({ foo: 'bar' })).to.be.true;
+      expect(this.beforeStartStub.calledWith({ state: { foo: 'bar' } })).to.be.true;
 
       this.myApp.setState('foo', 'baz');
 
       this.myApp.restart();
 
-      expect(this.beforeStartSpy.returned({ foo: 'baz' })).to.be.true;
+      expect(this.beforeStartStub.calledWith({ state: { foo: 'baz' } })).to.be.true;
     });
   });
 
