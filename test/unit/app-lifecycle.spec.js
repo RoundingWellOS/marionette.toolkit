@@ -121,13 +121,13 @@ describe('App-Lifecycle', function() {
     });
 
     it('should maintain the previous app\'s state', function() {
-      expect(this.beforeStartStub.calledWith({ state: { foo: 'bar' } })).to.be.true;
+      expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'bar' } });
 
       this.myApp.setState('foo', 'baz');
 
       this.myApp.restart();
 
-      expect(this.beforeStartStub.calledWith({ state: { foo: 'baz' } })).to.be.true;
+      expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'baz' } });
     });
   });
 
