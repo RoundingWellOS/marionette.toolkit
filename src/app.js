@@ -157,7 +157,6 @@ const App = Marionette.Application.extend({
    * @public
    * @method restart
    * @memberOf App
-   * @event App#before:start - passes options
    * @returns {App}
    */
   restart() {
