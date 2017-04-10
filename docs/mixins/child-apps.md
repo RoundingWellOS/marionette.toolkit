@@ -242,9 +242,8 @@ var childApps = {
 
 var myApp = new Marionette.Toolkit.App({ childApps: childApps });
 
-myApp.startChildApp('cA1', { foo: 'bar' });
-
-var childAppInstance = myApp.getChildApp('cA1');
+// Once you have the childApp instance stored, you can also do childAppInstance.start();
+var childAppInstance = myApp.startChildApp('cA1', { foo: 'bar' });
 
 // true
 console.log(childAppInstance.isRunning());
@@ -264,15 +263,16 @@ method and passing the childApp name.
 ```js
 var myApp = new Marionette.Toolkit.App({ childApps: { cA1: Marionette.Toolkit.App } });
 
-myApp.startChildApp('cA1');
+var childAppInstance = myApp.startChildApp('cA1');
 
 // true
-console.log(myApp.getChildApp('cA1').isRunning());
+console.log(childAppInstance.isRunning());
 
+// This is equivalent to childAppInstance.stop();
 myApp.stopChildApp('cA1');
 
 // false
-console.log(myApp.getChildApp('cA1').isRunning());
+console.log(childAppInstance.isRunning());
 ```
 
 Note: The parentApp instance is returned for chaining.
