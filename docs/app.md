@@ -24,7 +24,6 @@
 * [Application Region](#application-region)
   * [App `setRegion`](#app-setregion)
 * [Application State](#application-state)
-  * [App `getInitState`](#app-getinitstate)
   * [App `StateModel`](#app-statemodel)
   * [App `stateEvents`](#app-stateevents)
 * [Application View](#application-view)
@@ -266,10 +265,10 @@ myApp.isDestroyed() === true;
 ### `before:start` / `start` events
 
 The "before:start" event and corresponding `onBeforeStart`
-method are triggered just before the `App` `isRunning` is set `true`.
+method are triggered just before the `App` `isRunning` is set `true`. This is the appropriate place to set up your app's initial state. Calling `setState` in `onBeforeStart` will not trigger any events.
 
 The "start" event and corresponding `onStart`
-method are triggered after the `App` `isRunning` is set `true`.
+method are triggered after the `App` `isRunning` is set `true`. Once `onStart` is run, state event listeners have been applied.
 
 ```js
 var MyApp = Marionette.Toolkit.App.extend({
@@ -339,18 +338,6 @@ Calling `setRegion` will replace the `App`'s region making it available to the A
 ## Application State
 
 Application state can be passed to [App `start`](#app-start) as an option. The state is maintained while the app is running.
-
-### App `getInitState`
-
-Override `getInitState` to modify state object passed into the App constructor.
-
-```js
-getInitState(state){
-  const modState = _.extend({}, {foo: 'bar'}, state);
-
-  return return modState;
-}
-```
 
 ### App `StateModel`
 

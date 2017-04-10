@@ -189,6 +189,14 @@ describe('Marionette.Toolkit.Component', function() {
 
   // INSTANTIATING A COMPONENT WITH OPTIONS
   describe('when instantiating a component', function() {
+    it('should delegate state events', function() {
+      this.MyComponent = Marionette.Toolkit.Component.extend();
+      this.sinon.spy(this.MyComponent.prototype, 'delegateStateEvents');
+      this.myComponent = new this.MyComponent();
+
+      expect(this.myComponent.delegateStateEvents).to.be.calledOnce;
+    });
+
     describe('with state options', function() {
       it('should initialize stateModel with passed in state', function() {
         this.MyComponent = Marionette.Toolkit.Component.extend();

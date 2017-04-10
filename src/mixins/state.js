@@ -30,6 +30,16 @@ export default {
    * @param {Backbone.Model} [options.StateModel] - Model class for _stateModel.
    */
   initState(options = {}) {
+    this._initState(options);
+    this.delegateStateEvents();
+  },
+
+  /**
+   * @private
+   * @method _initState
+   * @param {Object} [options] - Settings for the StateMixin.
+   */
+  _initState(options) {
     // Make defaults available to this
     this.mergeOptions(options, ClassOptions);
 
@@ -46,8 +56,42 @@ export default {
   },
 
   /**
-   * Unbind all entity events and remove any listeners on _stateModel
-   * Clean up destroy event handler
+   * Bind events from the _stateModel defined in stateEvents hash
+   *
+   * @public
+   * @method delegateStateEvents
+   */
+  delegateStateEvents() {
+    this.undelegateStateEvents();
+    this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
+
+    return this;
+  },
+
+  /**
+   * Unbind all entity events on _stateModel
+   *
+   * @public
+   * @method undelegateStateEvents
+   */
+  undelegateStateEvents() {
+    this.unbindEvents(this._stateModel);
+
+    return this;
+  },
+
+  /**
+   * Setup destroy event handle
+   *
+   * @private
+   * @method _setEventHandlers
+   */
+  _setEventHandlers() {
+    this.on('destroy', this._destroyState);
+  },
+
+  /**
+   * Clean up destroy event handler, remove any listeners on _stateModel
    *
    * @private
    * @method _removeEventHandlers
@@ -55,23 +99,11 @@ export default {
   _removeEventHandlers() {
     if(!this._stateModel) return;
 
-    this.unbindEvents(this._stateModel);
+    this.undelegateStateEvents();
     this._stateModel.stopListening();
     this.off('destroy', this._destroyState);
   },
 
-  /**
-   * Bind events from the _stateModel defined in stateEvents hash
-   * Setup destroy event handle
-   *
-   * @private
-   * @method _setEventHandlers
-   */
-  _setEventHandlers() {
-    this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
-
-    this.on('destroy', this._destroyState);
-  },
 
   /**
    * Get the StateMixin StateModel class.
