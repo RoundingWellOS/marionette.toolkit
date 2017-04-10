@@ -270,6 +270,27 @@ myApp.isRunning() === false;
 
 ```
 
+### App `isRestarting`
+
+Returns a Boolean indicating whether or not the `App` is restarting.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+myApp.on('before:stop', function(options) {
+    console.log(this.isRestarting());
+});
+
+myApp.start();
+
+// logs true
+myApp.restart();
+
+// logs false
+myApp.stop();
+
+```
+
 ### App `destroy`
 
 This method stops the `App` if running and sets the `App`'s state to destroyed.
