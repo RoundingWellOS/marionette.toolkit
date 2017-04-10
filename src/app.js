@@ -116,6 +116,18 @@ const App = Marionette.Application.extend({
   },
 
   /**
+   * Gets the value of internal `_isRestarting` flag
+   *
+   * @public
+   * @method isRestarting
+   * @memberOf App
+   * @returns {Boolean}
+   */
+  isRestarting() {
+    return this._isRestarting;
+  },
+
+  /**
    * Sets the app lifecycle to running.
    *
    * @public
@@ -160,8 +172,11 @@ const App = Marionette.Application.extend({
    * @returns {App}
    */
   restart() {
-    const stateAttributes = this.getState().attributes;
-    this.stop().start({ state: stateAttributes });
+    const state = this.getState().attributes;
+
+    this._isRestarting = true;
+    this.stop().start({ state });
+    this._isRestarting = false;
 
     return this;
   },

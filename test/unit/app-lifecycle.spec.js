@@ -112,7 +112,7 @@ describe('App-Lifecycle', function() {
       expect(this.stopStub).to.have.been.calledOnce;
     });
 
-    it('should trigger start event twice', function() {
+    it('should be started again', function() {
       expect(this.startStub).to.have.been.calledOnce;
 
       this.myApp.restart();
@@ -120,7 +120,7 @@ describe('App-Lifecycle', function() {
       expect(this.startStub).to.have.been.calledTwice;
     });
 
-    it('should maintain the previous app\'s state', function() {
+    it('should maintain the app\'s previous state', function() {
       expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'bar' } });
 
       this.myApp.setState('foo', 'baz');
@@ -128,6 +128,20 @@ describe('App-Lifecycle', function() {
       this.myApp.restart();
 
       expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'baz' } });
+    });
+
+    it('should set isRestarting() during restart process', function() {
+      const newApp = App.extend({
+        onBeforeStop() {
+          expect(this.isRestarting()).to.equal(true);
+        }
+      });
+
+      this.myApp = new newApp();
+      this.myApp.start();
+      this.myApp.restart();
+
+      expect(this.myApp.isRestarting()).to.equal(false);
     });
   });
 
