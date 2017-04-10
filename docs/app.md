@@ -15,6 +15,7 @@
   * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
+  * [App `restart`](#app-restart)
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
   * [App `destroy`](#app-destroy)
@@ -189,6 +190,33 @@ myApp.isRunning();
 myApp.start();
 ```
 
+### App `restart`
+
+This method saves the current state of the app before stopping it.
+It then starts the app again with the preserved state attributes.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+myApp.on('before:start', function(options) {
+    console.log(options.state);
+});
+
+var initialState = {
+  foo: 'bar'
+};
+
+// logs { foo: 'bar' }
+myApp.start({
+  state: initialState
+});
+
+myApp.setState('foo', 'baz');
+
+// logs { foo: 'baz' }
+myApp.restart();
+```
+
 ### App `stop`
 
 This method stops the `App`'s running state.
@@ -238,6 +266,27 @@ myApp.isRunning() === true;
 myApp.stop();
 
 myApp.isRunning() === false;
+
+```
+
+### App `isRestarting`
+
+Returns a Boolean indicating whether or not the `App` is restarting.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+myApp.on('before:stop', function(options) {
+    console.log(this.isRestarting());
+});
+
+myApp.start();
+
+// logs true
+myApp.restart();
+
+// logs false
+myApp.stop();
 
 ```
 

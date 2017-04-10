@@ -104,6 +104,52 @@ describe('App-Lifecycle', function() {
     });
   });
 
+  describe('when restarting the app', function() {
+    beforeEach(function() {
+      this.myApp.start({
+        state: { 'foo': 'bar' }
+      });
+    });
+
+    it('should be stopped', function() {
+      this.myApp.restart();
+
+      expect(this.stopStub).to.have.been.calledOnce;
+    });
+
+    it('should be started again', function() {
+      expect(this.startStub).to.have.been.calledOnce;
+
+      this.myApp.restart();
+
+      expect(this.startStub).to.have.been.calledTwice;
+    });
+
+    it('should maintain the app\'s previous state', function() {
+      expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'bar' } });
+
+      this.myApp.setState('foo', 'baz');
+
+      this.myApp.restart();
+
+      expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'baz' } });
+    });
+
+    it('should set isRestarting() during restart process', function() {
+      const newApp = App.extend({
+        onBeforeStop() {
+          expect(this.isRestarting()).to.equal(true);
+        }
+      });
+
+      this.myApp = new newApp();
+      this.myApp.start();
+      this.myApp.restart();
+
+      expect(this.myApp.isRestarting()).to.equal(false);
+    });
+  });
+
   describe('when an application is yet to be destroyed', function() {
     it('should have isDestroyed() to return false', function() {
       expect(this.myApp.isDestroyed()).to.equal(false);
