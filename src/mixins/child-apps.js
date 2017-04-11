@@ -103,9 +103,7 @@ export default {
    * @method startChildApp
    */
   startChildApp(appName, options) {
-    this.getChildApp(appName).start(options);
-
-    return this;
+    return this.getChildApp(appName).start(options);
   },
 
   /**
@@ -116,9 +114,7 @@ export default {
    * @method stopChildApp
    */
   stopChildApp(appName) {
-    this.getChildApp(appName).stop();
-
-    return this;
+    return this.getChildApp(appName).stop();
   },
 
   /**

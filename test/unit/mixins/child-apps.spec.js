@@ -343,23 +343,23 @@ describe('ChildAppMixin', function() {
     });
 
     it('should start specified childApp', function() {
-      this.myApp.startChildApp('cA1');
+      this.myChildApp = this.myApp.startChildApp('cA1');
 
-      expect(this.myApp.getChildApp('cA1').isRunning()).to.be.true;
+      expect(this.myChildApp.isRunning()).to.be.true;
     });
 
     it('should start childApp with options', function() {
-      this.myApp.startChildApp('cA2', { region: 'regionName' });
+      this.myChildApp = this.myApp.startChildApp('cA2', { region: 'regionName' });
 
-      expect(this.myApp.getChildApp('cA2').getOption('region')).to.eq('regionName');
+      expect(this.myChildApp.getOption('region')).to.eq('regionName');
     });
 
-    it('should return parentApp instance', function() {
+    it('should return childApp instance', function() {
       const spy = sinon.spy(this.myApp, 'startChildApp');
 
-      this.myApp.startChildApp('cA1');
+      this.myChildApp = this.myApp.startChildApp('cA1');
 
-      expect(spy.returned(this.myApp)).to.be.true;
+      expect(spy.returned(this.myChildApp)).to.be.true;
     });
   });
 
@@ -372,13 +372,13 @@ describe('ChildAppMixin', function() {
       };
 
       this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
-      this.myApp.startChildApp('cA1');
+      this.myChildApp = this.myApp.startChildApp('cA1');
     });
 
     it('should stop specified childApp', function() {
       this.myApp.stopChildApp('cA1');
 
-      expect(this.myApp.getChildApp('cA1').isRunning()).to.be.false;
+      expect(this.myChildApp.isRunning()).to.be.false;
     });
 
     it('should return parentApp instance', function() {
@@ -386,7 +386,7 @@ describe('ChildAppMixin', function() {
 
       this.myApp.stopChildApp('cA1');
 
-      expect(spy.returned(this.myApp)).to.be.true;
+      expect(spy.returned(this.myChildApp)).to.be.true;
     });
   });
 });
