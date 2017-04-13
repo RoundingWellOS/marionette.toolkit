@@ -22,12 +22,16 @@
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
-* [Application Region](#application-region)
-  * [App `setRegion`](#app-setregion)
 * [Application State](#application-state)
   * [App `StateModel`](#app-statemodel)
   * [App `stateEvents`](#app-stateevents)
+* [Application Region](#application-region)
+  * [App `setRegion`](#app-setregion)
+  * [App `getRegion`](#app-getregion)
 * [Application View](#application-view)
+  * [App `setView`](#application-setview)
+  * [App `getView`](#application-getview)
+  * [App `showView`](#application-showview)
   * [App `showChildView`](#app-showchildview)
   * [App `getChildView`](#app-getchildview)
 
@@ -375,19 +379,6 @@ myApp.on('stop', function(options){
 });
 ```
 
-## Application Region
-
-A `Marionette.Region` instance can be passed to [App `start`](#app-start) as an option,
-[setting the App region](#app-setregion), making it available to both [`before:start` and `start`](#beforestart--start-events) events.
-
-### App `setRegion`
-
-Calling `setRegion` will replace the `App`'s region making it available to the App's [Region API](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md#getregion).
-
-## Application State
-
-Application state can be passed to [App `start`](#app-start) as an option. The state is maintained while the app is running.
-
 ### App `StateModel`
 
 A [`StateModel`](./mixins/state.md#statemixins-statemodel) class can be passed to App instantiation as an option or defined on the App.
@@ -413,9 +404,32 @@ var MyApp = Marionette.Toolkit.App.extend({
 });
 ```
 
+## Application State
+
+Application state can be passed to [App `start`](#app-start) as an option. The state is maintained while the app is running.
+
+## Application Region
+
+A `Marionette.Region` instance can be passed to [App `start`](#app-start) as an option,
+[setting the App region](#app-setregion), making it available to both [`before:start` and `start`](#beforestart--start-events) events.
+
+### App `setRegion`
+
+Calling `setRegion` will replace the `App`'s region making it available to the App's [Region API](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md#getregion).
+
+### App `getRegion`
+
+
+
 ## Application View
 
 A [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md) can have an associated view shown in its region with `showView`. Toolkit takes this a step further and proxies that view's `showChildView` and `getChildView`. This is simply sugar for common patterns.
+
+### App `setView`
+
+### App `getView`
+
+### App `showView`
 
 ### App `showChildView`
 
