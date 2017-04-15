@@ -144,7 +144,13 @@ const App = Marionette.Application.extend({
       return this;
     }
 
-    this.setRegion(options.region);
+    if(options.region) {
+      this.setRegion(options.region);
+    }
+
+    if(options.view) {
+      this.setView(options.view);
+    }
 
     this._initState(options);
 
@@ -175,26 +181,6 @@ const App = Marionette.Application.extend({
     this._isRestarting = true;
     this.stop().start({ state });
     this._isRestarting = false;
-
-    return this;
-  },
-
-  /**
-   * Set the Application's Region after instantiation
-   *
-   * @public
-   * @method setRegion
-   * @memberOf App
-   * @param {Region} [region] - Region to use with the app
-   * @returns {App}
-   */
-
-  setRegion(region) {
-    if(!region) {
-      return this;
-    }
-
-    this._region = region;
 
     return this;
   },
@@ -259,7 +245,90 @@ const App = Marionette.Application.extend({
 
     this.stop();
 
+    delete this._view;
+
     Marionette.Object.prototype.destroy.apply(this, arguments);
+  },
+
+  /**
+   * Set the Application's Region
+   *
+   * @public
+   * @method setRegion
+   * @memberOf App
+   * @param {Region} [region] - Region to use with the app
+   * @returns {Region}
+   */
+  setRegion(region) {
+    this._region = region;
+
+    return region;
+  },
+
+  /**
+   * Get the Application's Region or
+   * Get a region from the Application's View
+   *
+   * @public
+   * @method getRegion
+   * @memberOf App
+   * @param {String} [regionName] - Optional regionName to get from the view
+   * @returns {Region}
+   */
+  getRegion(regionName) {
+    if(!regionName) {
+      return this._region;
+    }
+
+    return this.getView().getRegion(regionName);
+  },
+
+  /**
+   * Set the Application's View
+   *
+   * @public
+   * @method setView
+   * @memberOf App
+   * @param {View} [view] - View to use with the app
+   * @returns {View}
+   */
+  setView(view) {
+    this._view = view;
+
+    return view;
+  },
+
+  /**
+   * Get the Application's View
+   *
+   * @public
+   * @method getView
+   * @memberOf App
+   * @returns {View}
+   */
+  getView() {
+    const region = this.getRegion();
+
+    if(region && region.currentView) {
+      return region.currentView;
+    }
+
+    return this._view;
+  },
+
+  /**
+   * Shows a view in the Application's region
+   *
+   * @public
+   * @method showView
+   * @param {View} view - Child view instance defaults to App's view
+   * @param {...args} Additional args that get passed along
+   * @returns {View}
+   */
+  showView(view = this._view, ...args) {
+    this.getRegion().show(view, ...args);
+
+    return view;
   },
 
   /**
@@ -273,13 +342,7 @@ const App = Marionette.Application.extend({
    * @returns {View} - Child view instance
    */
   showChildView(regionName, view, ...args) {
-    const appView = this.getView();
-
-    if(!appView) {
-      return false;
-    }
-
-    appView.showChildView(regionName, view, ...args);
+    this.getView().showChildView(regionName, view, ...args);
 
     return view;
   },
@@ -293,13 +356,7 @@ const App = Marionette.Application.extend({
    * @returns {View}
    */
   getChildView(regionName) {
-    const appView = this.getView();
-
-    if(!appView) {
-      return false;
-    }
-
-    return appView.getChildView(regionName);
+    return this.getView().getChildView(regionName);
   }
 });
 
