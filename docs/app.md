@@ -22,12 +22,16 @@
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
   * ["before:stop" / "stop" events](#beforestop--stop-events)
-* [Application Region](#application-region)
-  * [App `setRegion`](#app-setregion)
 * [Application State](#application-state)
   * [App `StateModel`](#app-statemodel)
   * [App `stateEvents`](#app-stateevents)
+* [Application Region](#application-region)
+  * [App `setRegion`](#app-setregion)
+  * [App `getRegion`](#app-getregion)
 * [Application View](#application-view)
+  * [App `setView`](#application-setview)
+  * [App `getView`](#application-getview)
+  * [App `showView`](#application-showview)
   * [App `showChildView`](#app-showchildview)
   * [App `getChildView`](#app-getchildview)
 
@@ -375,19 +379,6 @@ myApp.on('stop', function(options){
 });
 ```
 
-## Application Region
-
-A `Marionette.Region` instance can be passed to [App `start`](#app-start) as an option,
-[setting the App region](#app-setregion), making it available to both [`before:start` and `start`](#beforestart--start-events) events.
-
-### App `setRegion`
-
-Calling `setRegion` will replace the `App`'s region making it available to the App's [Region API](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md#getregion).
-
-## Application State
-
-Application state can be passed to [App `start`](#app-start) as an option. The state is maintained while the app is running.
-
 ### App `StateModel`
 
 A [`StateModel`](./mixins/state.md#statemixins-statemodel) class can be passed to App instantiation as an option or defined on the App.
@@ -413,9 +404,172 @@ var MyApp = Marionette.Toolkit.App.extend({
 });
 ```
 
+## Application State
+
+Application state can be passed to [App `start`](#app-start) as a `state` option. The state is maintained while the app is running.
+
+```js
+myApp.start({
+  state: {
+    limit: 10
+  }
+});
+
+myApp.getState('limit') === 10;
+```
+
+## Application Region
+
+A `Marionette.Region` instance can be passed to [App `start`](#app-start) as a `region` option,
+[setting the App region](#app-setregion), making it available to both [`before:start` and `start`](#beforestart--start-events) events.
+
+```js
+myApp.start({
+  region: myRegion
+});
+
+myApp.getRegion() === myRegion;
+```
+
+### App `setRegion`
+
+Calling `setRegion` will replace the `App`'s region making it available to the App's [Region API](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md#getregion).
+Unlike `Marionette.Appliation`'s [region attribute](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md#root-layout), `setRegion` only accepts a Region instance.
+
+```js
+myApp.setRegion(myView.getRegion('appRegion'));
+
+```
+
+### App `getRegion`
+
+`getRegion` performs two functions. When passed no arguments returns the app's region.
+You can also give `getRegion` a region name string which will attempt to return a region from the app's view.
+It is sugar for `myApp.getView().getRegion('regionName') === myApp.getRegion('regionName');`.
+
+```js
+const MyApp = Toolkit.App.extend({
+  region: '#app-hook'
+});
+
+const myView = new Mn.View({
+  template: MyTemplate,
+  regions: {
+    foo: '#foo'
+  }
+});
+
+myApp.getRegion(); // #app-hook region
+
+myApp.showView(myView);
+myApp.getRegion('foo');  // foo region on myView
+```
+
 ## Application View
 
-A [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md) can have an associated view shown in its region with `showView`. Toolkit takes this a step further and proxies that view's `showChildView` and `getChildView`. This is simply sugar for common patterns.
+A [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md) can have an associated view shown in its region with `showView`.
+Toolkit takes this a step further and proxies that view's `showChildView` and `getChildView`. This is simply sugar for common patterns.
+A View instance can be passed to [App `start`](#app-start) as an option,
+[setting the App view](#app-setview), making it available to both [`before:start` and `start`](#beforestart--start-events) events.
+
+```js
+myApp.start({
+  view: myView
+});
+
+myApp.getView() === myView;
+```
+
+### App `setView`
+
+Assign a view to an App. There are two notable use cases for this.
+First, this allows you to use `App.getRegion('regionName')` or `App.showChildView`
+without first showing the view in the App's region. This way all of the App's children
+can be setup and rendered prior to attaching anything to the DOM.
+
+```js
+const MyApp = Toolkit.App.extend({
+  onStart() {
+    this.setView(myLayoutView);
+    this.startChildApp('child', { region: this.getRegion('child') });
+    this.showChildView('title', 'My App');
+    this.showView();
+  }
+});
+```
+
+The second is when you want to associate an App with a view already in a region or one that
+won't be shown in a region.
+
+```js
+const myView = new Mn.View.extend({
+  el: $('#existing-dom'),
+  regions: {
+    foo: '#foo'
+  }
+});
+
+const myApp = new MyApp();
+
+myApp.start();
+
+myApp.setView(myView);
+
+myApp.getRegion('foo') === myView.getRegion('foo');
+```
+
+`setView` returns the view.
+
+```js
+
+const myView = myApp.setView(new MyView());
+
+// myApp.listenTo(myView, ...);
+```
+
+### App `getView`
+
+Returns the view instance associated with the App.
+
+```js
+myApp.setView(fooView);
+
+myApp.getView() === fooView;
+
+myApp.showView(barView);
+
+myApp.getView() === barView;
+
+myApp.getRegion().show(bazView);
+
+myApp.getView() === bazView;
+```
+
+### App `showView`
+
+Shows a view instance in the App's region.
+The first argument for `showView` is the view instance, but if left undefined the App will
+attempt to use the current view ie: `myApp.getView()`. The second argument is region.show options
+
+```js
+myApp.showView(myView, { replaceElement: true });
+
+
+// Alternatively
+myApp.setView(fooView);
+
+// Show fooView
+myApp.showView();
+```
+
+`showView` returns the view.
+
+```js
+
+const myView = myApp.showView(new MyView());
+
+// myApp.listenTo(myView, ...);
+```
 
 ### App `showChildView`
 
@@ -428,6 +582,15 @@ myApp.showChildView('fooRegion', myChildView, 'fooArg');
 
 //is equivalent to
 myApp.getView().getRegion('fooRegion').show(myChildView, 'fooArg');
+```
+
+`showChildView` returns the child view.
+
+```js
+
+const myView = myApp.showChildView('fooRegion', new MyView());
+
+// myApp.listenTo(myView, ...);
 ```
 
 ### App `getChildView`
