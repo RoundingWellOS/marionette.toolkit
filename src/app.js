@@ -77,6 +77,7 @@ const App = Marionette.Application.extend({
   constructor(options = {}) {
     this.mergeOptions(options, ClassOptions);
 
+    // ChildAppsMixin
     this._initChildApps(options);
 
     Marionette.Application.call(this, options);
@@ -146,12 +147,14 @@ const App = Marionette.Application.extend({
 
     this.setRegion(options.region);
 
+    // StateMixin
     this._initState(options);
 
     this.triggerMethod('before:start', options);
 
     this._isRunning = true;
 
+    // StateMixin
     this.delegateStateEvents();
 
     this.triggerStart(options);
@@ -254,12 +257,14 @@ const App = Marionette.Application.extend({
    */
   destroy() {
     if(this._isDestroyed) {
-      return;
+      return this;
     }
 
     this.stop();
 
     Marionette.Object.prototype.destroy.apply(this, arguments);
+
+    return this;
   },
 
   /**

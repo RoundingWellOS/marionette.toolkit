@@ -9,6 +9,7 @@ const ClassOptions = [
   'viewOptions',
   'region'
 ];
+
 /**
  * Reusable Marionette.Object with View management boilerplate
  *
@@ -57,10 +58,12 @@ const Component = Marionette.Object.extend({
     // Make defaults available to this
     this.mergeOptions(options, ClassOptions);
 
+    // StateMixin
     this._initState(options);
 
     Marionette.Object.call(this, options);
 
+    // StateMixin
     this.delegateStateEvents();
   },
 
@@ -315,6 +318,8 @@ const Component = Marionette.Object.extend({
     this._shouldDestroy = true;
 
     this._destroy(options);
+
+    return this;
   }
 });
 
