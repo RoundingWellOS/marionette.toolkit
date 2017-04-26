@@ -1,18 +1,21 @@
 # Marionette.Toolkit.Component
 
-`Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component) and is an extension of `Marionette.Application`. It mixes in [`StateMixin`](./mixins/state.md) that manages a view (or views) whose lifecycle is tied to the region it is shown in.
+`Marionette.Toolkit.Component` is heavily influenced by **@jfairbank**'s [Marionette.Component](https://github.com/jfairbank/marionette.component) and is an extension of `Marionette.Application`.
 The Component provides a consistent interface for which to package state-view-logic.
+It utilizes the following mixins:
+
+* [`StateMixin`](./mixins/state.md) manages a view (or views) whose lifecycle is tied to the region it is shown in.
+* [`ViewEventsMixin`](./mixins/view-events.md) for proxying events from the component's view to the app.
 
 ## Documentation Index
 * [Using a Component](#using-a-component)
 * [Component's `ViewClass`](#components-viewclass)
-  * [Component's `viewEventPrefix`](#components-vieweventprefix)
   * [Component's `viewOptions`](#components-viewoptions)
 * [Component's `region`](#components-region)
 * [Component Events](#component-events)
   * ["before:show" / "show" events](#beforeshow--show-events)
   * ["before:render:view" / "render:view" events](#beforerenderview--renderview-events)
-  * ["view:*" event bubbling from the component view](#view-event-bubbling-from-the-component-view)
+  * [View Events](#view-events)
 * [Component API](#component-api)
   * [Component `showIn`](#component-showin)
   * [Component `show`](#component-show)
@@ -98,32 +101,6 @@ Marionette.Toolkit.Component.extend({
   ViewClass: MyViewClass
 });
 ```
-
-### Component's `viewEventPrefix`
-
-You can customize the event prefix for events that are forwarded
-through the component. To do this, set the `viewEventPrefix`
-on the component. For more information on the `viewEventPrefix` see
-["view:*" event bubbling from the component view](#view-event-bubbling-from-the-component-view)
-
-```js
-var MyComponent = Marionette.Toolkit.Component.extend({
-  viewEventPrefix: 'some:prefix'
-});
-
-var myComponent = new MyComponent({});
-
-myComponent.showIn(MyRegion);
-
-myComponent.on('some:prefix:render', function(){
-  // view was rendered
-});
-
-myComponent.currentView.render();
-```
-
-The `viewEventPrefix` can be provided in the component definition or
-in the constructor function call, to get a component instance.
 
 ### Component's `viewOptions`
 
@@ -240,39 +217,14 @@ myComponent.on('render:view', function(currentView){
 });
 ```
 
-### `view:*` event bubbling from the component view
+### View Events
 
-When the current view within a component triggers an
-event, that event will bubble up through the component
-with "view:" prepended to the event name.  Override the
-prefix by setting [`viewEventPrefix`](#components-vieweventprefix).
+View events for a Component's view can be proxied following a very similar API to what you would
+expect on a `Marionette.View` and `Marionette.CollectionView` with their children.
 
-That is, if a current view triggers "do:something", the
-component will then trigger "childview:do:something".
+You can use `viewEvents`, `viewTriggers` and `viewEventPrefix` for auto-proxying events.
 
-```js
-var MyView = Marionette.View.extend({
-  triggers: {
-    'click button': 'do:something'
-  }
-});
-
-// get the collection view in place
-var myComponent = new Marionette.Toolkit.Component(null, {
-  ViewClass: MyView,
-
-  onViewDoSomething: function(currentView, args*) {
-    console.log("I said, 'do something!'");
-  }
-});
-
-myComponent.on('view:do:something', function(currentView, args*){
-  console.log("My component said, 'do something!'");
-});
-```
-
-Now, whenever the button inside the `currentView` is clicked,
-both messages will log to the console.
+For more information see the [ViewEventsMixin documentation](./mixins/view-events.md).
 
 ## Component API
 

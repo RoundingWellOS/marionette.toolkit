@@ -2,10 +2,13 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import StateMixin from './mixins/state';
+import ViewEventsMixin from './mixins/view-events';
 
 const ClassOptions = [
   'ViewClass',
   'viewEventPrefix',
+  'viewEvents',
+  'viewTriggers',
   'viewOptions',
   'region'
 ];
@@ -28,21 +31,6 @@ const Component = Marionette.Object.extend({
   ViewClass: Marionette.View,
 
   /**
-   * Used as the prefix for events forwarded from
-   * the component's view to the component
-   * @type {String}
-   * @default 'view'
-   */
-  viewEventPrefix: 'view',
-
-  /**
-   * Options hash passed to the view when built.
-   * @type {Object|Function}
-   * @default '{}'
-   */
-  viewOptions: {},
-
-  /**
    * @public
    * @constructs Component
    * @param {Object} [options] - Settings for the component.
@@ -57,6 +45,11 @@ const Component = Marionette.Object.extend({
   constructor(options = {}) {
     // Make defaults available to this
     this.mergeOptions(options, ClassOptions);
+
+    this.options = _.extend({}, _.result(this, 'options'), options);
+
+    // ViewEventMixin
+    this._buildEventProxies();
 
     // StateMixin
     this._initState(options);
@@ -198,6 +191,7 @@ const Component = Marionette.Object.extend({
     // Attach current built view to component
     this.currentView = view;
 
+    // ViewEventMixin
     this._proxyViewEvents(view);
 
     this.triggerMethod('before:render:view', view);
@@ -214,31 +208,6 @@ const Component = Marionette.Object.extend({
     this.triggerMethod('render:view', view);
 
     return this;
-  },
-
-  /**
-   * Proxies the ViewClass's viewEvents to the Component itself
-   * Similar to CollectionView childEvents
-   * (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
-   *
-   * @private
-   * @method _proxyViewEvents
-   * @memberOf Component
-   * @param {Mn.View|Mn.CollectionView} view -
-   * The instantiated ViewClass.
-   */
-  _proxyViewEvents(view) {
-    const prefix = this.viewEventPrefix;
-
-    view.on('all', function() {
-      const args = _.toArray(arguments);
-      const rootEvent = args[0];
-
-      args[0] = `${ prefix }:${ rootEvent }`;
-      args.splice(1, 0, view);
-
-      this.triggerMethod.apply(this, args);
-    }, this);
   },
 
   /**
@@ -323,6 +292,6 @@ const Component = Marionette.Object.extend({
   }
 });
 
-_.extend(Component.prototype, StateMixin);
+_.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
 export default Component;

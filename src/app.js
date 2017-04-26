@@ -3,6 +3,7 @@ import Marionette from 'backbone.marionette';
 import StateMixin from './mixins/state';
 import ChildAppsMixin from './mixins/child-apps';
 import EventListenersMixin from './mixins/event-listeners';
+import ViewEventsMixin from './mixins/view-events';
 
 const ClassOptions = [
   'startWithParent',
@@ -10,7 +11,10 @@ const ClassOptions = [
   'startAfterInitialized',
   'preventDestroy',
   'StateModel',
-  'stateEvents'
+  'stateEvents',
+  'viewEventPrefix',
+  'viewEvents',
+  'viewTriggers'
 ];
 
 /**
@@ -76,6 +80,11 @@ const App = Marionette.Application.extend({
    */
   constructor(options = {}) {
     this.mergeOptions(options, ClassOptions);
+
+    this.options = _.extend({}, _.result(this, 'options'), options);
+
+    // ViewEventMixin
+    this._buildEventProxies();
 
     // ChildAppsMixin
     this._initChildApps(options);
@@ -350,6 +359,9 @@ const App = Marionette.Application.extend({
 
     this._view = view;
 
+    // ViewEventsMixin
+    this._proxyViewEvents(view);
+
     return view;
   },
 
@@ -409,6 +421,6 @@ const App = Marionette.Application.extend({
   }
 });
 
-_.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin);
+_.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin, ViewEventsMixin);
 
 export default App;

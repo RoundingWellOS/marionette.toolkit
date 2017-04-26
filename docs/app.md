@@ -5,6 +5,7 @@
 * [`StateMixin`](./mixins/state.md) to maintain application state.
 * [`EventListenersMixin`](./mixins/event-listeners.md) to bind all events to an `App` while running (and only those) will be remove when stopped.
 * [`ChildAppsMixin`](./mixins/child-apps.md) to manage the addition and removal of child `App`s and relating the child `App` lifecycle with the parent `App` lifecycle.
+* [`ViewEventsMixin`](./mixins/view-events.md) for proxying events from the app's view to the app.
 
 ## Documentation Index
 * [Using Toolkit App](#using-toolkit-app)
@@ -34,6 +35,7 @@
   * [App `showView`](#application-showview)
   * [App `showChildView`](#app-showchildview)
   * [App `getChildView`](#app-getchildview)
+  * [View Events](#view-events)
 
 ## Using Toolkit App
 
@@ -605,3 +607,12 @@ myApp.getChildView('fooRegion');
 //is equivalent to
 myApp.getView().getRegion('fooRegion').currentView;
 ```
+
+### View events
+
+View events for an App's view can be proxied following a very similar API to what you would
+expect on a `Marionette.View` and `Marionette.CollectionView` with their children.
+
+You can use `viewEvents`, `viewTriggers` and `viewEventPrefix` for auto-proxying events.
+
+For more information see the [ViewEventsMixin documentation](./mixins/view-events.md).
