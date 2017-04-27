@@ -23,6 +23,8 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
   [ChildAppsMixin](./docs/mixins/child-apps.md) - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.
 
   [EventListenersMixin](./docs/mixins/event-listeners.md) - Binds events to the `App` while running and removed (and only those) when the `App` is stopped.
+  
+  [ViewEventsMixin](./docs/mixins/view-events.md) - Adds `Marionette.View`-like support for view event proxying. The API is analogous to `childViewEventPrefix`, `childViewEvents` and `childViewTriggers`.
 
 
 ## Getting Help
@@ -39,6 +41,11 @@ Everyone there is happy to discuss design patterns.
 You can download the latest builds directly from the [dist](https://github.com/RoundingWellOS/marionette.toolkit/tree/master/dist) folder above.
 
 #### Available Packages
+
+**Via [yarn](https://www.npmjs.com/package/marionette.toolkit)**
+```
+$ yarn add marionette.toolkit
+```
 
 **Via [npm](https://www.npmjs.com/package/marionette.toolkit)**
 ```
