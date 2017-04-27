@@ -211,27 +211,6 @@ describe('Marionette.Toolkit.Component', function() {
       });
     });
 
-    describe('with a customized viewEventPrefix', function() {
-      it('should trigger the correct action as defined', function() {
-        this.MyComponent = Marionette.Toolkit.Component.extend({
-          viewEventPrefix: 'some:prefix',
-          viewOptions: {
-            template: false
-          },
-          testRender: false
-        });
-        this.myComponent = new this.MyComponent({});
-
-        this.myComponent.showIn(this.myRegion);
-        this.myComponent.on('some:prefix:render', function() {
-          this.testRender = true;
-        });
-        this.myComponent.currentView.render();
-
-        expect(this.myComponent.testRender).to.equal(true);
-      });
-    });
-
     describe('with defined viewOptions', function() {
       beforeEach(function() {
         this.MyView = Marionette.View.extend({
