@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 export default {
   /**
    * Used as the prefix for events forwarded from

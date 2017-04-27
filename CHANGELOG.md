@@ -1,3 +1,40 @@
+#### v4.0.0
+
+* `App`
+  * **Breaking Changes:**
+    * Inits the state model before `before:start` and waits until before `start` to delegate `stateEvents`
+    * Remove `getInitState` in favor of setting the state in `before:start`
+    * `setRegion` now returns the set region instance
+  * `destroy` now returns the app instance
+  * `destroy` now calls the Application prototype instead of Object
+  * Added `ViewEventsMixin`
+  * Added `restart` and `isRestarting` feature
+  * `start` now accepts a view option
+  * Added `setView` / `getView` feature allowing setting up children with the App's API prior to `showView`
+  * `getRegion` now accepts an argument of a region name that is sugar for `myApp.getView().getRegion('regionName')`
+  * `showView` will show the "set" view if not passed a 1st argument
+  * Added `showChildView` / `getChildView` for interaction with the children of the App's view
+
+* `Component`
+  * **Breaking Changes:**
+    * `viewEventPrefix` is now defaulted to `false`
+    * `stateEvents` is now delegated after `initialize` this allows for setState in `initialize`
+  * Added `ViewEventsMixin`
+  * `destroy` now returns the component instance
+
+* `ChildAppMixin`
+  * **Breaking Changes:**
+    * `startChildApp` / `stopChildApp` now return the child app instance
+
+* `StateMixin`
+  * Add `delegateStateEvents` / `undelegateStateEvents` for binding and unbinding `stateEvents`
+
+* `ViewEventsMixin` - This new mixin adds Marionette.View like support for view event proxying
+The API is analogous to `childViewEventPrefix`, `childViewEvents` and `childViewTriggers`
+  * `viewEventPrefix` defaulting to false allows for auto-proxying events from the view to the app or component
+  * `viewEvents` allows app or component handlers of view events
+  * `viewTriggers` triggers an event on the app or component when an event is triggered on the view
+
 #### v3.1.0
 
 * `App`
