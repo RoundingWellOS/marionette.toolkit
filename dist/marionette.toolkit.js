@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v3.1.0
+ * @version v4.0.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -42,6 +42,19 @@
     initState: function initState() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+      this._initState(options);
+      this.delegateStateEvents();
+
+      return this;
+    },
+
+
+    /**
+     * @private
+     * @method _initState
+     * @param {Object} [options] - Settings for the StateMixin.
+     */
+    _initState: function _initState(options) {
       // Make defaults available to this
       this.mergeOptions(options, ClassOptions);
 
@@ -53,14 +66,49 @@
       this._stateModel = new StateModel(options.state);
 
       this._setEventHandlers();
+    },
+
+
+    /**
+     * Bind events from the _stateModel defined in stateEvents hash
+     *
+     * @public
+     * @method delegateStateEvents
+     */
+    delegateStateEvents: function delegateStateEvents() {
+      this.undelegateStateEvents();
+      this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
 
       return this;
     },
 
 
     /**
-     * Unbind all entity events and remove any listeners on _stateModel
-     * Clean up destroy event handler
+     * Unbind all entity events on _stateModel
+     *
+     * @public
+     * @method undelegateStateEvents
+     */
+    undelegateStateEvents: function undelegateStateEvents() {
+      this.unbindEvents(this._stateModel);
+
+      return this;
+    },
+
+
+    /**
+     * Setup destroy event handle
+     *
+     * @private
+     * @method _setEventHandlers
+     */
+    _setEventHandlers: function _setEventHandlers() {
+      this.on('destroy', this._destroyState);
+    },
+
+
+    /**
+     * Clean up destroy event handler, remove any listeners on _stateModel
      *
      * @private
      * @method _removeEventHandlers
@@ -68,23 +116,9 @@
     _removeEventHandlers: function _removeEventHandlers() {
       if (!this._stateModel) return;
 
-      this.unbindEvents(this._stateModel);
+      this.undelegateStateEvents();
       this._stateModel.stopListening();
       this.off('destroy', this._destroyState);
-    },
-
-
-    /**
-     * Bind events from the _stateModel defined in stateEvents hash
-     * Setup destroy event handle
-     *
-     * @private
-     * @method _setEventHandlers
-     */
-    _setEventHandlers: function _setEventHandlers() {
-      this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
-
-      this.on('destroy', this._destroyState);
     },
 
 
@@ -275,9 +309,7 @@
      * @method startChildApp
      */
     startChildApp: function startChildApp(appName, options) {
-      this.getChildApp(appName).start(options);
-
-      return this;
+      return this.getChildApp(appName).start(options);
     },
 
 
@@ -289,9 +321,7 @@
      * @method stopChildApp
      */
     stopChildApp: function stopChildApp(appName) {
-      this.getChildApp(appName).stop();
-
-      return this;
+      return this.getChildApp(appName).stop();
     },
 
 
@@ -533,52 +563,6 @@
       }
 
       return childApp;
-    },
-
-
-    /**
-     * Shows a view in the region of the app's view
-     *
-     * @public
-     * @method showChildView
-     * @param {String} regionName - Name of region to show in
-     * @param {View} view - Child view instance
-     * @param {...args} Additional args that get passed along
-     * @returns {View} - Child view instance
-     */
-    showChildView: function showChildView(regionName, view) {
-      var appView = this.getView();
-
-      if (!appView) {
-        return false;
-      }
-
-      for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-        args[_key - 2] = arguments[_key];
-      }
-
-      appView.showChildView.apply(appView, [regionName, view].concat(args));
-
-      return view;
-    },
-
-
-    /**
-     * Returns view from the App view by region name.
-     *
-     * @public
-     * @method getChildView
-     * @param {String} regionName - Name of region to get view from
-     * @returns {View}
-     */
-    getChildView: function getChildView(regionName) {
-      var appView = this.getView();
-
-      if (!appView) {
-        return false;
-      }
-
-      return appView.getChildView(regionName);
     }
   };
 
@@ -669,7 +653,83 @@
     }
   };
 
-  var ClassOptions$1 = ['startWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel', 'stateEvents'];
+  var ViewEventsMixin = {
+    /**
+     * Used as the prefix for events forwarded from
+     * the component's view to the component
+     * @type {String}
+     * @default false
+     */
+    viewEventPrefix: false,
+
+    /**
+     * Constructs hashes and options for view event proxy
+     *
+     * @private
+     * @method _buildEventProxies
+     */
+    _buildEventProxies: function _buildEventProxies() {
+      var viewEvents = _.result(this, 'viewEvents') || {};
+      this._viewEvents = this.normalizeMethods(viewEvents);
+      this._viewTriggers = _.result(this, 'viewTriggers') || {};
+      this._viewEventPrefix = _.result(this, 'viewEventPrefix');
+    },
+
+
+    /**
+     * Proxies the ViewClass's viewEvents to the Component itself
+     * Similar to CollectionView childEvents
+     * (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
+     *
+     * @private
+     * @method _proxyViewEvents
+     * @param {Mn.View|Mn.CollectionView} view -
+     * The instantiated ViewClass.
+     */
+    _proxyViewEvents: function _proxyViewEvents(view) {
+      this.listenTo(view, 'all', this._childViewEventHandler);
+    },
+
+
+    /**
+     * Event handler for view proxy
+     * Similar to CollectionView childEvents
+     * (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
+     *
+     * @private
+     * @method _childViewEventHandler
+     * @param {String} - event name
+     */
+    _childViewEventHandler: function _childViewEventHandler(eventName) {
+      var viewEvents = this._viewEvents;
+
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      if (_.isFunction(viewEvents[eventName])) {
+        viewEvents[eventName].apply(this, args);
+      }
+
+      // use the parent view's proxyEvent handlers
+      var viewTriggers = this._viewTriggers;
+
+      // Call the event with the proxy name on the parent layout
+      if (_.isString(viewTriggers[eventName])) {
+        this.triggerMethod.apply(this, [viewTriggers[eventName]].concat(args));
+      }
+
+      var prefix = this._viewEventPrefix;
+
+      if (prefix !== false) {
+        var viewEventName = prefix + ':' + eventName;
+
+        this.triggerMethod.apply(this, [viewEventName].concat(args));
+      }
+    }
+  };
+
+  var ClassOptions$1 = ['startWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel', 'stateEvents', 'viewEventPrefix', 'viewEvents', 'viewTriggers'];
 
   /**
    * Marionette.Application with an `initialize` / `start` / `stop` / `destroy` lifecycle.
@@ -737,6 +797,12 @@
 
       this.mergeOptions(options, ClassOptions$1);
 
+      this.options = _.extend({}, _.result(this, 'options'), options);
+
+      // ViewEventMixin
+      this._buildEventProxies();
+
+      // ChildAppsMixin
       this._initChildApps(options);
 
       Marionette.Application.call(this, options);
@@ -744,6 +810,20 @@
       if (_.result(this, 'startAfterInitialized')) {
         this.start(options);
       }
+    },
+
+
+    /**
+     * Override of Marionette's Application._initRegion
+     * Allows region monitor to be setup prior to initialize
+     *
+     * @private
+     * @method _initRegion
+     * @memberOf App
+     */
+    _initRegion: function _initRegion() {
+      Marionette.Application.prototype._initRegion.call(this);
+      this._regionEventMonitor();
     },
 
 
@@ -779,6 +859,19 @@
 
 
     /**
+     * Gets the value of internal `_isRestarting` flag
+     *
+     * @public
+     * @method isRestarting
+     * @memberOf App
+     * @returns {Boolean}
+     */
+    isRestarting: function isRestarting() {
+      return this._isRestarting;
+    },
+
+
+    /**
      * Sets the app lifecycle to running.
      *
      * @public
@@ -788,65 +881,56 @@
      * @event App#before:start - passes options
      * @returns {App}
      */
-    start: function start(options) {
+    start: function start() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
       this._ensureAppIsIntact();
 
       if (this._isRunning) {
         return this;
       }
 
-      var opts = _.extend({}, options);
+      if (options.region) {
+        this.setRegion(options.region);
+      }
 
-      this.setRegion(opts.region);
+      if (options.view) {
+        this.setView(options.view);
+      }
+
+      // StateMixin
+      this._initState(options);
 
       this.triggerMethod('before:start', options);
 
-      opts.state = this.getInitState(opts.state);
-
       this._isRunning = true;
 
-      this.initState(opts);
+      // StateMixin
+      this.delegateStateEvents();
 
-      this.triggerStart(opts);
+      this.triggerStart(options);
 
       return this;
     },
 
 
     /**
-     * Set the Application's Region after instantiation
+     * Sets the app lifecycle to not running
+     * then sets the app lifecycle to running with ending state
      *
      * @public
-     * @method setRegion
+     * @method restart
      * @memberOf App
-     * @param {Region} [region] - Region to use with the app
      * @returns {App}
      */
+    restart: function restart() {
+      var state = this.getState().attributes;
 
-    setRegion: function setRegion(region) {
-      if (!region) {
-        return this;
-      }
-
-      this._region = region;
+      this._isRestarting = true;
+      this.stop().start({ state: state });
+      this._isRestarting = false;
 
       return this;
-    },
-
-
-    /**
-     * Returns state.
-     * Override to extend state
-     *
-     * @public
-     * @method getInitState
-     * @memberOf App
-     * @param {Object} [state] - initial app state
-     * @returns state
-     */
-
-    getInitState: function getInitState(state) {
-      return state;
     },
 
 
@@ -907,18 +991,189 @@
      */
     destroy: function destroy() {
       if (this._isDestroyed) {
-        return;
+        return this;
       }
 
       this.stop();
 
-      Marionette.Object.prototype.destroy.apply(this, arguments);
+      delete this._view;
+
+      Marionette.Application.prototype.destroy.apply(this, arguments);
+
+      return this;
+    },
+
+
+    /**
+     * Set the Application's Region
+     *
+     * @public
+     * @method setRegion
+     * @memberOf App
+     * @param {Region} [region] - Region to use with the app
+     * @returns {Region}
+     */
+    setRegion: function setRegion(region) {
+      if (this._region) {
+        this.stopListening(this._region);
+      }
+
+      this._region = region;
+
+      this._regionEventMonitor();
+
+      return region;
+    },
+
+
+    /**
+     * Monitors the apps region before:show event so the region's view
+     * is available to the app
+     *
+     * @private
+     * @method _regionEventMonitor
+     * @memberOf App
+     */
+    _regionEventMonitor: function _regionEventMonitor() {
+      this.listenTo(this._region, 'before:show', this._onBeforeShow);
+    },
+
+
+    /**
+     * Region monitor handler which sets the app's view to the region's view
+     *
+     * @private
+     * @method _onBeforeShow
+     * @memberOf App
+     */
+    _onBeforeShow: function _onBeforeShow(region, view) {
+      this.setView(view);
+    },
+
+
+    /**
+     * Get the Application's Region or
+     * Get a region from the Application's View
+     *
+     * @public
+     * @method getRegion
+     * @memberOf App
+     * @param {String} [regionName] - Optional regionName to get from the view
+     * @returns {Region}
+     */
+    getRegion: function getRegion(regionName) {
+      if (!regionName) {
+        return this._region;
+      }
+
+      return this.getView().getRegion(regionName);
+    },
+
+
+    /**
+     * Set the Application's View
+     *
+     * @public
+     * @method setView
+     * @memberOf App
+     * @param {View} [view] - View to use with the app
+     * @returns {View}
+     */
+    setView: function setView(view) {
+      if (this._view === view) {
+        return view;
+      }
+
+      if (this._view) {
+        this.stopListening(this._view);
+      }
+
+      this._view = view;
+
+      // ViewEventsMixin
+      this._proxyViewEvents(view);
+
+      return view;
+    },
+
+
+    /**
+     * Get the Application's View
+     *
+     * @public
+     * @method getView
+     * @memberOf App
+     * @returns {View}
+     */
+    getView: function getView() {
+      return this._view;
+    },
+
+
+    /**
+     * Shows a view in the Application's region
+     *
+     * @public
+     * @method showView
+     * @param {View} view - Child view instance defaults to App's view
+     * @param {...args} Additional args that get passed along
+     * @returns {View}
+     */
+    showView: function showView() {
+      var _getRegion;
+
+      var view = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._view;
+
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      (_getRegion = this.getRegion()).show.apply(_getRegion, [view].concat(args));
+
+      return view;
+    },
+
+
+    /**
+     * Shows a view in the region of the app's view
+     *
+     * @public
+     * @method showChildView
+     * @param {String} regionName - Name of region to show in
+     * @param {View} view - Child view instance
+     * @param {...args} Additional args that get passed along
+     * @returns {View} - Child view instance
+     */
+    showChildView: function showChildView(regionName, view) {
+      var _getView;
+
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      (_getView = this.getView()).showChildView.apply(_getView, [regionName, view].concat(args));
+
+      return view;
+    },
+
+
+    /**
+     * Returns view from the App view by region name.
+     *
+     * @public
+     * @method getChildView
+     * @param {String} regionName - Name of region to get view from
+     * @returns {View}
+     */
+    getChildView: function getChildView(regionName) {
+      return this.getView().getChildView(regionName);
     }
   });
 
-  _.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin);
+  _.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin, ViewEventsMixin);
 
-  var ClassOptions$3 = ['ViewClass', 'viewEventPrefix', 'viewOptions', 'region'];
+  var ClassOptions$3 = ['ViewClass', 'viewEventPrefix', 'viewEvents', 'viewTriggers', 'viewOptions', 'region'];
+
   /**
    * Reusable Marionette.Object with View management boilerplate
    *
@@ -935,21 +1190,6 @@
      * @default Marionette.View
      */
     ViewClass: Marionette.View,
-
-    /**
-     * Used as the prefix for events forwarded from
-     * the component's view to the component
-     * @type {String}
-     * @default 'view'
-     */
-    viewEventPrefix: 'view',
-
-    /**
-     * Options hash passed to the view when built.
-     * @type {Object|Function}
-     * @default '{}'
-     */
-    viewOptions: {},
 
     /**
      * @public
@@ -969,9 +1209,18 @@
       // Make defaults available to this
       this.mergeOptions(options, ClassOptions$3);
 
-      this.initState(options);
+      this.options = _.extend({}, _.result(this, 'options'), options);
+
+      // ViewEventMixin
+      this._buildEventProxies();
+
+      // StateMixin
+      this._initState(options);
 
       Marionette.Object.call(this, options);
+
+      // StateMixin
+      this.delegateStateEvents();
     },
 
 
@@ -1112,6 +1361,7 @@
       // Attach current built view to component
       this.currentView = view;
 
+      // ViewEventMixin
       this._proxyViewEvents(view);
 
       this.triggerMethod('before:render:view', view);
@@ -1128,32 +1378,6 @@
       this.triggerMethod('render:view', view);
 
       return this;
-    },
-
-
-    /**
-     * Proxies the ViewClass's viewEvents to the Component itself
-     * Similar to CollectionView childEvents
-     * (http://marionettejs.com/docs/v2.3.2/marionette.collectionview.html#collectionviews-childevents)
-     *
-     * @private
-     * @method _proxyViewEvents
-     * @memberOf Component
-     * @param {Mn.View|Mn.CollectionView} view -
-     * The instantiated ViewClass.
-     */
-    _proxyViewEvents: function _proxyViewEvents(view) {
-      var prefix = this.viewEventPrefix;
-
-      view.on('all', function () {
-        var args = _.toArray(arguments);
-        var rootEvent = args[0];
-
-        args[0] = prefix + ':' + rootEvent;
-        args.splice(1, 0, view);
-
-        this.triggerMethod.apply(this, args);
-      }, this);
     },
 
 
@@ -1238,10 +1462,12 @@
       this._shouldDestroy = true;
 
       this._destroy(options);
+
+      return this;
     }
   });
 
-  _.extend(Component.prototype, StateMixin);
+  _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
   /**
    * @module Toolkit
@@ -1266,7 +1492,7 @@
     _.extend(classDefinition.prototype, _StateMixin);
   };
 
-  Toolkit.VERSION = '3.1.0';
+  Toolkit.VERSION = '4.0.0';
 
   Toolkit.StateMixin = StateMixin;
 
