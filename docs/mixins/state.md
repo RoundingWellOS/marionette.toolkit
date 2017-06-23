@@ -231,7 +231,7 @@ exception that not passing any attribute to "get" will return the state model
 instance.
 
 ```js
-var MyToolKitApp = Backbone.Model.extend({
+var MyStateModel = Backbone.Model.extend({
   defaults: {
     foo: 'bar'
   }
@@ -240,6 +240,8 @@ var MyToolKitApp = Backbone.Model.extend({
 var myToolKitApp = new Marionette.Toolkit.App({
   StateModel: MyStateModel
 });
+
+myToolKitApp.start()
 
 // returns "bar"
 myToolKitApp.getState('foo');
