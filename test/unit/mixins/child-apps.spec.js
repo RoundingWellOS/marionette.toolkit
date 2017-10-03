@@ -389,4 +389,44 @@ describe('ChildAppMixin', function() {
       expect(spy.returned(this.myChildApp)).to.be.true;
     });
   });
+
+  describe('restartWithParent', function() {
+    it('should not affect childApp with restartWithParent: true', function() {
+      const childApps = {
+        cA1: Marionette.Toolkit.App.extend({
+          restartWithParent: true
+        })
+      };
+
+      const myApp = new Marionette.Toolkit.App({ childApps: childApps });
+
+      myApp.start();
+
+      const stopSpy = sinon.spy(myApp.getChildApp('cA1'), 'stop');
+      const startSpy = sinon.spy(myApp.getChildApp('cA1'), 'start');
+
+      myApp.restart();
+
+      expect(stopSpy).to.be.called.once;
+      expect(startSpy).to.be.called.once;
+    });
+
+    it('should affect childApp with restartWithParent: false (default)', function() {
+      const childApps = {
+        cA1: Marionette.Toolkit.App
+      };
+
+      const myApp = new Marionette.Toolkit.App({ childApps: childApps });
+
+      myApp.start();
+
+      const stopSpy = sinon.spy(myApp.getChildApp('cA1'), 'stop');
+      const startSpy = sinon.spy(myApp.getChildApp('cA1'), 'start');
+
+      myApp.restart();
+
+      expect(stopSpy).to.not.be.called;
+      expect(startSpy).to.not.be.called;
+    });
+  });
 });
