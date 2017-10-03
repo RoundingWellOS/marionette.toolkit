@@ -74,11 +74,11 @@ export default {
    */
   _startChildApps() {
     const shouldStartOption = this._isRestarting ? 'restartWithParent' : 'startWithParent';
-    _.each(this._childApps, _.bind(function(childApp) {
+    _.each(this._childApps, function(childApp) {
       if(_.result(childApp, shouldStartOption)) {
         childApp.start();
       }
-    }, this));
+    });
   },
 
   /**
@@ -89,11 +89,11 @@ export default {
    */
   _stopChildApps() {
     const shouldStopOption = this._isRestarting ? 'restartWithParent' : 'stopWithParent';
-    _.each(this._childApps, _.bind(function(childApp) {
+    _.each(this._childApps, function(childApp) {
       if(_.result(childApp, shouldStopOption)) {
         childApp.stop();
       }
-    }, this));
+    });
   },
 
   /**

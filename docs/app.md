@@ -13,8 +13,8 @@
   * [App's `startAfterInitialized`](#apps-startafterinitialized)
   * [App's `preventDestroy`](#apps-preventdestroy)
   * [App's `startWithParent`](#apps-startwithparent)
-  * [App's `stopWithParent`](#apps-stopwithparent)
   * [App's `restartWithParent`](#apps-restartwithparent)
+  * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
   * [App `restart`](#app-restart)
@@ -125,42 +125,9 @@ console.log(myChildApp.isRunning());
 console.log(myStartWithParentApp.isRunning());
 ```
 
-### App's `stopWithParent`
-
-If set `true` this `App` will stop when its parent `App` stops.
-Default value is `true`.
-Can be added as an option when instantiated or defined on the `App` definition.
-It can also be defined as a function returning a boolean value.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-var myChildApp = myApp.addChildApp('myChildApp', {
-  AppClass: Marionette.Toolkit.App,
-  stopWithParent: false
-});
-
-var myStopWithParentApp = myApp.addChildApp('myStopWithParentApp', {
-  AppClass: Marionette.Toolkit.App,
-  stopWithParent: true
-});
-
-myApp.start();
-myChildApp.start();
-myStopWithParentApp.start();
-
-myApp.stop();
-
-// logs true
-console.log(myChildApp.isRunning());
-
-// logs false
-console.log(myStopWithParentApp.isRunning());
-```
-
 ### App's `restartWithParent`
 
-Call `stop` then `start` on the child app when the parent app restarts.  Default value is `false`.
+Calls `stop` then `start` on the child app when the parent app restarts.  Default value is `false`.
 It can also be defined as a function returning a boolean value.
 
 ```js
@@ -192,6 +159,39 @@ restartingChildApp.on('stop start', function(options) {
 // logs true twice
 myApp.restart();
 
+```
+
+### App's `stopWithParent`
+
+If set `true` this `App` will stop when its parent `App` stops.
+Default value is `true`.
+Can be added as an option when instantiated or defined on the `App` definition.
+It can also be defined as a function returning a boolean value.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+var myChildApp = myApp.addChildApp('myChildApp', {
+  AppClass: Marionette.Toolkit.App,
+  stopWithParent: false
+});
+
+var myStopWithParentApp = myApp.addChildApp('myStopWithParentApp', {
+  AppClass: Marionette.Toolkit.App,
+  stopWithParent: true
+});
+
+myApp.start();
+myChildApp.start();
+myStopWithParentApp.start();
+
+myApp.stop();
+
+// logs true
+console.log(myChildApp.isRunning());
+
+// logs false
+console.log(myStopWithParentApp.isRunning());
 ```
 
 ## Lifecycle API
