@@ -183,6 +183,8 @@ var restartingChildApp = myApp.addChildApp('restartingChildApp', {
   restartWithParent: true
 });
 
+myApp.start();
+
 restartingChildApp.on('stop start', function(options) {
     console.log(this.isRestarting());
 });

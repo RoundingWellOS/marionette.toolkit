@@ -68,12 +68,22 @@ const App = Marionette.Application.extend({
    */
   stopWithParent: true,
 
+
+  /**
+   * Set to true if a parent `App` should be able to restart this `App`.
+   *
+   * @type {Boolean|Function}
+   * @default false
+   */
+  restartWithParent: false,
+
   /**
    * @public
    * @constructs App
    * @param {Object} [options] - Settings for the App.
    * @param {Boolean} [options.startWithParent]
    * @param {Boolean} [options.stopWithParent]
+   * @param {Boolean} [options.restartWithParent]
    * @param {Boolean} [options.startAfterInitialized]
    * @param {Boolean} [options.preventDestroy]
    * @param {Object} [options.state] - Attributes to set on the state model.

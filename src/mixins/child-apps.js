@@ -15,14 +15,6 @@ const ClassOptions = [
 export default {
 
   /**
-   * Set to true if a parent `App` should be able to restart this `App`.
-   *
-   * @type {Boolean|Function}
-   * @default false
-   */
-  restartWithParent: false,
-
-  /**
    * @private
    * @method _initChildApps
    * @constructs ChildApps
@@ -81,9 +73,9 @@ export default {
    * @method _startChildApps
    */
   _startChildApps() {
-    const isRestarting = this._isRestarting;
+    const shouldStartOption = this._isRestarting ? 'restartWithParent' : 'startWithParent';
     _.each(this._childApps, _.bind(function(childApp) {
-      if(_.result(childApp, isRestarting ? 'restartWithParent' : 'startWithParent')) {
+      if(_.result(childApp, shouldStartOption)) {
         childApp.start();
       }
     }, this));
@@ -96,9 +88,9 @@ export default {
    * @method _stopChildApps
    */
   _stopChildApps() {
-    const isRestarting = this._isRestarting;
+    const shouldStopOption = this._isRestarting ? 'restartWithParent' : 'stopWithParent';
     _.each(this._childApps, _.bind(function(childApp) {
-      if(_.result(childApp, isRestarting ? 'restartWithParent' : 'stopWithParent')) {
+      if(_.result(childApp, shouldStopOption)) {
         childApp.stop();
       }
     }, this));
