@@ -111,4 +111,48 @@ describe('app-lifecycle-options', function() {
       expect(test.isDestroyed()).to.equal(true);
     });
   });
+
+  describe('when restarting the application with child apps', function() {
+    describe('and a childApp has restartWithParent = true', function() {
+      it('should stop and start the specific childApp', function() {
+        const childApps = {
+          cA1: Marionette.Toolkit.App.extend({
+            restartWithParent: true
+          })
+        };
+
+        const myApp = new Marionette.Toolkit.App({ childApps: childApps });
+
+        myApp.start();
+
+        const stopSpy = sinon.spy(myApp.getChildApp('cA1'), 'stop');
+        const startSpy = sinon.spy(myApp.getChildApp('cA1'), 'start');
+
+        myApp.restart();
+
+        expect(stopSpy).to.be.called.once;
+        expect(startSpy).to.be.called.once;
+      });
+    });
+
+    describe('and a childApp has restartWithParent = false', function() {
+      it('should not stop or start the specific childApp', function() {
+        const childApps = {
+          cA1: Marionette.Toolkit.App
+        };
+
+        const myApp = new Marionette.Toolkit.App({ childApps: childApps });
+
+        myApp.start();
+
+        const stopSpy = sinon.spy(myApp.getChildApp('cA1'), 'stop');
+        const startSpy = sinon.spy(myApp.getChildApp('cA1'), 'start');
+
+        myApp.restart();
+
+        expect(stopSpy).to.not.be.called;
+        expect(startSpy).to.not.be.called;
+      });
+    });
+  });
 });

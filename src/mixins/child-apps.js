@@ -81,12 +81,9 @@ export default {
    * @method _startChildApps
    */
   _startChildApps() {
+    const isRestarting = this._isRestarting;
     _.each(this._childApps, _.bind(function(childApp) {
-      if(this._isRestarting && _.result(childApp, 'restartWithParent')) {
-        childApp.start();
-        return;
-      }
-      if(_.result(childApp, 'startWithParent')) {
+      if(_.result(childApp, isRestarting ? 'restartWithParent' : 'startWithParent')) {
         childApp.start();
       }
     }, this));
@@ -99,8 +96,9 @@ export default {
    * @method _stopChildApps
    */
   _stopChildApps() {
+    const isRestarting = this._isRestarting;
     _.each(this._childApps, _.bind(function(childApp) {
-      if(_.result(childApp, this._isRestarting ? 'restartWithParent' : 'stopWithParent')) {
+      if(_.result(childApp, isRestarting ? 'restartWithParent' : 'stopWithParent')) {
         childApp.stop();
       }
     }, this));

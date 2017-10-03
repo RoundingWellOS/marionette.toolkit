@@ -4,7 +4,6 @@
 
 ## Documentation Index
 * [ChildAppsMixin's Lifecycle Settings](#childappsmixins-lifecycle-settings)
-  * [ChildAppsMixin's `restartWithParent`](#childappsmixins-restartwithparent)
 * [ChildAppsMixin's `childApps`](#apps-childapps)
 * [ChildAppsMixin API](#childappsmixin-api)
   * [ChildAppsMixin `buildApp`](#childappsmixin-buildapp)
@@ -21,41 +20,6 @@
 ## ChildAppsMixin's Lifecycle Settings
 
 `childApp` lifecycles may be determined by the settings applied to a `childApp` itself.  For more information read [App Lifecycle Settings](../app.md#lifecycle-settings)
-
-### ChildAppsMixin's `restartWithParent`
-
-Call `stop` then `start` on the child app when the parent app restarts.  Default value is `false`.
-Can be added as an option when instantiated or defined on the `App` definition.
-It can also be defined as a function returning a boolean value.
-
-```js
-var myApp = new Marionette.Toolkit.App();
-
-var persistantChildApp = myApp.addChildApp('persistantChildApp', {
-  AppClass: Marionette.Toolkit.App,
-  restartWithParent: false
-});
-
-persistantChildApp.on('stop start', function(options) {
-    console.log(this.isRestarting());
-});
-
-// does not log
-myApp.restart();
-
-var restartingChildApp = myApp.addChildApp('restartingChildApp', {
-  AppClass: Marionette.Toolkit.App,
-  restartWithParent: true
-});
-
-restartingChildApp.on('stop start', function(options) {
-    console.log(this.isRestarting());
-});
-
-// logs true twice
-myApp.restart();
-
-```
 
 ### App's `childApps`
 `childApps` is an object literal or a function that returns an object literal.
