@@ -120,6 +120,14 @@ describe('Marionette.Toolkit.Component', function() {
       expect(this.renderStub).to.have.been.calledOnce;
     });
 
+    it('should call showView with the current view instance', function() {
+      this.sinon.spy(this.myComponent, 'showView');
+
+      this.myComponent.renderView();
+
+      expect(this.myComponent.showView).to.have.been.calledOnce.and.calledWith(this.myComponent.currentView);
+    });
+
     describe('and checking the currentView', function() {
       it('should have the correct className on currentView', function() {
         this.myComponent.renderView({

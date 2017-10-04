@@ -21,6 +21,7 @@ It utilizes the following mixins:
   * [Component `show`](#component-show)
   * [Component `renderView`](#component-renderview)
   * [Component `currentView`](#component-currentview)
+  * [Component `showView`](#component-showview)
   * [Component `mixinOptions`](#component-mixinoptions)
   * [Component `buildView`](#component-buildview)
   * [Component `destroy`](#component-destroy)
@@ -266,8 +267,7 @@ myComponent.show(viewOptions);
 ### Component `renderView`
 
 Builds the view from the ViewClass with the options from [`mixinOptions`](#component-mixinoptions)
-and attaches it to the component's `currentView`. It then shows the `currentView` in the component's `region`.
-During this `region.show` the component will not destroy itself on the region's empty event.
+and attaches it to the component's `currentView`. It then shows the `currentView` in the component's `region` via `showView`.
 While a component can only be shown once, it can be re-rendered many times.
 `renderView` triggers ["before:render:view" / "render:view" events](#beforerenderview--renderview-events).
 
@@ -310,6 +310,29 @@ myComponent.show({
 
 // Works but best to use the component to interface with the view.
 var view = myComponent.currentView;
+```
+
+### Component `showView`
+
+Shows the `view` in the component's `region`.
+During this `region.show` the component will not destroy itself on the region's empty event.
+This method can be overridden to change a component's behavior and should not be called directly.
+
+```js
+var MyComponent = Marionette.Toolkit.Component.extend({
+  ViewClass: MyViewClass,
+  region: someRegion,
+  showView(view) {
+    this.getRegion().show(view, { replaceElement: true });
+  }
+});
+
+var myComponent = new MyComponent();
+
+// region el is now <div class="my-component-class">
+myComponent.renderView({
+  className: 'my-component-class'
+});
 ```
 
 ### Component `mixinOptions`
