@@ -200,14 +200,26 @@ const Component = Marionette.Object.extend({
     // destroyed if the region is emptied by Component itself.
     this._shouldDestroy = false;
 
-    // Show the view in the region
-    this.getRegion().show(view);
+    this.showView(view);
 
     this._shouldDestroy = true;
 
     this.triggerMethod('render:view', view);
 
     return this;
+  },
+
+  /**
+   * Override this to change how the component's view is shown in the region
+   *
+   * @public
+   * @method showView
+   * @memberOf Component
+   * @param {Object} view - view built from a viewClass and viewOptions
+   */
+  showView(view) {
+    // Show the view in the region
+    this.getRegion().show(view);
   },
 
   /**
