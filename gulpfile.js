@@ -170,7 +170,7 @@ function test() {
 }
 
 // Lint and run our tests
-gulp.task('test', function() {
+gulp.task('test', ['lint-src', 'lint-test'], function() {
   _registerBabel();
   return test();
 });
