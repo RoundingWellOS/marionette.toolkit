@@ -112,7 +112,7 @@ describe('App-Lifecycle', function() {
     });
 
     it('should start with _isRestarting flag set to false', function() {
-      expect(this.myApp._isRestarting).to.equal(false);
+      expect(this.myApp.isRestarting()).to.equal(false);
     });
 
     it('should be stopped', function() {
