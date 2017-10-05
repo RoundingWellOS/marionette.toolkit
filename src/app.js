@@ -37,6 +37,15 @@ const App = Marionette.Application.extend({
   _isRunning: false,
 
   /**
+   * Internal flag indiciate when `App` is in the process of stopping then starting.
+   *
+   * @private
+   * @type {Boolean}
+   * @default false
+   */
+  _isRestarting: false,
+
+  /**
    * Set to true if a parent `App` should not be able to destroy this `App`.
    *
    * @type {Boolean|Function}
