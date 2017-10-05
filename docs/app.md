@@ -19,6 +19,7 @@
   * [App `restart`](#app-restart)
   * [App `stop`](#app-stop)
   * [App `isRunning`](#app-isrunning)
+  * [App `isRestarting`](#app-isrestarting)
   * [App `destroy`](#app-destroy)
 * [Lifecycle Events](#lifecycle-events)
   * ["before:start" / "start" events](#beforestart--start-events)
