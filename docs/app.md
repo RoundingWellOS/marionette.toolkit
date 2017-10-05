@@ -13,6 +13,7 @@
   * [App's `startAfterInitialized`](#apps-startafterinitialized)
   * [App's `preventDestroy`](#apps-preventdestroy)
   * [App's `startWithParent`](#apps-startwithparent)
+  * [App's `restartWithParent`](#apps-restartwithparent)
   * [App's `stopWithParent`](#apps-stopwithparent)
 * [Lifecycle API](#lifecycle-api)
   * [App `start`](#app-start)
@@ -123,6 +124,42 @@ console.log(myChildApp.isRunning());
 
 // logs true
 console.log(myStartWithParentApp.isRunning());
+```
+
+### App's `restartWithParent`
+
+Calls `stop` then `start` on the child app when the parent app restarts.  Default value is `false`.
+It can also be defined as a function returning a boolean value.
+
+```js
+var myApp = new Marionette.Toolkit.App();
+
+var persistantChildApp = myApp.addChildApp('persistantChildApp', {
+  AppClass: Marionette.Toolkit.App,
+  restartWithParent: false
+});
+
+persistantChildApp.on('stop start', function(options) {
+    console.log(this.isRestarting());
+});
+
+// does not log
+myApp.restart();
+
+var restartingChildApp = myApp.addChildApp('restartingChildApp', {
+  AppClass: Marionette.Toolkit.App,
+  restartWithParent: true
+});
+
+myApp.start();
+
+restartingChildApp.on('stop start', function(options) {
+    console.log(this.isRestarting());
+});
+
+// logs true twice
+myApp.restart();
+
 ```
 
 ### App's `stopWithParent`
