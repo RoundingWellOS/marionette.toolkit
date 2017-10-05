@@ -73,8 +73,9 @@ export default {
    * @method _startChildApps
    */
   _startChildApps() {
+    const shouldStartOption = this._isRestarting ? 'restartWithParent' : 'startWithParent';
     _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, 'startWithParent')) {
+      if(_.result(childApp, shouldStartOption)) {
         childApp.start();
       }
     });
@@ -87,8 +88,9 @@ export default {
    * @method _stopChildApps
    */
   _stopChildApps() {
+    const shouldStopOption = this._isRestarting ? 'restartWithParent' : 'stopWithParent';
     _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, 'stopWithParent')) {
+      if(_.result(childApp, shouldStopOption)) {
         childApp.stop();
       }
     });
