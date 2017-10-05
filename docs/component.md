@@ -268,6 +268,7 @@ myComponent.show(viewOptions);
 
 Builds the view from the ViewClass with the options from [`mixinOptions`](#component-mixinoptions)
 and attaches it to the component's `currentView`. It then shows the `currentView` in the component's `region` via `showView`.
+During this `region.show` the component will not destroy itself on the region's empty event.
 While a component can only be shown once, it can be re-rendered many times.
 `renderView` triggers ["before:render:view" / "render:view" events](#beforerenderview--renderview-events).
 
@@ -314,9 +315,8 @@ var view = myComponent.currentView;
 
 ### Component `showView`
 
-Shows the `view` in the component's `region`.
-During this `region.show` the component will not destroy itself on the region's empty event.
-This method can be overridden to change a component's behavior and should not be called directly.
+Called by `renderView`, it shows the `view` in the component's `region`.
+This method can be overridden to change a component's behavior.
 
 ```js
 var MyComponent = Marionette.Toolkit.Component.extend({
