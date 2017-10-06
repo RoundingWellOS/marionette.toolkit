@@ -290,7 +290,7 @@ const App = Marionette.Application.extend({
 
     this.stop();
 
-    delete this._view;
+    this._removeView();
 
     Marionette.Application.prototype.destroy.apply(this, arguments);
 
@@ -327,7 +327,10 @@ const App = Marionette.Application.extend({
    * @memberOf App
    */
   _regionEventMonitor() {
-    this.listenTo(this._region, 'before:show', this._onBeforeShow);
+    this.listenTo(this._region, {
+      'before:show': this._onBeforeShow,
+      'empty': this._onEmpty
+    });
   },
 
   /**
@@ -339,6 +342,31 @@ const App = Marionette.Application.extend({
    */
   _onBeforeShow(region, view) {
     this.setView(view);
+  },
+
+  /**
+   * Region monitor handler which empties the region's view
+   *
+   * @private
+   * @method _onEmpty
+   * @memberOf App
+   */
+  _onEmpty(region, view) {
+    this._removeView();
+  },
+
+  /**
+   * Region monitor handler which deletes the region's view and listeners to view
+   *
+   * @private
+   * @method _removeView
+   * @memberOf App
+   */
+  _removeView() {
+    if(this._view) {
+      this.stopListening(this._view);
+      delete this._view;
+    }
   },
 
   /**
@@ -381,6 +409,8 @@ const App = Marionette.Application.extend({
 
     // ViewEventsMixin
     this._proxyViewEvents(view);
+
+    this.listenTo(this._view, 'destroy', this._removeView);
 
     return view;
   },
