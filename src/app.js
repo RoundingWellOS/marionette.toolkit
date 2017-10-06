@@ -351,7 +351,7 @@ const App = Marionette.Application.extend({
    * @method _onEmpty
    * @memberOf App
    */
-  _onEmpty(region, view) {
+  _onEmpty() {
     this._removeView();
   },
 
