@@ -206,6 +206,42 @@ describe('App', function() {
         expect(this.myApp.getView()).to.equal(this.view);
       });
     });
+
+    describe('when a view is emptied in the app\'s region', function() {
+      it('should delete the shown view', function() {
+        this.myApp.setRegion(this.region);
+        this.myApp.showView(this.view);
+        this.myApp.getRegion().empty();
+        expect(this.myApp.getView()).to.be.undefined;
+      });
+
+      it('should remove any listeners to the view', function() {
+        this.sinon.spy(this.myApp, 'stopListening');
+
+        this.myApp.setRegion(this.region);
+        this.myApp.showView(this.view);
+        this.myApp.getRegion().empty();
+        expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
+      });
+    });
+
+    describe('when a view in the app\'s region is destroyed', function() {
+      it('should delete the shown view', function() {
+        this.myApp.setRegion(this.region);
+        this.myApp.showView(this.view);
+        this.myApp.getView().destroy();
+        expect(this.myApp.getView()).to.be.undefined;
+      });
+
+      it('should remove any listeners to the view', function() {
+        this.sinon.spy(this.myApp, 'stopListening');
+
+        this.myApp.setRegion(this.region);
+        this.myApp.showView(this.view);
+        this.myApp.getView().destroy();
+        expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
+      });
+    });
   });
 
   describe('#showView', function() {
