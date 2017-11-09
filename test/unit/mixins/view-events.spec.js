@@ -16,13 +16,14 @@ describe('ViewEventsMixin', function() {
     });
   });
 
-  describe('when initializing an app', function() {
+  describe('when starting an app', function() {
     let myApp;
 
     beforeEach(function() {
       const MyApp = Marionette.Toolkit.App.extend();
       this.sinon.spy(MyApp.prototype, '_buildEventProxies');
       myApp = new MyApp(mergeOptions);
+      myApp.start();
     });
 
     _.each(mergeOptions, function(value, key) {
@@ -63,6 +64,8 @@ describe('ViewEventsMixin', function() {
 
       const myView = new Marionette.View();
       myApp.setView(myView);
+
+      myApp.start();
 
       expect(myApp._proxyViewEvents)
         .to.have.been.calledOnce.and.calledWith(myView);
@@ -148,6 +151,8 @@ describe('ViewEventsMixin', function() {
       myView = new Marionette.View();
 
       myApp.setView(myView);
+
+      myApp.start();
     });
 
     it('should trigger view events to a function handle', function() {
@@ -183,6 +188,8 @@ describe('ViewEventsMixin', function() {
       myView = new Marionette.View();
 
       myApp.setView(myView);
+
+      myApp.start();
     });
 
     it('should trigger view events to a event on the app', function() {

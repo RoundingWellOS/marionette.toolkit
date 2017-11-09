@@ -90,6 +90,21 @@ describe('App', function() {
         expect(this.myApp.setRegion(region)).to.equal(region);
       });
     });
+
+    describe('when setting a region with a view', function() {
+      beforeEach(function() {
+        this.myRegion = new Marionette.Region({ el: $('<div>')[0] });
+        this.myRegion.show(new Marionette.View({ template: false }));
+
+        this.myApp = new this.MyApp();
+
+        this.myApp.setRegion(this.myRegion);
+      });
+
+      it('should set the app view to the region view', function() {
+        expect(this.myApp.getRegion().currentView).to.equal(this.myApp.getView());
+      });
+    });
   });
 
   describe('#getRegion', function() {
