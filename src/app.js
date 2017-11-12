@@ -103,9 +103,6 @@ const App = Marionette.Application.extend({
 
     this.options = _.extend({}, _.result(this, 'options'), options);
 
-    // ViewEventMixin
-    this._buildEventProxies();
-
     // ChildAppsMixin
     this._initChildApps(options);
 
@@ -114,19 +111,6 @@ const App = Marionette.Application.extend({
     if(_.result(this, 'startAfterInitialized')) {
       this.start(options);
     }
-  },
-
-  /**
-   * Override of Marionette's Application._initRegion
-   * Allows region monitor to be setup prior to initialize
-   *
-   * @private
-   * @method _initRegion
-   * @memberOf App
-   */
-  _initRegion() {
-    Marionette.Application.prototype._initRegion.call(this);
-    this._regionEventMonitor();
   },
 
   /**
@@ -198,18 +182,40 @@ const App = Marionette.Application.extend({
     // StateMixin
     this._initState(options);
 
+    // ViewEventMixin
+    this._buildEventProxies();
+
     this.triggerMethod('before:start', options);
 
     this._isRunning = true;
 
-    // StateMixin
-    this.delegateStateEvents();
+    this._bindRunningEvents();
 
     this.triggerStart(options);
 
     return this;
   },
 
+  /**
+   * Sets up region, view, and state events.
+   * To only be called after `isRunning` is true
+   *
+   * @private
+   * @method _bindRunningEvents
+   * @memberOf App
+   */
+  _bindRunningEvents() {
+    if(this._region) {
+      this._regionEventMonitor();
+    }
+
+    if(this._view) {
+      this._proxyViewEvents(this._view);
+    }
+
+    // StateMixin
+    this.delegateStateEvents();
+  },
 
   /**
    * Sets the app lifecycle to not running
@@ -313,7 +319,13 @@ const App = Marionette.Application.extend({
 
     this._region = region;
 
-    this._regionEventMonitor();
+    if(region.currentView) {
+      this.setView(region.currentView);
+    }
+
+    if(this._isRunning) {
+      this._regionEventMonitor();
+    }
 
     return region;
   },
@@ -408,7 +420,9 @@ const App = Marionette.Application.extend({
     this._view = view;
 
     // ViewEventsMixin
-    this._proxyViewEvents(view);
+    if(this._isRunning) {
+      this._proxyViewEvents(view);
+    }
 
     this.listenTo(this._view, 'destroy', this._removeView);
 
@@ -424,7 +438,7 @@ const App = Marionette.Application.extend({
    * @returns {View}
    */
   getView() {
-    return this._view;
+    return this._view || this._region && this._region.currentView;
   },
 
   /**
