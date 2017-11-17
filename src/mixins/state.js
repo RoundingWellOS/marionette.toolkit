@@ -174,6 +174,28 @@ export default {
   },
 
   /**
+   * Toggle a property on the _stateModel.
+   *
+   * @public
+   * @method toggleState
+   * @param {String} attr - Attribute name of stateModel.
+   * @param {*} [value] - Attribute value if key is String, replaces options param otherwise.
+   * @returns {Backbone.Model} - The _stateModel
+   */
+  toggleState(attr, val) {
+    if(!attr) {
+      return this._stateModel;
+    }
+
+    if(val) return this._stateModel.set(attr, !!val);
+
+    const attrValue = this._stateModel.get(attr);
+
+    return this._stateModel.set(attr, !attrValue);
+  },
+
+
+  /**
    * Clean up any listeners on the _stateModel.
    *
    * @private
