@@ -242,7 +242,7 @@ describe('StateMixin', function() {
       this.myStateClass.setState('test', true);
     });
 
-    describe('with no attribue', function() {
+    describe('with no attribute', function() {
       it('should not modify the state', function() {
         this.myStateClass.toggleState();
         expect(this.myStateClass.getState('test')).to.be.true;
@@ -270,10 +270,24 @@ describe('StateMixin', function() {
       });
     });
 
+    describe('with a zero value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 0);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
     describe('with a null value', function() {
       it('should return the modified state', function() {
         this.myStateClass.toggleState('test', null);
         expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with isNum set to true', function() {
+      it('should set the attribute value to true', function() {
+        this.myStateClass.toggleState('test', 0, true);
+        expect(this.myStateClass.getState('test')).to.be.true;
       });
     });
   });
@@ -282,7 +296,7 @@ describe('StateMixin', function() {
     describe('with no value', function() {
       it('should return the modified state', function() {
         this.myStateClass.toggleState('test');
-        expect(this.myStateClass.getState('test')).to.be.undefined;
+        expect(this.myStateClass.getState('test')).to.be.true;
       });
     });
 
@@ -300,10 +314,24 @@ describe('StateMixin', function() {
       });
     });
 
+    describe('with a zero value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 0);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
     describe('with a null value', function() {
       it('should return the modified state', function() {
         this.myStateClass.toggleState('test', null);
         expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with isNum set to true', function() {
+      it('should set the attribute value to true', function() {
+        this.myStateClass.toggleState('test', 0, true);
+        expect(this.myStateClass.getState('test')).to.be.true;
       });
     });
   });
