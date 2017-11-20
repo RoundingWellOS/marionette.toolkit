@@ -179,42 +179,13 @@ export default {
    * @public
    * @method toggleState
    * @param {String} attr - Attribute name of stateModel.
-   * @param {val} [value] - Attribute value if key is String, replaces options param otherwise.
-   * @param {Boolean} [isNum] - Boolean to allow for 0 value
-   * @returns {Backbone.Model} - The _stateModel
+   * @param {val} [value] - Attribute value.
+   * @returns {Backbone.Model} - The _stateModel or attribute value.
    */
-  toggleState(attr, val, isNum) {
-    if(!attr) {
-      return this._stateModel;
-    }
+  toggleState(attr, val) {
+    if(arguments.length > 1) return this._stateModel.set(attr, !!val);
 
-    if(!this._stateModel.get(attr)) return this._toggleUndefinedAttribute(attr, val, isNum);
-
-    if(!_.isUndefined(val)) {
-      return this._stateModel.set(attr, (isNum) ? _.isNumber(val) : !!val);
-    }
-
-    const attrValue = this._stateModel.get(attr);
-
-    return this._stateModel.set(attr, !attrValue);
-  },
-
-  /**
-   * Set a non-existent property to a boolean value
-   *
-   * @private
-   * @param {String} attr - Attribute name of stateModel.
-   * @param {val} [value] - Attribute value if key is String, replaces options param otherwise.
-   * @param {Boolean} [isNum] - Boolean to allow for 0 value
-   * @returns {Backbone.Model} - The _stateModel
-   * @method _toggleUndefinedAttribute
-   */
-  _toggleUndefinedAttribute(attr, val, isNum) {
-    if(!_.isUndefined(val)) {
-      return this._stateModel.set(attr, (isNum) ? _.isNumber(val) : !!val);
-    }
-
-    return this._stateModel.set(attr, true);
+    return this._stateModel.set(attr, !this._stateModel.get(attr));
   },
 
   /**

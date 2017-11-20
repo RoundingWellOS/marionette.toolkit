@@ -284,10 +284,10 @@ describe('StateMixin', function() {
       });
     });
 
-    describe('with isNum set to true', function() {
-      it('should set the attribute value to true', function() {
-        this.myStateClass.toggleState('test', 0, true);
-        expect(this.myStateClass.getState('test')).to.be.true;
+    describe('with an undefined value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', undefined);
+        expect(this.myStateClass.getState('test')).to.be.false;
       });
     });
   });
@@ -328,10 +328,10 @@ describe('StateMixin', function() {
       });
     });
 
-    describe('with isNum set to true', function() {
-      it('should set the attribute value to true', function() {
-        this.myStateClass.toggleState('test', 0, true);
-        expect(this.myStateClass.getState('test')).to.be.true;
+    describe('with an undefined value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', undefined);
+        expect(this.myStateClass.getState('test')).to.be.false;
       });
     });
   });
