@@ -14,6 +14,7 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
   * [Setting State `setState`](#setting-state)
   * [Resetting State `resetStateDefaults`](#resetting-state-defaults)
   * [Getting State `getState`](#getting-state)
+  * [Toggling State `toggleState`](#toggle-state)
   * [Binding State Events `delegateStateEvents`](#binding-events)
   * [Unbinding State Events `undelegateStateEvents`](#unbinding-events)
 
@@ -187,7 +188,7 @@ implementations of `modelEvents` and `collectionEvents` in the [Marionette.View]
 for the `StateMixin`'s attached `StateModel`.  Implementation will match [Backbone.Model.set](http://backbonejs.org/#Model-set) documentation.
 
 ```js
-var MyToolKitApp = new Marionette.Toolkit.App({
+var myToolKitApp = new Marionette.Toolkit.App({
     stateEvents: {
       'change:foo': 'alert'
     },
@@ -205,12 +206,14 @@ myToolKitApp.setState('foo', 'bar');
 `StateMixin` has a `resetStateDefaults` method that sets the `StateModel` instance attributes back to the [defined defaults](#setting-default-state).  Implementation will match [Backbone.Model.defaults](http://backbonejs.org/#Model-defaults) documentation.
 
 ```js
-var MyToolKitApp = new Marionette.Toolkit.App({
-    StateModel: {
-      defaults: {
-        'foo': 'bar'
-      }
-    }
+var MyStateModel = Backbone.Model.extend({
+  defaults: {
+    foo: 'bar'
+  }
+});
+
+var myToolKitApp = new Marionette.Toolkit.App({
+  StateModel: MyStateModel
 });
 
 // This will trigger the "change:foo" event and log "alert!" to the console.
@@ -250,13 +253,34 @@ myToolKitApp.getState('foo');
 myToolKitApp.getState();
 ```
 
+### Toggling State
+
+`StateMixin` has a `toggleState` method that sets the `StateModel` instance attribute to a boolean value.
+Attributes that do not exist on the state will be created.
+Not passing in a value will toggle the attribute's current value, while non-boolean values will be coerced to `true` or `false`.
+
+```js
+var myToolKitApp = new Marionette.Toolkit.App();
+
+myToolKitApp.setState('foo', true);
+
+// sets "foo" attribute to false
+myToolKitApp.toggleState('foo');
+
+// coerces "bar" string into boolean, setting "foo" attribute to true
+myToolKitApp.toggleState('foo', 'bar');
+
+// sets a "baz" attribute on the state with a true value
+myToolKitApp.toggleState('baz');
+```
+
 ### Binding State Events
 
 `StateMixin` has a `delegateStateEvents` that will bind all events specified
 in the `stateEvents` option. Implementation matches [Backbone.View.delegateEvents](http://backbonejs.org/#View-delegateEvents).
 
 ```js
-var MyToolKitApp = new Marionette.Toolkit.App({
+var myToolKitApp = new Marionette.Toolkit.App({
     stateEvents: {
       'change:foo': 'alert'
     },
@@ -288,7 +312,7 @@ myToolKitApp.setState('foo', 'bar');
 specified on the `StateModel` option. Implementation matches [Backbone.View.undelegateEvents](http://backbonejs.org/#View-undelegateEvents).
 
 ```js
-var MyToolKitApp = new Marionette.Toolkit.App({
+var myToolKitApp = new Marionette.Toolkit.App({
     stateEvents: {
       'change:foo': 'alert'
     },
