@@ -237,6 +237,105 @@ describe('StateMixin', function() {
     });
   });
 
+  describe('when calling toggleState with an attribute on a statemodel', function() {
+    beforeEach(function() {
+      this.myStateClass.setState('test', true);
+    });
+
+    describe('with no attribute', function() {
+      it('should not modify the state', function() {
+        this.myStateClass.toggleState();
+        expect(this.myStateClass.getState('test')).to.be.true;
+      });
+    });
+
+    describe('with no value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test');
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with a string', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 'foo');
+        expect(this.myStateClass.getState('test')).to.be.true;
+      });
+    });
+
+    describe('with a non-zero number', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 123);
+        expect(this.myStateClass.getState('test')).to.be.true;
+      });
+    });
+
+    describe('with a zero value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 0);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with a null value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', null);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with an undefined value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', undefined);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+  });
+
+  describe('when calling toggleState without an attribute on a statemodel', function() {
+    describe('with no value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test');
+        expect(this.myStateClass.getState('test')).to.be.true;
+      });
+    });
+
+    describe('with a string', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 'foo');
+        expect(this.myStateClass.getState('test')).to.be.true;
+      });
+    });
+
+    describe('with a non-zero number', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 123);
+        expect(this.myStateClass.getState('test')).to.be.true;
+      });
+    });
+
+    describe('with a zero value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', 0);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with a null value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', null);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+
+    describe('with an undefined value', function() {
+      it('should return the modified state', function() {
+        this.myStateClass.toggleState('test', undefined);
+        expect(this.myStateClass.getState('test')).to.be.false;
+      });
+    });
+  });
+
   describe('when destroying a state object', function() {
     it('should be gone', function() {
       this.sinon.spy(this.myStateClass._stateModel, 'stopListening');
