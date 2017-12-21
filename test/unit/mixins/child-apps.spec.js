@@ -381,6 +381,15 @@ describe('ChildAppMixin', function() {
       expect(this.myChildApp.isRunning()).to.be.false;
     });
 
+    it('should stop childApp with options', function() {
+      const spy = sinon.spy(this.myChildApp, 'stop');
+
+      this.myApp.stopChildApp('cA1', { foo: 'bar' });
+
+      expect(spy.calledWith({ foo: 'bar' })).to.be.true;
+    });
+
+
     it('should return parentApp instance', function() {
       const spy = sinon.spy(this.myApp, 'stopChildApp');
 
