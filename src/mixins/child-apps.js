@@ -112,11 +112,12 @@ export default {
    * Stops `childApp`
    *
    * @param {String} appName - Name of childApp to stop
+   * @param {Object} options - Stop options for app
    * @public
    * @method stopChildApp
    */
-  stopChildApp(appName) {
-    return this.getChildApp(appName).stop();
+  stopChildApp(appName, options) {
+    return this.getChildApp(appName).stop(options);
   },
 
   /**
