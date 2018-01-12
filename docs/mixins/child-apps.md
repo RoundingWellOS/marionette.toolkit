@@ -269,10 +269,13 @@ var childAppInstance = myApp.startChildApp('cA1');
 console.log(childAppInstance.isRunning());
 
 // This is equivalent to childAppInstance.stop();
-myApp.stopChildApp('cA1');
+myApp.stopChildApp('cA1', { foo: 'bar' });
 
 // false
 console.log(childAppInstance.isRunning());
+
+// bar
+console.log(childAppInstance.getOption('foo'));
 ```
 
 Note: The parentApp instance is returned for chaining.
