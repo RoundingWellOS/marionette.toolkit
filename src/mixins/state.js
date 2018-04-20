@@ -189,6 +189,18 @@ export default {
   },
 
   /**
+   * Check if _stateModel has a property
+   *
+   * @public
+   * @method hasState
+   * @param {String} [attr] - Attribute name of stateModel.
+   * @returns {Boolean}
+   */
+  hasState(attr) {
+    return this._stateModel.has(attr);
+  },
+
+  /**
    * Clean up any listeners on the _stateModel.
    *
    * @private
