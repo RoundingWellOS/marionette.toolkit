@@ -15,6 +15,7 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
   * [Resetting State `resetStateDefaults`](#resetting-state-defaults)
   * [Getting State `getState`](#getting-state)
   * [Toggling State `toggleState`](#toggle-state)
+  * [Checking State `hasState`](#checking-state)
   * [Binding State Events `delegateStateEvents`](#binding-events)
   * [Unbinding State Events `undelegateStateEvents`](#unbinding-events)
 
@@ -272,6 +273,29 @@ myToolKitApp.toggleState('foo', 'bar');
 
 // sets a "baz" attribute on the state with a true value
 myToolKitApp.toggleState('baz');
+```
+
+### Checking State
+
+`StateMixin` has a `hasState` method that checks the `StateModel` instance for a specified attribute.
+Passing an attribute that does not exist on the state will return `false`.
+
+```js
+var myToolKitApp = new Marionette.Toolkit.App();
+
+// returns false
+myToolKitApp.hasState('foo')
+
+myToolKitApp.setState('foo', 'bar');
+
+// returns true
+myToolKitApp.hasState('foo');
+
+// coerces "bar" string into boolean, setting "foo" attribute to true
+myToolKitApp.setState('foo', false);
+
+// Still returns true
+myToolKitApp.hasState('foo');
 ```
 
 ### Binding State Events

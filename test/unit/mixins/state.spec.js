@@ -336,6 +336,19 @@ describe('StateMixin', function() {
     });
   });
 
+  describe('when calling hasState with no attribute on a state model', function() {
+    it('should return false', function() {
+      expect(this.myStateClass.hasState('test')).to.be.false;
+    });
+  });
+
+  describe('when calling haState with an attribute on a state model', function() {
+    it('should return true', function() {
+      this.myStateClass.setState('test', 'testing');
+      expect(this.myStateClass.hasState('test')).to.be.true;
+    });
+  });
+
   describe('when destroying a state object', function() {
     it('should be gone', function() {
       this.sinon.spy(this.myStateClass._stateModel, 'stopListening');
