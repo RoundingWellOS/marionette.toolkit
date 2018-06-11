@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import * as Toolkit from './marionette.toolkit.js';
 
 import StateMixin from './mixins/state';
 import App from './app';
@@ -29,4 +28,10 @@ export {
   Component
 };
 
-export default Toolkit;
+export default {
+  MixinState,
+  VERSION,
+  StateMixin,
+  App,
+  Component
+};
