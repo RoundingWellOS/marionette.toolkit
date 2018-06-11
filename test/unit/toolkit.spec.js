@@ -1,17 +1,7 @@
-describe('Marionette.Toolkit.noConflict()', function() {
-  describe('when calling noConflict', function() {
-    it('should make Marionette.Toolkit return undefined', function() {
-      const preNoConflict = Marionette.Toolkit.noConflict();
-      expect(Marionette.Toolkit).to.equal(undefined);
-      Marionette.Toolkit = preNoConflict;
-    });
-  });
-});
-
 describe('Marionette.Toolkit.MixinState', function() {
   describe('when classDefinition has no StateModel definition', function() {
     it('should use the StateModel defined on StateMixin', function() {
-      const MyClass = Marionette.Object.extend();
+      const MyClass = Marionette.MnObject.extend();
       Marionette.Toolkit.MixinState(MyClass);
 
       const myStateModel = new MyClass.prototype.StateModel();
@@ -26,7 +16,7 @@ describe('Marionette.Toolkit.MixinState', function() {
         foo: 'bar'
       });
 
-      const MyClass = Marionette.Object.extend({
+      const MyClass = Marionette.MnObject.extend({
         StateModel: MyModel
       });
 

@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
-import Marionette from 'backbone.marionette';
+import { MnObject, View } from 'backbone.marionette';
 import StateMixin from './mixins/state';
 import ViewEventsMixin from './mixins/view-events';
 
@@ -14,21 +14,21 @@ const ClassOptions = [
 ];
 
 /**
- * Reusable Marionette.Object with View management boilerplate
+ * Reusable Marionette.MnObject with View management boilerplate
  *
  * @public
  * @class Component
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const Component = Marionette.Object.extend({
+const Component = MnObject.extend({
 
   /**
    * The view class to be managed.
    * @type {Mn.View|Mn.CollectionView}
    * @default Marionette.View
    */
-  ViewClass: Marionette.View,
+  ViewClass: View,
 
   /**
    * @public
@@ -54,7 +54,7 @@ const Component = Marionette.Object.extend({
     // StateMixin
     this._initState(options);
 
-    Marionette.Object.call(this, options);
+    MnObject.call(this, options);
 
     // StateMixin
     this.delegateStateEvents();
@@ -105,17 +105,11 @@ const Component = Marionette.Object.extend({
     const region = this.getRegion();
 
     if(this._isShown) {
-      throw new Marionette.Error({
-        name: 'ComponentShowError',
-        message: 'Component has already been shown in a region.'
-      });
+      throw new Error('Component has already been shown in a region.');
     }
 
     if(!region) {
-      throw new Marionette.Error({
-        name: 'ComponentRegionError',
-        message: 'Component has no defined region.'
-      });
+      throw new Error('Component has no defined region.');
     }
 
     this.triggerMethod('before:show');
@@ -164,10 +158,7 @@ const Component = Marionette.Object.extend({
       return ViewClass.call(this, options);
     }
 
-    throw new Marionette.Error({
-      name: 'InvalidViewClassError',
-      message: '"ViewClass" must be a view class or a function that returns a view class'
-    });
+    throw new Error('"ViewClass" must be a view class or a function that returns a view class');
   },
 
   /**
@@ -264,7 +255,7 @@ const Component = Marionette.Object.extend({
    */
   _destroy() {
     if(this._shouldDestroy) {
-      Marionette.Object.prototype.destroy.apply(this, arguments);
+      MnObject.prototype.destroy.apply(this, arguments);
     }
   },
 

@@ -1,4 +1,4 @@
-import Marionette from 'backbone.marionette';
+import * as Marionette from 'backbone.marionette';
 
 describe('StateMixin', function() {
   beforeEach(function() {
@@ -6,7 +6,7 @@ describe('StateMixin', function() {
       foo: 'bar'
     });
 
-    this.StateClass = Marionette.Object.extend();
+    this.StateClass = Marionette.MnObject.extend();
 
     _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
 
@@ -58,7 +58,7 @@ describe('StateMixin', function() {
 
   describe('when resetting a state on a state object using resetStateDefaults', function() {
     beforeEach(function() {
-      this.StateClass = Marionette.Object.extend();
+      this.StateClass = Marionette.MnObject.extend();
       _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
     });
 
@@ -170,7 +170,7 @@ describe('StateMixin', function() {
   // SETTING StateModel
   describe('when defining StateModel as a function that returns a model class', function() {
     beforeEach(function() {
-      this.StateClass = Marionette.Object.extend();
+      this.StateClass = Marionette.MnObject.extend();
       _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
 
       this.MyStateClass = this.StateClass.extend({
@@ -197,7 +197,7 @@ describe('StateMixin', function() {
 
   describe('when defining StateModel as neither a function or a class', function() {
     beforeEach(function() {
-      this.StateClass = Marionette.Object.extend();
+      this.StateClass = Marionette.MnObject.extend();
       _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
 
       this.MyStateClass = this.StateClass.extend({

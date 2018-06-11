@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import Marionette from 'backbone.marionette';
+import * as Toolkit from './marionette.toolkit.js';
 
 import StateMixin from './mixins/state';
 import App from './app';
@@ -9,16 +9,9 @@ import Component from './component';
  * @module Toolkit
  */
 
-const previousToolkit = Marionette.Toolkit;
+const VERSION = '<%VERSION%>';
 
-const Toolkit = Marionette.Toolkit = {};
-
-Toolkit.noConflict = function() {
-  Marionette.Toolkit = previousToolkit;
-  return this;
-};
-
-Toolkit.MixinState = function(classDefinition) {
+function MixinState(classDefinition) {
   let _StateMixin = StateMixin;
 
   if(classDefinition.prototype.StateModel) {
@@ -26,14 +19,14 @@ Toolkit.MixinState = function(classDefinition) {
   }
 
   _.extend(classDefinition.prototype, _StateMixin);
+}
+
+export {
+  MixinState,
+  VERSION,
+  StateMixin,
+  App,
+  Component
 };
-
-Toolkit.VERSION = '<%VERSION%>';
-
-Toolkit.StateMixin = StateMixin;
-
-Toolkit.App = App;
-
-Toolkit.Component = Component;
 
 export default Toolkit;

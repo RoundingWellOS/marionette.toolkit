@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import Marionette from 'backbone.marionette';
+import { Application } from 'backbone.marionette';
 import StateMixin from './mixins/state';
 import ChildAppsMixin from './mixins/child-apps';
 import EventListenersMixin from './mixins/event-listeners';
@@ -26,7 +26,7 @@ const ClassOptions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const App = Marionette.Application.extend({
+const App = Application.extend({
 
   /**
    * Internal flag indiciate when `App` has started but has not yet stopped.
@@ -106,7 +106,7 @@ const App = Marionette.Application.extend({
     // ChildAppsMixin
     this._initChildApps(options);
 
-    Marionette.Application.call(this, options);
+    Application.call(this, options);
 
     if(_.result(this, 'startAfterInitialized')) {
       this.start(options);
@@ -123,10 +123,7 @@ const App = Marionette.Application.extend({
    */
   _ensureAppIsIntact() {
     if(this._isDestroyed) {
-      throw new Marionette.Error({
-        name: 'AppDestroyedError',
-        message: 'App has already been destroyed and cannot be used.'
-      });
+      throw new Error('App has already been destroyed and cannot be used.');
     }
   },
 

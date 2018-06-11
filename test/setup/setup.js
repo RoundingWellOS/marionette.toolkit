@@ -1,10 +1,11 @@
+import _ from 'underscore';
+import Backbone from 'backbone';
+import * as Marionette from 'backbone.marionette';
+
 module.exports = function() {
-  const _ = require('underscore');
-  const Backbone = require('backbone');
   const $ = require('jquery');
   Backbone.$ = $;
-  const Marionette = require('backbone.marionette');
-  require('../../src/marionette.toolkit');
+  Marionette.Toolkit = require('../../src/marionette.toolkit');
 
   // Set up test div
   const $testDiv = $('#testDiv');

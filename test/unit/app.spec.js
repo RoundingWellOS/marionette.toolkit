@@ -235,6 +235,7 @@ describe('App', function() {
 
         this.myApp.setRegion(this.region);
         this.myApp.showView(this.view);
+        this.myApp.stopListening.reset();
         this.myApp.getRegion().empty();
         expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
       });
@@ -253,6 +254,7 @@ describe('App', function() {
 
         this.myApp.setRegion(this.region);
         this.myApp.showView(this.view);
+        this.myApp.stopListening.reset();
         this.myApp.getView().destroy();
         expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
       });

@@ -2,7 +2,7 @@ describe('Marionette.Toolkit.Component', function() {
   beforeEach(function() {
     this.setFixtures('<div id="testRegion"></div>');
     this.el = Backbone.$('#testRegion');
-    this.myRegion = new Backbone.Marionette.Region({
+    this.myRegion = new Marionette.Region({
       el: this.el
     });
   });
