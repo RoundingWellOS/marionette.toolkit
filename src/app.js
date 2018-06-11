@@ -366,7 +366,9 @@ const App = Application.extend({
    * @method _onEmpty
    * @memberOf App
    */
-  _onEmpty() {
+  _onEmpty(region, view) {
+    if(view !== this._view) return;
+
     this._removeView();
   },
 
