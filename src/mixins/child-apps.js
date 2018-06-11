@@ -65,6 +65,20 @@ export default {
     });
   },
 
+  _getChildStartOpts(childApp) {
+    const tkOpts = childApp._tkOpts || {};
+
+    const opts = {
+      region: this.getRegion(tkOpts.regionName)
+    };
+
+    _.each(tkOpts.getOptions, opt => {
+      opts[opt] = this.getOption(opt);
+    });
+
+    return opts;
+  },
+
   /**
    * Starts `childApps` if allowed by child
    *
@@ -73,10 +87,11 @@ export default {
    */
   _startChildApps() {
     const shouldStartOption = this._isRestarting ? 'restartWithParent' : 'startWithParent';
-    _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, shouldStartOption)) {
-        childApp.start();
-      }
+    _.each(this._childApps, childApp => {
+      if(!_.result(childApp, shouldStartOption)) return;
+
+      const opts = this._getChildStartOpts(childApp);
+      childApp.start(opts);
     });
   },
 
@@ -104,7 +119,9 @@ export default {
    * @method startChildApp
    */
   startChildApp(appName, options) {
-    return this.getChildApp(appName).start(options);
+    const childApp = this.getChildApp(appName);
+    const opts = this._getChildStartOpts(childApp);
+    return childApp.start(_.extend(opts, options));
   },
 
   /**
@@ -143,9 +160,13 @@ export default {
    */
   _buildAppFromObject(appConfig) {
     const AppClass = appConfig.AppClass;
-    const options = _.omit(appConfig, 'AppClass');
+    const options = _.omit(appConfig, 'AppClass', 'regionName', 'getOptions');
 
-    return this.buildApp(AppClass, options);
+    const app = this.buildApp(AppClass, options);
+
+    app._tkOpts = _.pick(appConfig, 'regionName', 'getOptions');
+
+    return app;
   },
 
   /**
