@@ -421,7 +421,8 @@ const App = Application.extend({
       this._proxyViewEvents(view);
     }
 
-    this.listenTo(this._view, 'destroy', this._removeView);
+    // Internal non-running listener
+    this._listenTo(this._view, 'destroy', this._removeView);
 
     return view;
   },
