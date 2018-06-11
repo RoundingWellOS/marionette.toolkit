@@ -46,23 +46,6 @@ export default {
 
       this.addChildApps(childApps);
     }
-
-    this._initListeners();
-  },
-
-  /**
-   * The child apps should be handled while the app is running;
-   * After start, before stop, and before destroy.
-   *
-   * @private
-   * @method _initListeners
-   */
-  _initListeners() {
-    this._on({
-      'start': this._startChildApps,
-      'before:stop': this._stopChildApps,
-      'before:destroy': this._destroyChildApps
-    });
   },
 
   _getChildStartOpts(childApp) {

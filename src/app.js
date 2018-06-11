@@ -188,6 +188,8 @@ const App = Application.extend({
 
     this._bindRunningEvents();
 
+    this._startChildApps();
+
     this.triggerStart(options);
 
     return this;
@@ -267,6 +269,8 @@ const App = Application.extend({
 
     this.triggerMethod('before:stop', options);
 
+    this._stopChildApps();
+
     this._isRunning = false;
 
     this.triggerMethod('stop', options);
@@ -295,7 +299,9 @@ const App = Application.extend({
 
     this._removeView();
 
-    Marionette.Application.prototype.destroy.apply(this, arguments);
+    this._destroyChildApps();
+
+    Application.prototype.destroy.apply(this, arguments);
 
     return this;
   },
