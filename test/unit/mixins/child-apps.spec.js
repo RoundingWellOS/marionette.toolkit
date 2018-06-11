@@ -220,6 +220,15 @@ describe('ChildAppMixin', function() {
     it('should assign the childApp name to the passed in appName', function() {
       expect(this.myApp.addChildApp('cA4', Marionette.Toolkit.App)).to.have.property('_name', 'cA4');
     });
+
+    describe('when the child startAfterInitialize', function() {
+      it('should remove the child if destroyed', function() {
+        this.myApp.addChildApp('foo', Marionette.Toolkit.App.extend({ startAfterInitialized: true }));
+        this.myApp.getChildApp('foo').destroy();
+
+        expect(this.myApp.getChildApp('foo')).to.be.undefined;
+      });
+    });
   });
 
   describe('getName', function() {

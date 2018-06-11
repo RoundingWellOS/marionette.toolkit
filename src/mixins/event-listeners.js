@@ -51,6 +51,15 @@ export default {
   },
 
   /**
+   * Keep a copy of non-running on for internal use
+   *
+   * @private
+   * @method _on
+   * @returns {EventListeners}
+   */
+  _on: MnObject.prototype.on,
+
+  /**
    * Overrides `Backbone.Event.listenTo()`
    * If this `App` is running it will register the listener for removal `onStop`
    *
@@ -65,6 +74,15 @@ export default {
     }
     return MnObject.prototype.listenTo.apply(this, arguments);
   },
+
+  /**
+   * Keep a copy of non-running on for internal use
+   *
+   * @private
+   * @method _listenTo
+   * @returns {EventListeners}
+   */
+  _listenTo: MnObject.prototype.listenTo,
 
   /**
    * Overrides `Backbone.Event.listenToOnce()`

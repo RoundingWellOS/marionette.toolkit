@@ -58,7 +58,7 @@ export default {
    * @method _initListeners
    */
   _initListeners() {
-    this.on({
+    this._on({
       'start': this._startChildApps,
       'before:stop': this._stopChildApps,
       'before:destroy': this._destroyChildApps
@@ -238,7 +238,8 @@ export default {
     this._childApps[appName] = childApp;
 
     // When the app is destroyed remove the cached app.
-    childApp.on('destroy', _.partial(this._removeChildApp, appName), this);
+    // Listener setup relative to the childApp's running state (using _on)
+    childApp._on('destroy', _.partial(this._removeChildApp, appName), this);
 
     if(this.isRunning() && _.result(childApp, 'startWithParent')) {
       childApp.start();
