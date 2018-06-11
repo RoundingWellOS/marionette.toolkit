@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import Marionette from 'backbone.marionette';
 
 const ClassOptions = [
   'childApps',
@@ -195,10 +194,7 @@ export default {
    */
   _ensureAppIsUnique(appName) {
     if(this._childApps[appName]) {
-      throw new Marionette.Error({
-        name: 'DuplicateChildAppError',
-        message: `A child App with name "${ appName }" has already been added.`
-      });
+      throw new Error(`A child App with name "${ appName }" has already been added.`);
     }
   },
 
@@ -234,10 +230,7 @@ export default {
     const childApp = this._buildApp(AppClass, options);
 
     if(!childApp) {
-      throw new Marionette.Error({
-        name: 'AddChildAppError',
-        message: 'App build failed.  Incorrect configuration.'
-      });
+      throw new Error('App build failed.  Incorrect configuration.');
     }
 
     childApp._name = appName;

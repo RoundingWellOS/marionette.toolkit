@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
-import Marionette from 'backbone.marionette';
 
 const ClassOptions = [
   'StateModel',
@@ -9,7 +8,7 @@ const ClassOptions = [
 
  /**
  * This provides methods used for keeping state using a Backbone.Model. It's meant to
- * be used with either a Marionette.Object or Backbone.View.
+ * be used with either a Marionette.MnObject or Backbone.View.
  *
  * @mixin
  */
@@ -122,10 +121,7 @@ export default {
       return this.StateModel.call(this, options);
     }
 
-    throw new Marionette.Error({
-      name: 'InvalidStateModelError',
-      message: '"StateModel" must be a model class or a function that returns a model class'
-    });
+    throw new Error('"StateModel" must be a model class or a function that returns a model class');
   },
 
   /**

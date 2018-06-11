@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import Marionette from 'backbone.marionette';
+import { MnObject } from 'backbone.marionette';
 
  /**
  * This provides methods used for registering events while App is running and cleans them up at `onStop`. It's not meant to
@@ -47,7 +47,7 @@ export default {
       this._runningEvents.push(arguments);
     }
 
-    return Marionette.Object.prototype.on.apply(this, arguments);
+    return MnObject.prototype.on.apply(this, arguments);
   },
 
   /**
@@ -63,7 +63,7 @@ export default {
       this._runningListeningTo = (this._runningListeningTo || []);
       this._runningListeningTo.push(arguments);
     }
-    return Marionette.Object.prototype.listenTo.apply(this, arguments);
+    return MnObject.prototype.listenTo.apply(this, arguments);
   },
 
   /**
@@ -80,6 +80,6 @@ export default {
       this._runningListeningTo.push(arguments);
     }
 
-    return Marionette.Object.prototype.listenToOnce.apply(this, arguments);
+    return MnObject.prototype.listenToOnce.apply(this, arguments);
   }
 };
