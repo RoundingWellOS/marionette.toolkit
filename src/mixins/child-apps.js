@@ -63,18 +63,31 @@ export default {
   },
 
   /**
+   * Determines if `childApps` should restart
+   *
+   * @private
+   * @method _shouldRestart
+   */
+  _shouldRestart(childApp) {
+    return this._isRestarting && _.result(childApp, 'restartWithParent');
+  },
+
+  /**
    * Starts `childApps` if allowed by child
    *
    * @private
    * @method _startChildApps
    */
   _startChildApps() {
-    const shouldStartOption = this._isRestarting ? 'restartWithParent' : 'startWithParent';
     _.each(this._childApps, childApp => {
-      if(!_.result(childApp, shouldStartOption)) return;
+      if(_.result(childApp, 'startWithParent')) {
+        childApp.start();
+        return;
+      }
 
-      const opts = this._getChildStartOpts(childApp);
-      childApp.start(opts);
+      if(this._shouldRestart(childApp)) {
+        childApp.start();
+      }
     });
   },
 
@@ -85,9 +98,13 @@ export default {
    * @method _stopChildApps
    */
   _stopChildApps() {
-    const shouldStopOption = this._isRestarting ? 'restartWithParent' : 'stopWithParent';
-    _.each(this._childApps, function(childApp) {
-      if(_.result(childApp, shouldStopOption)) {
+    _.each(this._childApps, childApp => {
+      if(_.result(childApp, 'stopWithParent')) {
+        childApp.stop();
+        return;
+      }
+
+      if(this._shouldRestart(childApp)) {
         childApp.stop();
       }
     });
