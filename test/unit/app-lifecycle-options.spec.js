@@ -139,7 +139,10 @@ describe('app-lifecycle-options', function() {
     describe('and a childApp has restartWithParent = false', function() {
       it('should not stop or start the specific childApp', function() {
         const childApps = {
-          cA1: Marionette.Toolkit.App
+          cA1: {
+            AppClass: Marionette.Toolkit.App,
+            stopWithParent: false
+          }
         };
 
         const myApp = new Marionette.Toolkit.App({ childApps: childApps });
