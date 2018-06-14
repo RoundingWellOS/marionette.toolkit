@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v5.0.0-alpha.1
+ * @version v5.0.0-alpha.2
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -293,6 +293,17 @@
 
 
     /**
+     * Determines if `childApps` should restart
+     *
+     * @private
+     * @method _shouldRestart
+     */
+    _shouldRestart: function _shouldRestart(childApp) {
+      return this._isRestarting && _.result(childApp, 'restartWithParent');
+    },
+
+
+    /**
      * Starts `childApps` if allowed by child
      *
      * @private
@@ -301,12 +312,15 @@
     _startChildApps: function _startChildApps() {
       var _this2 = this;
 
-      var shouldStartOption = this._isRestarting ? 'restartWithParent' : 'startWithParent';
       _.each(this._childApps, function (childApp) {
-        if (!_.result(childApp, shouldStartOption)) return;
+        if (_.result(childApp, 'startWithParent')) {
+          childApp.start();
+          return;
+        }
 
-        var opts = _this2._getChildStartOpts(childApp);
-        childApp.start(opts);
+        if (_this2._shouldRestart(childApp)) {
+          childApp.start();
+        }
       });
     },
 
@@ -318,9 +332,15 @@
      * @method _stopChildApps
      */
     _stopChildApps: function _stopChildApps() {
-      var shouldStopOption = this._isRestarting ? 'restartWithParent' : 'stopWithParent';
+      var _this3 = this;
+
       _.each(this._childApps, function (childApp) {
-        if (_.result(childApp, shouldStopOption)) {
+        if (_.result(childApp, 'stopWithParent')) {
+          childApp.stop();
+          return;
+        }
+
+        if (_this3._shouldRestart(childApp)) {
           childApp.stop();
         }
       });
@@ -1142,7 +1162,9 @@
      * @method _onEmpty
      * @memberOf App
      */
-    _onEmpty: function _onEmpty() {
+    _onEmpty: function _onEmpty(region, view) {
+      if (view !== this._view) return;
+
       this._removeView();
     },
 
@@ -1593,7 +1615,7 @@
    * @module Toolkit
    */
 
-  var VERSION = '5.0.0-alpha.1';
+  var VERSION = '5.0.0-alpha.2';
 
   function MixinState(classDefinition) {
     var _StateMixin = StateMixin;
