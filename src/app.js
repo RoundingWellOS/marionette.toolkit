@@ -80,12 +80,13 @@ const App = Application.extend({
 
 
   /**
-   * Set to true if a parent `App` should be able to restart this `App`.
+   * Set this to determine if a parent `App` should maintain the child's
+   * lifecycle during a restart.
    *
    * @type {Boolean|Function}
-   * @default false
+   * @default null
    */
-  restartWithParent: false,
+  restartWithParent: null,
 
   /**
    * @public
