@@ -63,13 +63,15 @@ export default {
   },
 
   /**
-   * Determines if `childApps` should restart
+   * Starts a `childApp` if allowed by child
    *
    * @private
-   * @method _shouldRestart
+   * @method _startChildApp
    */
-  _shouldRestart(childApp) {
-    return this._isRestarting && _.result(childApp, 'restartWithParent');
+  _startChildApp(childApp) {
+    if(_.result(childApp, 'startWithParent')) {
+      childApp.start();
+    }
   },
 
   /**
@@ -79,16 +81,33 @@ export default {
    * @method _startChildApps
    */
   _startChildApps() {
+    if(!this._isRestarting) {
+      _.each(this._childApps, this._startChildApp);
+      return;
+    }
+
+    // Handles explicit boolean values of restartWithParent
+    // restartWithParent === false does nothing
     _.each(this._childApps, childApp => {
-      if(_.result(childApp, 'startWithParent')) {
+      const restartWithParent = _.result(childApp, 'restartWithParent');
+      if(restartWithParent === true) {
         childApp.start();
         return;
       }
-
-      if(this._shouldRestart(childApp)) {
-        childApp.start();
-      }
+      if(restartWithParent !== false) this._startChildApp(childApp);
     });
+  },
+
+  /**
+   * Stops a `childApp` if allowed by child
+   *
+   * @private
+   * @method _stopChildApp
+   */
+  _stopChildApp(childApp) {
+    if(_.result(childApp, 'stopWithParent')) {
+      childApp.stop();
+    }
   },
 
   /**
@@ -98,15 +117,20 @@ export default {
    * @method _stopChildApps
    */
   _stopChildApps() {
+    if(!this._isRestarting) {
+      _.each(this._childApps, this._stopChildApp);
+      return;
+    }
+
+    // Handles explicit boolean values of restartWithParent
+    // restartWithParent === false does nothing
     _.each(this._childApps, childApp => {
-      if(_.result(childApp, 'stopWithParent')) {
+      const restartWithParent = _.result(childApp, 'restartWithParent');
+      if(restartWithParent === true) {
         childApp.stop();
         return;
       }
-
-      if(this._shouldRestart(childApp)) {
-        childApp.stop();
-      }
+      if(restartWithParent !== false) this._stopChildApp(childApp);
     });
   },
 
