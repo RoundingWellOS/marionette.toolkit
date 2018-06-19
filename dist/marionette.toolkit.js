@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v5.0.0-alpha.2
+ * @version v5.0.0-alpha.3
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -293,13 +293,15 @@
 
 
     /**
-     * Determines if `childApps` should restart
+     * Starts a `childApp` if allowed by child
      *
      * @private
-     * @method _shouldRestart
+     * @method _startChildApp
      */
-    _shouldRestart: function _shouldRestart(childApp) {
-      return this._isRestarting && _.result(childApp, 'restartWithParent');
+    _startChildApp: function _startChildApp(childApp) {
+      if (_.result(childApp, 'startWithParent')) {
+        childApp.start();
+      }
     },
 
 
@@ -312,16 +314,34 @@
     _startChildApps: function _startChildApps() {
       var _this2 = this;
 
+      if (!this._isRestarting) {
+        _.each(this._childApps, this._startChildApp);
+        return;
+      }
+
+      // Handles explicit boolean values of restartWithParent
+      // restartWithParent === false does nothing
       _.each(this._childApps, function (childApp) {
-        if (_.result(childApp, 'startWithParent')) {
+        var restartWithParent = _.result(childApp, 'restartWithParent');
+        if (restartWithParent === true) {
           childApp.start();
           return;
         }
-
-        if (_this2._shouldRestart(childApp)) {
-          childApp.start();
-        }
+        if (restartWithParent !== false) _this2._startChildApp(childApp);
       });
+    },
+
+
+    /**
+     * Stops a `childApp` if allowed by child
+     *
+     * @private
+     * @method _stopChildApp
+     */
+    _stopChildApp: function _stopChildApp(childApp) {
+      if (_.result(childApp, 'stopWithParent')) {
+        childApp.stop();
+      }
     },
 
 
@@ -334,15 +354,20 @@
     _stopChildApps: function _stopChildApps() {
       var _this3 = this;
 
+      if (!this._isRestarting) {
+        _.each(this._childApps, this._stopChildApp);
+        return;
+      }
+
+      // Handles explicit boolean values of restartWithParent
+      // restartWithParent === false does nothing
       _.each(this._childApps, function (childApp) {
-        if (_.result(childApp, 'stopWithParent')) {
+        var restartWithParent = _.result(childApp, 'restartWithParent');
+        if (restartWithParent === true) {
           childApp.stop();
           return;
         }
-
-        if (_this3._shouldRestart(childApp)) {
-          childApp.stop();
-        }
+        if (restartWithParent !== false) _this3._stopChildApp(childApp);
       });
     },
 
@@ -859,12 +884,13 @@
     stopWithParent: true,
 
     /**
-     * Set to true if a parent `App` should be able to restart this `App`.
+     * Set this to determine if a parent `App` should maintain the child's
+     * lifecycle during a restart.
      *
      * @type {Boolean|Function}
-     * @default false
+     * @default null
      */
-    restartWithParent: false,
+    restartWithParent: null,
 
     /**
      * @public
@@ -1615,7 +1641,7 @@
    * @module Toolkit
    */
 
-  var VERSION = '5.0.0-alpha.2';
+  var VERSION = '5.0.0-alpha.3';
 
   function MixinState(classDefinition) {
     var _StateMixin = StateMixin;
