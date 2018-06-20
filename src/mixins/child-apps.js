@@ -48,6 +48,12 @@ export default {
     }
   },
 
+  /**
+   * Finds `regionName` and `getOptions` for the childApp
+   *
+   * @private
+   * @method _getChildStartOpts
+   */
   _getChildStartOpts(childApp) {
     const tkOpts = childApp._tkOpts || {};
 
@@ -63,15 +69,28 @@ export default {
   },
 
   /**
-   * Starts a `childApp` if allowed by child
+   * Starts a `childApp`
    *
    * @private
    * @method _startChildApp
    */
-  _startChildApp(childApp) {
-    if(_.result(childApp, 'startWithParent')) {
-      childApp.start();
-    }
+  _startChildApp(childApp, options) {
+    const opts = this._getChildStartOpts(childApp);
+    return childApp.start(_.extend(opts, options));
+  },
+
+  /**
+   * Handles explicit boolean values of restartWithParent
+   * restartWithParent === false does nothing
+   *
+   * @private
+   * @method _shouldStartWithRestart
+   */
+  _shouldActWithRestart(childApp, action) {
+    if(!this._isRestarting) return true;
+    const restartWithParent = _.result(childApp, 'restartWithParent');
+    if(restartWithParent === true) return true;
+    if(restartWithParent !== false && _.result(childApp, action)) return true;
   },
 
   /**
@@ -81,33 +100,12 @@ export default {
    * @method _startChildApps
    */
   _startChildApps() {
-    if(!this._isRestarting) {
-      _.each(this._childApps, this._startChildApp);
-      return;
-    }
-
-    // Handles explicit boolean values of restartWithParent
-    // restartWithParent === false does nothing
+    const action = 'startWithParent';
     _.each(this._childApps, childApp => {
-      const restartWithParent = _.result(childApp, 'restartWithParent');
-      if(restartWithParent === true) {
-        childApp.start();
-        return;
-      }
-      if(restartWithParent !== false) this._startChildApp(childApp);
+      if(!this._shouldActWithRestart(childApp, action)) return;
+      if(!this._isRestarting && !_.result(childApp, action)) return;
+      this._startChildApp(childApp);
     });
-  },
-
-  /**
-   * Stops a `childApp` if allowed by child
-   *
-   * @private
-   * @method _stopChildApp
-   */
-  _stopChildApp(childApp) {
-    if(_.result(childApp, 'stopWithParent')) {
-      childApp.stop();
-    }
   },
 
   /**
@@ -117,20 +115,11 @@ export default {
    * @method _stopChildApps
    */
   _stopChildApps() {
-    if(!this._isRestarting) {
-      _.each(this._childApps, this._stopChildApp);
-      return;
-    }
-
-    // Handles explicit boolean values of restartWithParent
-    // restartWithParent === false does nothing
+    const action = 'stopWithParent';
     _.each(this._childApps, childApp => {
-      const restartWithParent = _.result(childApp, 'restartWithParent');
-      if(restartWithParent === true) {
-        childApp.stop();
-        return;
-      }
-      if(restartWithParent !== false) this._stopChildApp(childApp);
+      if(!this._shouldActWithRestart(childApp, action)) return;
+      if(!this._isRestarting && !_.result(childApp, action)) return;
+      childApp.stop();
     });
   },
 
@@ -144,8 +133,7 @@ export default {
    */
   startChildApp(appName, options) {
     const childApp = this.getChildApp(appName);
-    const opts = this._getChildStartOpts(childApp);
-    return childApp.start(_.extend(opts, options));
+    return this._startChildApp(childApp, options);
   },
 
   /**
@@ -287,7 +275,7 @@ export default {
     childApp._on('destroy', _.partial(this._removeChildApp, appName), this);
 
     if(this.isRunning() && _.result(childApp, 'startWithParent')) {
-      childApp.start();
+      this._startChildApp(childApp);
     }
 
     return childApp;
