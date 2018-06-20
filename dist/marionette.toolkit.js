@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v5.0.0-alpha.3
+ * @version v5.0.0-alpha.4
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -275,6 +275,14 @@
         this.addChildApps(childApps);
       }
     },
+
+
+    /**
+     * Finds `regionName` and `getOptions` for the childApp
+     *
+     * @private
+     * @method _getChildStartOpts
+     */
     _getChildStartOpts: function _getChildStartOpts(childApp) {
       var _this = this;
 
@@ -293,15 +301,29 @@
 
 
     /**
-     * Starts a `childApp` if allowed by child
+     * Starts a `childApp`
      *
      * @private
      * @method _startChildApp
      */
-    _startChildApp: function _startChildApp(childApp) {
-      if (_.result(childApp, 'startWithParent')) {
-        childApp.start();
-      }
+    _startChildApp: function _startChildApp(childApp, options) {
+      var opts = this._getChildStartOpts(childApp);
+      return childApp.start(_.extend(opts, options));
+    },
+
+
+    /**
+     * Handles explicit boolean values of restartWithParent
+     * restartWithParent === false does nothing
+     *
+     * @private
+     * @method _shouldStartWithRestart
+     */
+    _shouldActWithRestart: function _shouldActWithRestart(childApp, action) {
+      if (!this._isRestarting) return true;
+      var restartWithParent = _.result(childApp, 'restartWithParent');
+      if (restartWithParent === true) return true;
+      if (restartWithParent !== false && _.result(childApp, action)) return true;
     },
 
 
@@ -314,34 +336,12 @@
     _startChildApps: function _startChildApps() {
       var _this2 = this;
 
-      if (!this._isRestarting) {
-        _.each(this._childApps, this._startChildApp);
-        return;
-      }
-
-      // Handles explicit boolean values of restartWithParent
-      // restartWithParent === false does nothing
+      var action = 'startWithParent';
       _.each(this._childApps, function (childApp) {
-        var restartWithParent = _.result(childApp, 'restartWithParent');
-        if (restartWithParent === true) {
-          childApp.start();
-          return;
-        }
-        if (restartWithParent !== false) _this2._startChildApp(childApp);
+        if (!_this2._shouldActWithRestart(childApp, action)) return;
+        if (!_this2._isRestarting && !_.result(childApp, action)) return;
+        _this2._startChildApp(childApp);
       });
-    },
-
-
-    /**
-     * Stops a `childApp` if allowed by child
-     *
-     * @private
-     * @method _stopChildApp
-     */
-    _stopChildApp: function _stopChildApp(childApp) {
-      if (_.result(childApp, 'stopWithParent')) {
-        childApp.stop();
-      }
     },
 
 
@@ -354,20 +354,11 @@
     _stopChildApps: function _stopChildApps() {
       var _this3 = this;
 
-      if (!this._isRestarting) {
-        _.each(this._childApps, this._stopChildApp);
-        return;
-      }
-
-      // Handles explicit boolean values of restartWithParent
-      // restartWithParent === false does nothing
+      var action = 'stopWithParent';
       _.each(this._childApps, function (childApp) {
-        var restartWithParent = _.result(childApp, 'restartWithParent');
-        if (restartWithParent === true) {
-          childApp.stop();
-          return;
-        }
-        if (restartWithParent !== false) _this3._stopChildApp(childApp);
+        if (!_this3._shouldActWithRestart(childApp, action)) return;
+        if (!_this3._isRestarting && !_.result(childApp, action)) return;
+        childApp.stop();
       });
     },
 
@@ -382,8 +373,7 @@
      */
     startChildApp: function startChildApp(appName, options) {
       var childApp = this.getChildApp(appName);
-      var opts = this._getChildStartOpts(childApp);
-      return childApp.start(_.extend(opts, options));
+      return this._startChildApp(childApp, options);
     },
 
 
@@ -533,7 +523,7 @@
       childApp._on('destroy', _.partial(this._removeChildApp, appName), this);
 
       if (this.isRunning() && _.result(childApp, 'startWithParent')) {
-        childApp.start();
+        this._startChildApp(childApp);
       }
 
       return childApp;
@@ -1641,7 +1631,7 @@
    * @module Toolkit
    */
 
-  var VERSION = '5.0.0-alpha.3';
+  var VERSION = '5.0.0-alpha.4';
 
   function MixinState(classDefinition) {
     var _StateMixin = StateMixin;
