@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v5.0.0-alpha.4
+ * @version v5.0.0-alpha.5
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -991,9 +991,7 @@
 
       this._bindRunningEvents();
 
-      this._startChildApps();
-
-      this.triggerStart(options);
+      this.finallyStart(options);
 
       return this;
     },
@@ -1042,18 +1040,33 @@
 
 
     /**
-     * Triggers start event.
-     * Override to introduce async start
+     * Starts children and triggers start event
+     * For calling within `finallyStart`
      *
      * @public
      * @method triggerStart
      * @memberOf App
-     * @param {Object} [options] - Settings for the App passed through to events
-     * @event App#start - passes options
+     * @event App#start - passes any arguments
      * @returns
      */
-    triggerStart: function triggerStart(options) {
-      this.triggerMethod('start', options);
+    triggerStart: function triggerStart() {
+      this._startChildApps();
+      this.triggerMethod.apply(this, ['start'].concat(Array.prototype.slice.call(arguments)));
+    },
+
+
+    /**
+     * Triggers start event.
+     * Override to introduce async start
+     *
+     * @public
+     * @method finallyStart
+     * @memberOf App
+     * @param {Object} [options] - Settings for the App passed through to events
+     * @returns
+     */
+    finallyStart: function finallyStart(options) {
+      this.triggerStart(options);
     },
 
 
@@ -1631,7 +1644,7 @@
    * @module Toolkit
    */
 
-  var VERSION = '5.0.0-alpha.4';
+  var VERSION = '5.0.0-alpha.5';
 
   function MixinState(classDefinition) {
     var _StateMixin = StateMixin;

@@ -1,6 +1,6 @@
 {
   "name": "marionette.toolkit",
-  "version": "5.0.0-alpha.4",
+  "version": "5.0.0-alpha.5",
   "description": "A collection of opinionated Backbone.Marionette extensions for large scale application architecture.",
   "main": "./dist/marionette.toolkit.js",
   "scripts": {
