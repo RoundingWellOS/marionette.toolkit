@@ -141,11 +141,11 @@ describe('app-lifecycle-options', function() {
         const childApps = {
           cA1: {
             AppClass: Marionette.Toolkit.App,
-            stopWithParent: false
+            restartWithParent: false
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps: childApps });
+        const myApp = new Marionette.Toolkit.App({ childApps });
 
         myApp.start();
 
@@ -156,6 +156,84 @@ describe('app-lifecycle-options', function() {
 
         expect(stopSpy).to.not.be.called;
         expect(startSpy).to.not.be.called;
+      });
+    });
+
+    describe('and a childApp has not set restartWithParent', function() {
+      it('should start when startWithParent is true', function() {
+        const childApps = {
+          cA1: {
+            AppClass: Marionette.Toolkit.App,
+            startWithParent: true
+          }
+        };
+
+        const myApp = new Marionette.Toolkit.App({ childApps });
+
+        myApp.start();
+
+        const startSpy = sinon.spy(myApp.getChildApp('cA1'), 'start');
+
+        myApp.restart();
+
+        expect(startSpy).to.be.calledOnce;
+      });
+
+      it('should not start when startWithParent is false', function() {
+        const childApps = {
+          cA1: {
+            AppClass: Marionette.Toolkit.App,
+            startWithParent: false
+          }
+        };
+
+        const myApp = new Marionette.Toolkit.App({ childApps });
+
+        myApp.start();
+
+        const startSpy = sinon.spy(myApp.getChildApp('cA1'), 'start');
+
+        myApp.restart();
+
+        expect(startSpy).to.not.be.called;
+      });
+
+      it('should stop when stopWithParent is true', function() {
+        const childApps = {
+          cA1: {
+            AppClass: Marionette.Toolkit.App,
+            stopWithParent: true
+          }
+        };
+
+        const myApp = new Marionette.Toolkit.App({ childApps });
+
+        myApp.start();
+
+        const stopSpy = sinon.spy(myApp.getChildApp('cA1'), 'stop');
+
+        myApp.restart();
+
+        expect(stopSpy).to.be.calledOnce;
+      });
+
+      it('should not stop when stopWithParent is false', function() {
+        const childApps = {
+          cA1: {
+            AppClass: Marionette.Toolkit.App,
+            stopWithParent: false
+          }
+        };
+
+        const myApp = new Marionette.Toolkit.App({ childApps });
+
+        myApp.start();
+
+        const stopSpy = sinon.spy(myApp.getChildApp('cA1'), 'stop');
+
+        myApp.restart();
+
+        expect(stopSpy).to.not.be.called;
       });
     });
   });

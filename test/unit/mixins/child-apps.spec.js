@@ -342,13 +342,21 @@ describe('ChildAppMixin', function() {
         cA1: Marionette.Toolkit.App,
         cA2: Marionette.Toolkit.App.extend({
           onStart(options) {
-            this.mergeOptions(options, ['region']);
+            this.mergeOptions(options, ['foo']);
           }
         }),
-        cA3: Marionette.Toolkit.App
+        cA3: Marionette.Toolkit.App,
+        cA4: {
+          AppClass: Marionette.Toolkit.App,
+          regionName: 'region'
+        },
+        cA5: {
+          AppClass: Marionette.Toolkit.App,
+          getOptions: ['foo', 'bar']
+        }
       };
 
-      this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+      this.myApp = new Marionette.Toolkit.App({ childApps });
     });
 
     it('should start specified childApp', function() {
@@ -358,9 +366,9 @@ describe('ChildAppMixin', function() {
     });
 
     it('should start childApp with options', function() {
-      this.myChildApp = this.myApp.startChildApp('cA2', { region: 'regionName' });
+      this.myChildApp = this.myApp.startChildApp('cA2', { foo: 'bar' });
 
-      expect(this.myChildApp.getOption('region')).to.eq('regionName');
+      expect(this.myChildApp.getOption('foo')).to.eq('bar');
     });
 
     it('should return childApp instance', function() {
@@ -369,6 +377,38 @@ describe('ChildAppMixin', function() {
       this.myChildApp = this.myApp.startChildApp('cA1');
 
       expect(spy.returned(this.myChildApp)).to.be.true;
+    });
+
+    describe('when regionName is defined', function() {
+      it('should set the region from the app view on the child app', function() {
+        const view = new Marionette.View({
+          template: _.template('<div id="region"></div>'),
+          regions: { region: '#region' }
+        });
+
+        this.myApp.setView(view);
+
+        this.myChildApp = this.myApp.startChildApp('cA4');
+
+        expect(this.myChildApp.getRegion()).to.equal(this.myApp.getRegion('region'));
+      });
+    });
+
+    describe('when getOptions is defined', function() {
+      it('should set the options from the app on the child app', function() {
+        this.myApp.foo = 'foo';
+        this.myApp.bar = 'bar';
+
+        this.myChildApp = this.myApp.getChildApp('cA5');
+
+        const spy = sinon.spy(this.myChildApp, 'start');
+
+        this.myApp.startChildApp('cA5', { bar: 'bar2', baz: 'baz' });
+
+        expect(spy)
+          .to.be.calledOnce
+          .and.calledWith({ foo: 'foo', bar: 'bar2', baz: 'baz', region: undefined });
+      });
     });
   });
 

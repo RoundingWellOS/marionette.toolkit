@@ -128,8 +128,12 @@ console.log(myStartWithParentApp.isRunning());
 
 ### App's `restartWithParent`
 
-Calls `stop` then `start` on the child app when the parent app restarts.  Default value is `false`.
+Default value is `null`.
 It can also be defined as a function returning a boolean value.
+
+If `restartWithParent` is `true` the child app will stop and start with the parent when `restart`ing.
+If `restartWithParent` is `false` the child app will neither stop nor start with the parent when `restart`ing.
+If `restartWithParent` is `null` the child app will respect `startWithParent` and `stopWithParent` when `restart`ing.
 
 ```js
 var myApp = new Marionette.Toolkit.App();

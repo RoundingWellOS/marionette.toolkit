@@ -241,6 +241,25 @@ describe('App', function() {
       });
     });
 
+    describe('when a view is detached from the app\s region', function() {
+      it('should delete the shown view', function() {
+        this.myApp.setRegion(this.region);
+        this.myApp.showView(this.view);
+        this.myApp.getRegion().detachView();
+        expect(this.myApp.getView()).to.be.undefined;
+      });
+
+      it('should remove any listeners to the view', function() {
+        this.sinon.spy(this.myApp, 'stopListening');
+
+        this.myApp.setRegion(this.region);
+        this.myApp.showView(this.view);
+        this.myApp.stopListening.reset();
+        this.myApp.getRegion().detachView();
+        expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
+      });
+    });
+
     describe('when a view in the app\'s region is destroyed', function() {
       it('should delete the shown view', function() {
         this.myApp.setRegion(this.region);

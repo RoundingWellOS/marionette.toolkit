@@ -5,6 +5,8 @@
 ## Documentation Index
 * [ChildAppsMixin's Lifecycle Settings](#childappsmixins-lifecycle-settings)
 * [ChildAppsMixin's `childApps`](#apps-childapps)
+  * [`regionName` option](#regionname-option)
+  * [`getOptions` option](#getoptions-option)
 * [ChildAppsMixin API](#childappsmixin-api)
   * [ChildAppsMixin `buildApp`](#childappsmixin-buildapp)
   * [ChildAppsMixin `addChildApp`](#childappsmixin-addchildapp)
@@ -53,6 +55,57 @@ var myApp = new Marionette.Toolkit.App({
     }
   }
 });
+```
+
+### `regionName` option
+
+If a `regionName` is passed along with an app configuration, when the app starts
+the region of that name will be passed to the child app from the app's view.
+
+```js
+const myApp = new Marionette.Toolkit.App({
+  childApps: {
+    childName:  {
+      AppClass: MyChildApp,
+      regionName: 'bar'
+    }
+  }
+});
+
+const LayoutView = Marionette.View.extend({
+  template: _.template('<div id="barRegion"></div>'),
+  regions: { bar: '#barRegion' }
+});
+
+myApp.setView(new LayoutView());
+
+const childApp = myApp.startChildApp('childName');
+
+myApp.getRegion('bar') === childApp.getRegion(); // true
+```
+
+### `getOptions` option
+
+If `getOptions` is defined with the app configuration, it will loop through the `getOptions` array,
+using `getOption` on the parent app and passing the result to the child app when starting.
+
+```js
+const myApp = new Marionette.Toolkit.App({
+  childApps: {
+    childName:  {
+      AppClass: MyChildApp,
+      getOptions: ['foo', 'bar']
+    }
+  },
+  foo: 'foo'
+});
+myApp.bar = 'bar';
+
+const childApp = myApp.startChildApp('childName', { bar: 'bar2', baz: 'baz' });
+
+childApp.getOption('foo'); // "foo"
+childApp.getOption('bar'); // "bar2"
+childApp.getOption('baz'); // "baz"
 ```
 
 ## ChildAppsMixin API
