@@ -13,7 +13,7 @@ Toolkit provides a simple method to override for async injection.
 
 ```js
 triggerStart: function(options) {
-  this.triggerMethod('start', options);
+  this.finallyStart(options);
 }
 ```
 
@@ -22,17 +22,11 @@ Simply override this function in a manner such that `this.triggerMethod('start',
 ```js
 var MyAsyncApp = Marionette.Toolkit.App.extend({
   triggerStart: function(options){
-    // Remove the sync call to triggerMethod
-    //this.triggerMethod('start', options);
-
     // Setup a listener for an event triggered by the completion of the async event
     // We trigger an event so that if the app is destroyed during the async request
     // the trigger will not occur, whereas triggerMethod would still call onStart
-    this.on('sync:data', _.partial(this.triggerMethod, 'start', options));
+    this.on('sync:data', _.partial(this.finallyStart, options));
 
-    this._fetchData(options);
-  },
-  _fetchData: function(options){
     $.when(this.beforeStart(options)).then(_.bind(this.trigger, this, 'sync:data'));
   },
   beforeStart: function(options){

@@ -189,7 +189,7 @@ const App = Application.extend({
 
     this._bindRunningEvents();
 
-    this.finallyStart(options);
+    this.triggerStart(options);
 
     return this;
   },
@@ -236,31 +236,31 @@ const App = Application.extend({
 
   /**
    * Starts children and triggers start event
-   * For calling within `finallyStart`
+   * For calling within `triggerStart`
    *
    * @public
-   * @method triggerStart
+   * @method finallyStart
    * @memberOf App
    * @event App#start - passes any arguments
    * @returns
    */
-  triggerStart() {
+  finallyStart() {
     this._startChildApps();
     this.triggerMethod('start', ...arguments);
   },
 
   /**
-   * Triggers start event.
+   * Triggers start event via finallyStart.
    * Override to introduce async start
    *
    * @public
-   * @method finallyStart
+   * @method triggerStart
    * @memberOf App
    * @param {Object} [options] - Settings for the App passed through to events
    * @returns
    */
-  finallyStart(options) {
-    this.triggerStart(options);
+  triggerStart(options) {
+    this.finallyStart(options);
   },
 
   /**
