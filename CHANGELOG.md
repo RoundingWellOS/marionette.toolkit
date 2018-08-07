@@ -1,3 +1,26 @@
+#### v5.0.0
+
+* **Breaking Changes**
+  * Upgraded to Marionette v4
+  * `Toolkit` is no longer attached to `Marionette.Toolkit`
+  * `noConflict` was removed
+  * Removed bower
+  * For apps the state model and listeners are now only init'd during runtime available first in `onBeforeStart` without listeners.
+  * `triggerStart` now calls a `finallyStart` method rather than `triggerMethod` directly.
+
+* **Features**
+  * childApps definitions now support `regionName` and `getOptions` for boilerplate reduction.
+  * Updated underscore dependency range
+  * Added `toggleState` for a quick/clean `set('foo', !get('foo'))`
+  * Added `hasState` for a quick/clean `this.getState().has('foo')`
+  * `stopChildApp` now passes options along `this.stopChildApp('appName', { foo: true })`
+  * `Component` now exposes `showView` so that the behavior can be overridden
+  * `restartWithParent` was added to modify the behavior of child apps during `restart`
+
+* **Fixes**
+  * Child app was not removing correctly if startAfterInitialize: true
+  * Fixed clean up for various app view removal methods
+
 #### v4.0.0
 
 * `App`

@@ -59,6 +59,12 @@ function getBanner() {
   return banner;
 }
 
+const rollupGlobals = {
+  'backbone': 'Backbone',
+  'underscore': '_',
+  'backbone.marionette': 'Marionette'
+};
+
 function _generate(bundle, expVarName) {
   const intro = getBanner();
 
@@ -67,11 +73,7 @@ function _generate(bundle, expVarName) {
     moduleName: expVarName,
     sourceMap: true,
     banner: intro,
-    globals: {
-      'backbone': 'Backbone',
-      'underscore': '_',
-      'backbone.marionette': 'Marionette'
-    }
+    globals: rollupGlobals
   });
 }
 
@@ -87,6 +89,14 @@ function bundleCode(entryFileName, expVarName) {
       })
     ]
   }).then(function(bundle) {
+    bundle.write({
+      format: 'es6',
+      dest: 'dist/marionette.toolkit.esm.js',
+      sourceMap: true,
+      sourceMapFile: 'marionette.toolkit.esm.js',
+      globals: rollupGlobals
+    });
+
     return _generate(bundle, expVarName);
   }).then(gen => {
     gen.code += `\n//# sourceMappingURL=${ gen.map.toUrl() }`;

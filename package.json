@@ -1,8 +1,11 @@
 {
   "name": "marionette.toolkit",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0",
   "description": "A collection of opinionated Backbone.Marionette extensions for large scale application architecture.",
   "main": "./dist/marionette.toolkit.js",
+  "module": "lib/marionette.toolkit.esm.js",
+  "jsnext:main": "lib/marionette.toolkit.esm.js",
+  "sideEffects": false,
   "scripts": {
     "test": "gulp",
     "test-browser": "gulp test-browser",
