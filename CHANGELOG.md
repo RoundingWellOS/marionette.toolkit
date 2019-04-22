@@ -1,3 +1,8 @@
+#### v5.1.0
+
+* **Features**
+  * Updated dependency versions
+
 #### v5.0.0
 
 * **Breaking Changes**

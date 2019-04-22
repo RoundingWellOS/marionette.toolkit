@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v5.0.0
+ * @version v5.1.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -1644,7 +1644,7 @@
    * @module Toolkit
    */
 
-  var VERSION = '5.0.0';
+  var VERSION = '5.1.0';
 
   function MixinState(classDefinition) {
     var _StateMixin = StateMixin;
