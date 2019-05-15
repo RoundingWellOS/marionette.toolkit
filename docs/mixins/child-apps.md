@@ -30,7 +30,7 @@ The object literal must contain app names as keys and app definitions as values.
 If defined as a function it will receive the `options` passed to the `constructor`.
 
 ```js
-var MyApp = Marionette.Toolkit.App.extend({
+const MyApp = App.extend({
   childApps: function(options){
     return {
       childName: MyChildApp,
@@ -45,7 +45,7 @@ var MyApp = Marionette.Toolkit.App.extend({
 ```
 
 ```js
-var myApp = new Marionette.Toolkit.App({
+const myApp = new App({
   childApps: {
     childName: MyChildApp,
     otherName: {
@@ -63,7 +63,7 @@ If a `regionName` is passed along with an app configuration, when the app starts
 the region of that name will be passed to the child app from the app's view.
 
 ```js
-const myApp = new Marionette.Toolkit.App({
+const myApp = new App({
   childApps: {
     childName:  {
       AppClass: MyChildApp,
@@ -90,7 +90,7 @@ If `getOptions` is defined with the app configuration, it will loop through the 
 using `getOption` on the parent app and passing the result to the child app when starting.
 
 ```js
-const myApp = new Marionette.Toolkit.App({
+const myApp = new App({
   childApps: {
     childName:  {
       AppClass: MyChildApp,
@@ -128,9 +128,9 @@ the app definition and options to pass to the app when built.
 The returned value is the add childApp instance.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
-var myChildApp = myApp.addChildApp('foo', Marionette.Toolkit.App, { fooOption: true });
+const myChildApp = myApp.addChildApp('foo', App, { fooOption: true });
 
 myChildApp.getOption('fooOption'); // => true
 ```
@@ -152,11 +152,11 @@ The object literal must contain app names as keys
 and app definitions as values.
 
 ```js
-var ChildAppsMixin = new Marionette.Toolkit.App();
+const ChildAppsMixin = new App();
 
 // With an object literal
 myApp.addChildApps({
-  main: Marionette.Toolkit.App,
+  main: App,
   navigation: {
     fooOption: true,
     startWithParent: true,
@@ -167,12 +167,12 @@ myApp.addChildApps({
 // With a function
 myApp.addChildApps(function() {
   return {
-    footer: Marionette.Toolkit.App
+    footer: App
   };
 });
 
 myApp.getChildApp('main');        //=> 'main' app instance
-var navApp = myApp.getChildApp('navigation');  //=> 'navigation' app instance
+const navApp = myApp.getChildApp('navigation');  //=> 'navigation' app instance
 navApp.getOption('fooOption'); //=> true
 myApp.getChildApp('footer'); //=> 'footer' app instance
 ```
@@ -187,15 +187,15 @@ is not a childApp or is a parentApp `undefined`
 will be returned.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
-myApp.addChildApp('bar', Marionette.Toolkit.App);
-var barAppName = myApp.getChildApp('bar').getName();
+myApp.addChildApp('bar', App);
+const barAppName = myApp.getChildApp('bar').getName();
 
 // logs bar
 console.log(barAppName);
 
-var myAppName = myApp.getName();
+const myAppName = myApp.getName();
 
 // logs undefined
 console.log(myAppName);
@@ -208,10 +208,10 @@ App instance using the `getChildApp` method and
 passing in the name of the childApp.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
-myApp.addChildApp('foo', Marionette.Toolkit.App);
+const myApp = new App();
+myApp.addChildApp('foo', App);
 
-var fooApp = myApp.getChildApp('foo');
+const fooApp = myApp.getChildApp('foo');
 ```
 
 ### ChildAppsMixin `getChildApps`
@@ -221,11 +221,11 @@ Returns an object literal with named childApps
 as attributes.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
-myApp.addChildApp('foo', Marionette.Toolkit.App);
-myApp.addChildApp('bar', Marionette.Toolkit.App);
+const myApp = new App();
+myApp.addChildApp('foo', App);
+myApp.addChildApp('bar', App);
 
-var childApps = myApp.getChildApps();
+const childApps = myApp.getChildApps();
 
 childApps.foo; //=> foo childApp
 childApps.bar; //=> bar childApp
@@ -237,17 +237,17 @@ An app can be removed by calling the `removeChildApp`
 method and passing in the name of the app.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
-myApp.addChildApp('foo', Marionette.Toolkit.App);
+const myApp = new App();
+myApp.addChildApp('foo', App);
 
 myApp.addChildApp('bar', {
-  AppClass: Marionette.Toolkit.App,
+  AppClass: App,
   preventDestroy: true
 });
 
-var fooApp = myApp.removeChildApp('foo');
+const fooApp = myApp.removeChildApp('foo');
 
-var barApp = myApp.removeChildApp('bar');
+const barApp = myApp.removeChildApp('bar');
 
 // logs true
 console.log(fooApp.isDestroyed());
@@ -266,11 +266,11 @@ App instance by calling the `removeChildApps`
 method.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 myApp.addChildApps({
-  foo: Marionette.Toolkit.App,
-  bar: Marionette.Toolkit.App,
-  baz: Marionette.Toolkit.App
+  foo: App,
+  bar: App,
+  baz: App
 });
 
 myApp.removeChildApps();
@@ -285,18 +285,18 @@ App instance by calling the `startChildApp`
 method and passing the childApp name and any options.
 
 ```js
-var childApps = {
-   cA1: Marionette.Toolkit.App.extend({
+const childApps = {
+   cA1: App.extend({
      onStart(options) {
        this.mergeOptions(options, ['foo']);
      }
    })
 };
 
-var myApp = new Marionette.Toolkit.App({ childApps: childApps });
+const myApp = new App({ childApps: childApps });
 
 // Once you have the childApp instance stored, you can also do childAppInstance.start();
-var childAppInstance = myApp.startChildApp('cA1', { foo: 'bar' });
+const childAppInstance = myApp.startChildApp('cA1', { foo: 'bar' });
 
 // true
 console.log(childAppInstance.isRunning());
@@ -314,9 +314,9 @@ App instance by calling the `stopChildApp`
 method and passing the childApp name.
 
 ```js
-var myApp = new Marionette.Toolkit.App({ childApps: { cA1: Marionette.Toolkit.App } });
+const myApp = new App({ childApps: { cA1: App } });
 
-var childAppInstance = myApp.startChildApp('cA1');
+const childAppInstance = myApp.startChildApp('cA1');
 
 // true
 console.log(childAppInstance.isRunning());

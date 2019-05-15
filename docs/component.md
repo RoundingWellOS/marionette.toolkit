@@ -32,11 +32,11 @@ The component is built to work out of the box.
 When instantiating a component you can pass various options including `ViewClass` or initial component `state`.
 
 ```js
-var MyComponentView = Marionette.View.extend({
+const MyComponentView = Marionette.View.extend({
   template: _.template('<div>Hello Component</div>')
 });
 
-var options = {
+const options = {
   fooOption: 'baz',
   ViewClass: MyComponentView,
   state: {
@@ -44,7 +44,7 @@ var options = {
   }
 };
 
-var myComponent = new Marionette.Toolkit.Component(options);
+const myComponent = new Component(options);
 
 myComponent.getState('fooState') === 'bar';
 
@@ -62,9 +62,9 @@ a view definition, not an instance.  If you do not specify a
 `ViewClass`, a vanilla `Marionette.View` definition will be used.
 
 ```js
-var MyViewClass = Marionette.View.extend({});
+const MyViewClass = Marionette.View.extend({});
 
-Marionette.Toolkit.Component.extend({
+Component.extend({
   ViewClass: MyViewClass
 });
 ```
@@ -74,10 +74,10 @@ returned by this method is the `ViewClass` class that will be instantiated.
 When defined as a function, it will receive the `options` passed to [`renderView`](#component-renderview).
 
 ```js
-var MyViewClass = Marionette.View.extend({});
+const MyViewClass = Marionette.View.extend({});
 
-Marionette.Toolkit.Component.extend({
-  ViewClass: function(options){
+Component.extend({
+  ViewClass(options){
     if(options.foo){
       return MyViewClass;
     }
@@ -94,11 +94,11 @@ You can also manage the state of the ViewClass by mixing in the [`StateMixin`](.
 This can be done by using the `Marionette.Toolkit.MixinState` Utility.
 
 ```js
-var MyViewClass = Marionette.View.extend({});
+const MyViewClass = Marionette.View.extend({});
 
-Marionette.Toolkit.MixinState(MyViewClass);
+MixinState(MyViewClass);
 
-Marionette.Toolkit.Component.extend({
+Component.extend({
   ViewClass: MyViewClass
 });
 ```
@@ -110,13 +110,13 @@ a `viewOptions` definition on your component as an object literal. This will
 be passed to the constructor of your view as part of the `options`.
 
 ```js
-var MyView = Marionette.View.extend({
-  initialize: function(options) {
+const MyView = Marionette.View.extend({
+  initialize(options) {
     console.log(options.foo); // => "bar"
   }
 });
 
-var MyComponent = Marionette.Toolkit.Component.extend({
+const MyComponent = Component.extend({
   ViewClass: MyView,
 
   viewOptions: {
@@ -131,8 +131,8 @@ an object, and the attributes of the object will be copied to the
 component view instance's options.
 
 ```js
-var MyComponent = Marionette.Toolkit.Component.extend({
-  viewOptions: function() {
+const MyComponent = Component.extend({
+  viewOptions() {
     return {
       foo: 'bar'
     };
@@ -161,19 +161,19 @@ method are triggered after building and rendering the `currentView`
 into the component's `region`.
 
 ```js
-var MyComponent = Marionette.Toolkit.Component.extend({
+const MyComponent = Component.extend({
   // ...
 
-  onBeforeShow: function(){
+  onBeforeShow(){
     // ...
   },
 
-  onShow: function(){
+  onShow(){
     // ...
   }
 });
 
-var myComponent = new MyComponent({...});
+const myComponent = new MyComponent({...});
 
 myComponent.on('before:show', function(){
   // ...
@@ -195,19 +195,19 @@ method are triggered after building and rendering the `currentView`
 into the component's `region`.
 
 ```js
-var MyComponent = Marionette.Toolkit.Component.extend({
+const MyComponent = Component.extend({
   // ...
 
-  onBeforeRenderView: function(currentView){
+  onBeforeRenderView(currentView){
     // ...
   },
 
-  onRenderView: function(currentView){
+  onRenderView(currentView){
     // ...
   }
 });
 
-var myComponent = new MyComponent({...});
+const myComponent = new MyComponent({...});
 
 myComponent.on('before:render:view', function(currentView){
   // ...
@@ -234,9 +234,9 @@ For more information see the [ViewEventsMixin documentation](./mixins/view-event
 Sets the component's `region` and then calls `show` on the component
 
 ```js
-var myComponent = new MyComponent();
+const myComponent = new MyComponent();
 
-var viewOptions = {
+const viewOptions = {
   className: 'my-component-class'
 };
 
@@ -250,16 +250,16 @@ shown once during its lifetime.
 `show` triggers ["before:show" / "show" events](#beforeshow--show-events).
 
 ```js
-var MyComponent = Marionette.Toolkit.Component.extend({
+const MyComponent = Component.extend({
   ViewClass: MyViewClass,
   region: someRegion
 });
 
-var viewOptions = {
+const viewOptions = {
   className: 'my-component-class'
 };
 
-var myComponent = new MyComponent();
+const myComponent = new MyComponent();
 
 myComponent.show(viewOptions);
 ```
@@ -273,12 +273,12 @@ While a component can only be shown once, it can be re-rendered many times.
 `renderView` triggers ["before:render:view" / "render:view" events](#beforerenderview--renderview-events).
 
 ```js
-var MyComponent = Marionette.Toolkit.Component.extend({
+const MyComponent = Component.extend({
   ViewClass: MyViewClass,
   region: someRegion
 });
 
-var myComponent = new MyComponent();
+const myComponent = new MyComponent();
 
 myComponent.show({
   className: 'my-component-class'
@@ -296,9 +296,9 @@ is attached to the component as `currentView`.  It is a read-only property and
 best used when extending a component rather than from its instantiation.
 
 ```js
-var myComponent = new MyComponent({
+const myComponent = new MyComponent({
   stateEvents: {
-    'change:selected': function(){
+    'change:selected'(){
       // this.currentView...
     }
   }
@@ -310,7 +310,7 @@ myComponent.show({
 
 
 // Works but best to use the component to interface with the view.
-var view = myComponent.currentView;
+const view = myComponent.currentView;
 ```
 
 ### Component `showView`
@@ -319,7 +319,7 @@ Called by `renderView`, it shows the `view` in the component's `region`.
 This method can be overridden to change a component's behavior.
 
 ```js
-var MyComponent = Marionette.Toolkit.Component.extend({
+const MyComponent = Component.extend({
   ViewClass: MyViewClass,
   region: someRegion,
   showView(view) {
@@ -327,7 +327,7 @@ var MyComponent = Marionette.Toolkit.Component.extend({
   }
 });
 
-var myComponent = new MyComponent();
+const myComponent = new MyComponent();
 
 // region el is now <div class="my-component-class">
 myComponent.renderView({
@@ -342,8 +342,8 @@ This function is used internally by [`renderView`](#component-renderview)
 however you can override this function if you need to dynamically build the view options hash.
 
 ```js
-mixinOptions: function(options){
-  var viewOptions = _.result(this, 'viewOptions');
+mixinOptions(options){
+  const viewOptions = _.result(this, 'viewOptions');
 
   return _.extend({ state: this.getState().attributes }, viewOptions, options);
 }
@@ -357,7 +357,7 @@ takes two parameters and returns a view instance to be used as the current view.
 Useful if changing the `ViewClass` based on component state.
 
 ```js
-buildView: function(ViewClass, viewOptions){
+buildView(ViewClass, viewOptions){
   return new ViewClass(viewOptions);
 }
 ```

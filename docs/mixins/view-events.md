@@ -70,7 +70,7 @@ are sugar for [View `events`](https://github.com/marionettejs/backbone.marionett
 
 ```js
 // The view fires a custom event, `foo:event`
-const ComponentView = Marionette.View.extend({
+const ComponentView = View.extend({
 
   // Events hash defines local event handlers that in turn may call `triggerMethod`.
   events: {
@@ -81,7 +81,7 @@ const ComponentView = Marionette.View.extend({
     'submit form': 'submit:form'
   },
 
-  onClickButton: function () {
+  onClickButton() {
     // Both `trigger` and `triggerMethod` events will be caught by the component.
     this.trigger('foo:event', 'foo');
     this.triggerMethod('foo:event', 'bar');
@@ -97,11 +97,11 @@ const MyComponent = Toolkit.Component.extend({
     'submit:form': 'view:submit:form'
   },
 
-  onViewFooEvent: function (message) {
+  onViewFooEvent(message) {
     console.log('A view fired foo:event with ' + message);
   },
 
-  onViewSubmitForm: function (view) {
+  onViewSubmitForm(view) {
     console.log('A view fired submit:form');
   }
 });
@@ -147,7 +147,7 @@ That is if a view has a `viewEventPrefix` of "view", when a current view trigger
 the app or component will then trigger "view:event:name" on itself.
 
 ```js
-const MyView = Marionette.View.extend({
+const MyView = View.extend({
   triggers: {
     'click button': 'click:button'
   }

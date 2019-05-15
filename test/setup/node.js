@@ -1,22 +1,31 @@
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const chaiJq = require('chai-jq');
+
+chai.use(sinonChai);
+chai.use(chaiJq);
+
+global.chai = chai;
+global.sinon = sinon;
+
 if(!global.document || !global.window) {
-  const jsdom = require('jsdom').jsdom;
+  const JSDOM = require('jsdom').JSDOM;
 
-  global.document = jsdom('<html><head><script></script></head><body><div id="testDiv"></div></body></html>', {
-    FetchExternalResources: ['script'],
-    ProcessExternalResources: ['script'],
-    MutationEvents: '2.0',
-    QuerySelector: false
-  });
+  const opts = {
+    runScripts: 'dangerously',
+    url: 'http://localhost'
+  };
 
-  global.window = document.defaultView;
+  const dom = new JSDOM(`
+    <html>
+      <head><script></script></head>
+      <body></body>
+    </html>
+  `, opts);
+
+  global.window = dom.window;
+  global.document = global.window.document;
   global.navigator = global.window.navigator;
 }
-
-global.$ = global.jQuery = require('jquery');
-
-global.chai = require('chai');
-global.sinon = require('sinon');
-global.chai.use(require('sinon-chai'));
-
-require('babel-register');
 require('./setup')();

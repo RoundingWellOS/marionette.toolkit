@@ -6,7 +6,7 @@ const ClassOptions = [
   'stateEvents'
 ];
 
- /**
+/**
  * This provides methods used for keeping state using a Backbone.Model. It's meant to
  * be used with either a Marionette.MnObject or Backbone.View.
  *
