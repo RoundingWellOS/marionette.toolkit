@@ -12,16 +12,15 @@ It utilizes the following mixins:
 * [Component's `ViewClass`](#components-viewclass)
   * [Component's `viewOptions`](#components-viewoptions)
 * [Component's `region`](#components-region)
+  * [Component Class `setRegion`](#component-class-setregion)
+* [Component's view](#components-view)
 * [Component Events](#component-events)
   * ["before:show" / "show" events](#beforeshow--show-events)
-  * ["before:render:view" / "render:view" events](#beforerenderview--renderview-events)
   * [View Events](#view-events)
 * [Component API](#component-api)
   * [Component `showIn`](#component-showin)
   * [Component `show`](#component-show)
-  * [Component `renderView`](#component-renderview)
-  * [Component `currentView`](#component-currentview)
-  * [Component `showView`](#component-showview)
+  * [Component `empty`](#component-empty)
   * [Component `mixinOptions`](#component-mixinoptions)
   * [Component `buildView`](#component-buildview)
   * [Component `destroy`](#component-destroy)
@@ -32,7 +31,7 @@ The component is built to work out of the box.
 When instantiating a component you can pass various options including `ViewClass` or initial component `state`.
 
 ```js
-const MyComponentView = Marionette.View.extend({
+const MyComponentView = View.extend({
   template: _.template('<div>Hello Component</div>')
 });
 
@@ -62,7 +61,7 @@ a view definition, not an instance.  If you do not specify a
 `ViewClass`, a vanilla `Marionette.View` definition will be used.
 
 ```js
-const MyViewClass = Marionette.View.extend({});
+const MyViewClass = View.extend({});
 
 Component.extend({
   ViewClass: MyViewClass
@@ -74,7 +73,7 @@ returned by this method is the `ViewClass` class that will be instantiated.
 When defined as a function, it will receive the `options` passed to [`renderView`](#component-renderview).
 
 ```js
-const MyViewClass = Marionette.View.extend({});
+const MyViewClass = View.extend({});
 
 Component.extend({
   ViewClass(options){
@@ -94,7 +93,7 @@ You can also manage the state of the ViewClass by mixing in the [`StateMixin`](.
 This can be done by using the `Marionette.Toolkit.MixinState` Utility.
 
 ```js
-const MyViewClass = Marionette.View.extend({});
+const MyViewClass = View.extend({});
 
 MixinState(MyViewClass);
 
@@ -110,7 +109,7 @@ a `viewOptions` definition on your component as an object literal. This will
 be passed to the constructor of your view as part of the `options`.
 
 ```js
-const MyView = Marionette.View.extend({
+const MyView = View.extend({
   initialize(options) {
     console.log(options.foo); // => "bar"
   }
@@ -148,6 +147,39 @@ You can set the region by passing it as an option at instantiation,
 by setting it directly on the Component's definition, or by passing
 it to the [`showIn`](#component-showin) method.
 
+#### Component Class `setRegion`
+
+`setRegion` is available as sugar for `MyComponentClass.prototype.region =`.
+This allows for generic (possibly 3rd party) components to be created where
+all instances within an app are given a specific region.
+
+```js
+import DatePicker from 'some-toolkit-datepicker';
+
+DatePicker.setRegion(myApp.getRegion('top'));
+```
+
+### Component's view
+
+To retrieve a component's view you can use `Marionette.Application`'s `getView()`
+
+```js
+const myComponent = new MyComponent({
+  stateEvents: {
+    'change:selected'(){
+      // this.getView()
+    }
+  }
+});
+
+myComponent.show({
+  className: 'my-component-class'
+});
+
+// Works but best to use the component to interface with the view.
+const view = myComponent.getView();
+```
+
 ## Component Events
 
 ### `before:show` / `show` events
@@ -157,7 +189,7 @@ method are triggered just before building the `ViewClass` instance
 and showing it in the component's `region`.
 
 The "show" event and corresponding `onShow`
-method are triggered after building and rendering the `currentView`
+method are triggered after building and rendering the view
 into the component's `region`.
 
 ```js
@@ -180,40 +212,6 @@ myComponent.on('before:show', function(){
 });
 
 myComponent.on('show', function(){
-  // ...
-});
-```
-
-### `before:render:view` / `render:view` events
-
-The "before:render:view" event and corresponding `onBeforeRenderView`
-method are triggered just after building the `ViewClass` instance
-and proxying its events, but before showing it in the component's `region`.
-
-The "render:view" event and corresponding `onRenderView`
-method are triggered after building and rendering the `currentView`
-into the component's `region`.
-
-```js
-const MyComponent = Component.extend({
-  // ...
-
-  onBeforeRenderView(currentView){
-    // ...
-  },
-
-  onRenderView(currentView){
-    // ...
-  }
-});
-
-const myComponent = new MyComponent({...});
-
-myComponent.on('before:render:view', function(currentView){
-  // ...
-});
-
-myComponent.on('render:view', function(currentView){
   // ...
 });
 ```
@@ -261,16 +259,13 @@ const viewOptions = {
 
 const myComponent = new MyComponent();
 
-myComponent.show(viewOptions);
+myComponent.show(viewOptions, { replaceElement: true });
 ```
 
-### Component `renderView`
+### Component `empty`
 
-Builds the view from the ViewClass with the options from [`mixinOptions`](#component-mixinoptions)
-and attaches it to the component's `currentView`. It then shows the `currentView` in the component's `region` via `showView`.
-During this `region.show` the component will not destroy itself on the region's empty event.
-While a component can only be shown once, it can be re-rendered many times.
-`renderView` triggers ["before:render:view" / "render:view" events](#beforerenderview--renderview-events).
+Empties the region without destroying the component.
+If the region is emptied outside of this method, the component would be destroyed.
 
 ```js
 const MyComponent = Component.extend({
@@ -280,59 +275,17 @@ const MyComponent = Component.extend({
 
 const myComponent = new MyComponent();
 
-myComponent.show({
-  className: 'my-component-class'
-});
+myComponent.show(viewOptions, { replaceElement: true });
 
-myComponent.renderView({
-  className: 'other-component-class'
-});
-```
+myComponent.empty();
 
-### Component `currentView`
+myComponent.isDestroyed(); // false
 
-When [`renderView`](#component-renderview) is called, the view built and rendered
-is attached to the component as `currentView`.  It is a read-only property and
-best used when extending a component rather than from its instantiation.
+myComponent.show(viewOptions);
 
-```js
-const myComponent = new MyComponent({
-  stateEvents: {
-    'change:selected'(){
-      // this.currentView...
-    }
-  }
-});
+myComponent.getRegion().empty();
 
-myComponent.show({
-  className: 'my-component-class'
-});
-
-
-// Works but best to use the component to interface with the view.
-const view = myComponent.currentView;
-```
-
-### Component `showView`
-
-Called by `renderView`, it shows the `view` in the component's `region`.
-This method can be overridden to change a component's behavior.
-
-```js
-const MyComponent = Component.extend({
-  ViewClass: MyViewClass,
-  region: someRegion,
-  showView(view) {
-    this.getRegion().show(view, { replaceElement: true });
-  }
-});
-
-const myComponent = new MyComponent();
-
-// region el is now <div class="my-component-class">
-myComponent.renderView({
-  className: 'my-component-class'
-});
+myComponent.isDestroyed(); // true
 ```
 
 ### Component `mixinOptions`

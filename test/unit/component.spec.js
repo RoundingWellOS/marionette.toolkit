@@ -32,7 +32,7 @@ describe('Component', function() {
     describe('in a specified region "showIn()"', function() {
       it('should show the component', function() {
         this.myComponent.showIn(this.myRegion);
-        expect(this.myComponent._isShown).to.equal(true);
+        expect(this.myComponent.getRegion().currentView).to.not.be.null;
       });
 
       it('should fire the before:show methods', function() {
@@ -50,13 +50,6 @@ describe('Component', function() {
           this.myComponent.showIn();
         }, this)).to.throw('Component has no defined region.');
       });
-
-      it('should throw a "already been shown" error if component has been shown', function() {
-        this.myComponent.showIn(this.myRegion);
-        expect(_.bind(function() {
-          this.myComponent.showIn(this.myRegion);
-        }, this)).to.throw('Component has already been shown in a region.');
-      });
     });
 
     describe('in a region on the component definition "show()"', function() {
@@ -68,7 +61,7 @@ describe('Component', function() {
         this.showComponent.show({
           className: 'my-component-class'
         });
-        expect(this.showComponent._isShown).to.equal(true);
+        expect(this.showComponent.getRegion().currentView).to.not.be.null;
       });
     });
   });
@@ -93,71 +86,31 @@ describe('Component', function() {
     });
   });
 
-  // RENDERING A VIEW WITH renderView()
-  describe('when rendering a view', function() {
+  describe('when emptying a component\'s region', function() {
     beforeEach(function() {
-      this.beforeRenderStub = this.sinon.stub();
-      this.renderStub = this.sinon.stub();
-      this.MyViewClass = View;
       this.MyComponent = Component.extend({
-        region: this.myRegion,
-        ViewClass: this.MyViewClass,
-        viewOptions: {
-          template: _.template('<div></div>')
-        }
+        region: this.myRegion
       });
       this.myComponent = new this.MyComponent();
-      this.myComponent.on('before:render:view', this.beforeRenderStub, function() {});
-      this.myComponent.on('render:view', this.renderStub, function() {});
+
+      this.myComponent.show({ template: false });
     });
 
-    it('should fire the before:render:view methods', function() {
-      this.myComponent.renderView({
-        className: 'other-component-class'
-      });
-      expect(this.beforeRenderStub).to.have.been.calledOnce;
+    it('should not destroy with component#empty', function() {
+      this.myComponent.empty();
+      expect(this.myComponent.isDestroyed()).to.be.false;
     });
 
-    it('should fire the render:view methods', function() {
-      this.myComponent.renderView({
-        className: 'other-component-class'
-      });
-      expect(this.renderStub).to.have.been.calledOnce;
+    it('should destroy with region#empty', function() {
+      this.myRegion.empty();
+      expect(this.myComponent.isDestroyed()).to.be.true;
     });
 
-    it('should call showView with the current view instance', function() {
-      this.sinon.spy(this.myComponent, 'showView');
-
-      this.myComponent.renderView();
-
-      expect(this.myComponent.showView).to.have.been.calledOnce.and.calledWith(this.myComponent.currentView);
-    });
-
-    describe('and checking the currentView', function() {
-      it('should have the correct className on currentView', function() {
-        this.myComponent.renderView({
-          className: 'my-component-class'
-        });
-        expect(this.myComponent.currentView.className).to.equal('my-component-class');
-      });
-    });
-
-    describe('with a defined ViewClass', function() {
-      it('should return the correct ViewClass', function() {
-        this.myComponent.renderView();
-        const test = this.myComponent.currentView;
-        expect(test).to.be.instanceof(this.MyViewClass);
-      });
-    });
-
-    // The test for mixinOptions()
-    describe('with additional options passed in', function() {
-      it('should put the options on currentView', function() {
-        this.myComponent.renderView({
-          foo: 'bar'
-        });
-        expect(this.myComponent.currentView.options.foo).to.equal('bar');
-      });
+    it('should throw a "no defined region" error when no region is defined', function() {
+      expect(_.bind(function() {
+        this.myComponent._region = null;
+        this.myComponent.empty()
+      }, this)).to.throw('Component has no defined region.');
     });
   });
 
@@ -182,7 +135,7 @@ describe('Component', function() {
     });
 
     it('should use the correct view class for passed options', function() {
-      expect(this.myComponent.currentView.getOption('customViewOption')).to.equal('bar');
+      expect(this.myComponent.getView().getOption('customViewOption')).to.equal('bar');
     });
   });
 
@@ -244,8 +197,8 @@ describe('Component', function() {
             }
           });
           this.myComponent = new this.MyComponent();
-          this.myComponent.renderView();
-          expect(this.myComponent.currentView.test).to.equal('bar1');
+          this.myComponent.show();
+          expect(this.myComponent.getView().test).to.equal('bar1');
         });
       });
 
@@ -260,8 +213,8 @@ describe('Component', function() {
             }
           });
           this.myComponent = new this.MyComponent();
-          this.myComponent.renderView();
-          expect(this.myComponent.currentView.test).to.equal('bar2');
+          this.myComponent.show();
+          expect(this.myComponent.getView().test).to.equal('bar2');
         });
       });
     });
@@ -276,6 +229,17 @@ describe('Component', function() {
         });
         this.myComponent = new this.MyComponent();
         this.myComponent.destroy();
+      });
+    });
+
+    describe('with a destroyed component', function() {
+      it('should return the component', function() {
+        this.MyComponent = Component.extend({
+          region: this.myRegion
+        });
+        this.myComponent = new this.MyComponent();
+        this.myComponent.destroy();
+        expect(this.myComponent.destroy()).to.equal(this.myComponent);
       });
     });
 
@@ -307,9 +271,18 @@ describe('Component', function() {
       });
 
       it('should not trigger a destroy event on rendering a view after show', function() {
-        this.myComponent.renderView();
+        this.myComponent.show();
         expect(this.destroyEvent).to.have.not.been.called;
       });
+    });
+  });
+
+  describe('setting a region on a component class', function() {
+    it('should instantiate a component with that region', function() {
+      this.MyComponent = Component.extend({});
+      this.MyComponent.setRegion(this.myRegion);
+      this.myComponent = new this.MyComponent();
+      expect(this.myComponent.getRegion()).to.equal(this.myRegion);
     });
   });
 });
