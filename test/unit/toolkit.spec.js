@@ -1,8 +1,12 @@
-describe('Marionette.Toolkit.MixinState', function() {
+import Backbone from 'backbone';
+import { MnObject } from 'backbone.marionette';
+import { MixinState } from '../../src/marionette.toolkit';
+
+describe('MixinState', function() {
   describe('when classDefinition has no StateModel definition', function() {
     it('should use the StateModel defined on StateMixin', function() {
-      const MyClass = Marionette.MnObject.extend();
-      Marionette.Toolkit.MixinState(MyClass);
+      const MyClass = MnObject.extend();
+      MixinState(MyClass);
 
       const myStateModel = new MyClass.prototype.StateModel();
 
@@ -16,11 +20,11 @@ describe('Marionette.Toolkit.MixinState', function() {
         foo: 'bar'
       });
 
-      const MyClass = Marionette.MnObject.extend({
+      const MyClass = MnObject.extend({
         StateModel: MyModel
       });
 
-      Marionette.Toolkit.MixinState(MyClass);
+      MixinState(MyClass);
 
       const myStateModel = new MyClass.prototype.StateModel();
 

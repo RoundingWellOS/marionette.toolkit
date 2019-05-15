@@ -1,8 +1,13 @@
-describe('Marionette.Toolkit.Component', function() {
+import _ from 'underscore';
+import Backbone from 'backbone';
+import { View, Region } from 'backbone.marionette';
+import Component from '../../src/component';
+
+describe('Component', function() {
   beforeEach(function() {
     this.setFixtures('<div id="testRegion"></div>');
     this.el = Backbone.$('#testRegion');
-    this.myRegion = new Marionette.Region({
+    this.myRegion = new Region({
       el: this.el
     });
   });
@@ -12,8 +17,8 @@ describe('Marionette.Toolkit.Component', function() {
     beforeEach(function() {
       this.beforeShowStub = this.sinon.stub();
       this.showStub = this.sinon.stub();
-      this.MyViewClass = Marionette.View.extend({});
-      this.MyComponent = Marionette.Toolkit.Component.extend({
+      this.MyViewClass = View.extend({});
+      this.MyComponent = Component.extend({
         viewOptions: {
           template: _.template('<div></div>')
         },
@@ -72,8 +77,8 @@ describe('Marionette.Toolkit.Component', function() {
   describe('when retriving a component\'s region', function() {
     beforeEach(function() {
       this.renderStub = this.sinon.stub();
-      this.MyViewClass = Marionette.View;
-      this.MyComponent = Marionette.Toolkit.Component.extend({
+      this.MyViewClass = View;
+      this.MyComponent = Component.extend({
         region: this.myRegion,
         ViewClass: this.MyViewClass,
         viewOptions: {
@@ -93,8 +98,8 @@ describe('Marionette.Toolkit.Component', function() {
     beforeEach(function() {
       this.beforeRenderStub = this.sinon.stub();
       this.renderStub = this.sinon.stub();
-      this.MyViewClass = Marionette.View;
-      this.MyComponent = Marionette.Toolkit.Component.extend({
+      this.MyViewClass = View;
+      this.MyComponent = Component.extend({
         region: this.myRegion,
         ViewClass: this.MyViewClass,
         viewOptions: {
@@ -159,16 +164,16 @@ describe('Marionette.Toolkit.Component', function() {
   // SETTING ViewClass
   describe('when defining ViewClass as a function that returns a view class', function() {
     beforeEach(function() {
-      this.MyComponent = Marionette.Toolkit.Component.extend({
+      this.MyComponent = Component.extend({
         region: this.myRegion,
         ViewClass: function(options) {
           if(options.foo) {
-            return Marionette.View.extend({
+            return View.extend({
               customViewOption: 'bar',
               template: _.template('<div></div>')
             });
           }
-          return Marionette.View;
+          return View;
         }
       });
       this.myComponent = new this.MyComponent();
@@ -183,7 +188,7 @@ describe('Marionette.Toolkit.Component', function() {
 
   describe('when defining ViewClass as neither a function or a class', function() {
     beforeEach(function() {
-      this.MyComponent = Marionette.Toolkit.Component.extend({
+      this.MyComponent = Component.extend({
         region: this.myRegion,
         ViewClass: 'Invalid View'
       });
@@ -198,7 +203,7 @@ describe('Marionette.Toolkit.Component', function() {
   // INSTANTIATING A COMPONENT WITH OPTIONS
   describe('when instantiating a component', function() {
     it('should delegate state events', function() {
-      this.MyComponent = Marionette.Toolkit.Component.extend();
+      this.MyComponent = Component.extend();
       this.sinon.spy(this.MyComponent.prototype, 'delegateStateEvents');
       this.myComponent = new this.MyComponent();
 
@@ -207,7 +212,7 @@ describe('Marionette.Toolkit.Component', function() {
 
     describe('with state options', function() {
       it('should initialize stateModel with passed in state', function() {
-        this.MyComponent = Marionette.Toolkit.Component.extend();
+        this.MyComponent = Component.extend();
 
         this.myComponent = new this.MyComponent({
           state: {
@@ -221,7 +226,7 @@ describe('Marionette.Toolkit.Component', function() {
 
     describe('with defined viewOptions', function() {
       beforeEach(function() {
-        this.MyView = Marionette.View.extend({
+        this.MyView = View.extend({
           initialize: function(options) {
             this.test = options.foo;
           }
@@ -230,7 +235,7 @@ describe('Marionette.Toolkit.Component', function() {
 
       describe('on the view instance', function() {
         it('should do what...', function() {
-          this.MyComponent = Marionette.Toolkit.Component.extend({
+          this.MyComponent = Component.extend({
             ViewClass: this.MyView,
             region: this.myRegion,
             viewOptions: {
@@ -246,7 +251,7 @@ describe('Marionette.Toolkit.Component', function() {
 
       describe('as specified as a function', function() {
         it('should do what...', function() {
-          this.MyComponent = Marionette.Toolkit.Component.extend({
+          this.MyComponent = Component.extend({
             ViewClass: this.MyView,
             region: this.myRegion,
             viewOptions: {
@@ -266,7 +271,7 @@ describe('Marionette.Toolkit.Component', function() {
   describe('when destroying a component', function() {
     describe('with a defined region', function() {
       it('should be destroyed and region emptied', function() {
-        this.MyComponent = Marionette.Toolkit.Component.extend({
+        this.MyComponent = Component.extend({
           region: this.myRegion
         });
         this.myComponent = new this.MyComponent();
@@ -276,7 +281,7 @@ describe('Marionette.Toolkit.Component', function() {
 
     describe('without a defined region', function() {
       it('should be destroyed', function() {
-        this.myComponent = new Marionette.Toolkit.Component();
+        this.myComponent = new Component();
         this.myComponent.destroy();
       });
     });
@@ -284,7 +289,7 @@ describe('Marionette.Toolkit.Component', function() {
     describe('by showing a new view in the region', function() {
       beforeEach(function() {
         this.destroyEvent = this.sinon.stub();
-        this.MyComponent = Marionette.Toolkit.Component.extend({
+        this.MyComponent = Component.extend({
           viewOptions: {
             template: false
           }
@@ -295,7 +300,7 @@ describe('Marionette.Toolkit.Component', function() {
       });
 
       it('should trigger a destroy event on the component', function() {
-        this.myRegion.show(new Marionette.View({
+        this.myRegion.show(new View({
           template: false
         }));
         expect(this.destroyEvent).to.have.been.calledOnce;

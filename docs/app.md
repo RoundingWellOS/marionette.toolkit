@@ -54,14 +54,14 @@ Can be added as an option when instantiated or defined on the `App` definition.
 It can also be defined as a function returning a boolean value.
 
 ```js
-var MyApp = Marionette.Toolkit.App.extend({
-  initialize: function(){
+const MyApp = App.extend({
+  initialize(){
     this.isRunning() === false;
   },
   startAfterInitialized: true
 });
 
-var myApp = new MyApp();
+const myApp = new MyApp();
 
 myApp.isRunning() === true;
 
@@ -75,15 +75,15 @@ Can be added as an option when instantiated or defined on the `App` definition.
 It can also be defined as a function returning a boolean value.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
-var myChildApp = myApp.addChildApp('myChildApp', {
+const myChildApp = myApp.addChildApp('myChildApp', {
   AppClass: Marionette.Toolkit.App,
   preventDestroy: false
 });
 
-var myPreventDestroyApp = myApp.addChildApp('myPreventDestroyApp', {
-  AppClass: Marionette.Toolkit.App,
+const myPreventDestroyApp = myApp.addChildApp('myPreventDestroyApp', {
+  AppClass: App,
   preventDestroy: true
 });
 
@@ -105,15 +105,15 @@ Can be added as an option when instantiated or defined on the `App` definition.
 It can also be defined as a function returning a boolean value.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
-var myChildApp = myApp.addChildApp('myChildApp', {
-  AppClass: Marionette.Toolkit.App,
+const myChildApp = myApp.addChildApp('myChildApp', {
+  AppClass: App,
   startWithParent: false
 });
 
-var myStartWithParentApp = myApp.addChildApp('myStartWithParentApp', {
-  AppClass: Marionette.Toolkit.App,
+const myStartWithParentApp = myApp.addChildApp('myStartWithParentApp', {
+  AppClass: App,
   startWithParent: true
 });
 
@@ -136,10 +136,10 @@ If `restartWithParent` is `false` the child app will neither stop nor start with
 If `restartWithParent` is `null` the child app will respect `startWithParent` and `stopWithParent` when `restart`ing.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
-var persistantChildApp = myApp.addChildApp('persistantChildApp', {
-  AppClass: Marionette.Toolkit.App,
+const persistantChildApp = myApp.addChildApp('persistantChildApp', {
+  AppClass: App,
   restartWithParent: false
 });
 
@@ -150,8 +150,8 @@ persistantChildApp.on('stop start', function(options) {
 // does not log
 myApp.restart();
 
-var restartingChildApp = myApp.addChildApp('restartingChildApp', {
-  AppClass: Marionette.Toolkit.App,
+const restartingChildApp = myApp.addChildApp('restartingChildApp', {
+  AppClass: App,
   restartWithParent: true
 });
 
@@ -174,15 +174,15 @@ Can be added as an option when instantiated or defined on the `App` definition.
 It can also be defined as a function returning a boolean value.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
-var myChildApp = myApp.addChildApp('myChildApp', {
-  AppClass: Marionette.Toolkit.App,
+const myChildApp = myApp.addChildApp('myChildApp', {
+  AppClass: App,
   stopWithParent: false
 });
 
-var myStopWithParentApp = myApp.addChildApp('myStopWithParentApp', {
-  AppClass: Marionette.Toolkit.App,
+const myStopWithParentApp = myApp.addChildApp('myStopWithParentApp', {
+  AppClass: App,
   stopWithParent: true
 });
 
@@ -210,7 +210,7 @@ This triggers ["before:start" / "start" events](#beforestart--start-events).
 Initial state can be passed as an option to `start`.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.on('start', function(options){
   console.log('My App Started!');
@@ -221,7 +221,7 @@ myApp.on('start', function(options){
 // false
 myApp.isRunning();
 
-var initialState = {
+const initialState = {
   bar: 'baz'
 };
 
@@ -244,13 +244,13 @@ This method saves the current state of the app before stopping it.
 It then starts the app again with the preserved state attributes.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.on('before:start', function(options) {
     console.log(options.state);
 });
 
-var initialState = {
+const initialState = {
   foo: 'bar'
 };
 
@@ -272,7 +272,7 @@ Events added after `start` are registered for removal `onStop`.
 This triggers ["before:stop" / "stop" events](#beforestop--stop-events).
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.on('stop', function(options){
   console.log('My App Stopped!');
@@ -305,7 +305,7 @@ myApp.stop();
 Returns a Boolean indicating whether or not the `App` is running.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.start();
 
@@ -322,7 +322,7 @@ myApp.isRunning() === false;
 Returns a Boolean indicating whether or not the `App` is restarting.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.on('before:stop', function(options) {
     console.log(this.isRestarting());
@@ -343,7 +343,7 @@ myApp.stop();
 This method stops the `App` if running and sets the `App`'s state to destroyed.
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.start();
 
@@ -368,19 +368,19 @@ The "start" event and corresponding `onStart`
 method are triggered after the `App` `isRunning` is set `true`. Once `onStart` is run, state event listeners have been applied.
 
 ```js
-var MyApp = Marionette.Toolkit.App.extend({
+const MyApp = App.extend({
   // ...
 
-  onBeforeStart: function(options){
+  onBeforeStart(options){
     // ...
   },
 
-  onStart: function(options){
+  onStart(options){
     // ...
   }
 });
 
-var myApp = new MyApp({...});
+const myApp = new MyApp({...});
 
 myApp.on('before:start', function(options){
   // ...
@@ -400,19 +400,19 @@ The "stop" event and corresponding `onStop`
 method are triggered after the `App` `isRunning` is set `false`.
 
 ```js
-var MyApp = Marionette.Toolkit.App.extend({
+const MyApp = App.extend({
   // ...
 
-  onBeforeStop: function(options){
+  onBeforeStop(options){
     // ...
   },
 
-  onStop: function(options){
+  onStop(options){
     // ...
   }
 });
 
-var myApp = new MyApp({...});
+const myApp = new MyApp({...});
 
 myApp.on('before:stop', function(options){
   // ...
@@ -428,7 +428,7 @@ myApp.on('stop', function(options){
 A [`StateModel`](./mixins/state.md#statemixins-statemodel) class can be passed to App instantiation as an option or defined on the App.
 
 ```js
-var myApp = new MyApp({
+const myApp = new MyApp({
   StateModel: MyStateModel
 });
 ```
@@ -438,11 +438,11 @@ var myApp = new MyApp({
 A [`stateEvents`](./mixins/state.md#statemixins-stateevents) hash can be passed to App instantiation as an option or defined on the App.
 
 ```js
-var MyApp = Marionette.Toolkit.App.extend({
+const MyApp = App.extend({
   stateEvents: {
     'change': 'onChangeState'
   }
-  onChangeState: function() {
+  onChangeState() {
     // Handle state change event
   }
 });

@@ -1,4 +1,7 @@
-import * as Marionette from 'backbone.marionette';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import { MnObject } from 'backbone.marionette';
+import { StateMixin } from '../../../src/marionette.toolkit';
 
 describe('StateMixin', function() {
   beforeEach(function() {
@@ -6,9 +9,9 @@ describe('StateMixin', function() {
       foo: 'bar'
     });
 
-    this.StateClass = Marionette.MnObject.extend();
+    this.StateClass = MnObject.extend();
 
-    _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+    _.extend(this.StateClass.prototype, StateMixin);
 
     this.MyStateClass = this.StateClass.extend({
       initialize(options) {
@@ -58,8 +61,8 @@ describe('StateMixin', function() {
 
   describe('when resetting a state on a state object using resetStateDefaults', function() {
     beforeEach(function() {
-      this.StateClass = Marionette.MnObject.extend();
-      _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+      this.StateClass = MnObject.extend();
+      _.extend(this.StateClass.prototype, StateMixin);
     });
 
     describe('when defaults is defined as an object', function() {
@@ -170,8 +173,8 @@ describe('StateMixin', function() {
   // SETTING StateModel
   describe('when defining StateModel as a function that returns a model class', function() {
     beforeEach(function() {
-      this.StateClass = Marionette.MnObject.extend();
-      _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+      this.StateClass = MnObject.extend();
+      _.extend(this.StateClass.prototype, StateMixin);
 
       this.MyStateClass = this.StateClass.extend({
         initialize(options) {
@@ -197,8 +200,8 @@ describe('StateMixin', function() {
 
   describe('when defining StateModel as neither a function or a class', function() {
     beforeEach(function() {
-      this.StateClass = Marionette.MnObject.extend();
-      _.extend(this.StateClass.prototype, Marionette.Toolkit.StateMixin);
+      this.StateClass = MnObject.extend();
+      _.extend(this.StateClass.prototype, StateMixin);
 
       this.MyStateClass = this.StateClass.extend({
         initialize(options) {

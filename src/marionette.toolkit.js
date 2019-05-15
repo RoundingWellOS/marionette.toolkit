@@ -4,11 +4,11 @@ import StateMixin from './mixins/state';
 import App from './app';
 import Component from './component';
 
+import { version as VERSION } from '../package.json';
+
 /**
  * @module Toolkit
  */
-
-const VERSION = '<%VERSION%>';
 
 function MixinState(classDefinition) {
   let _StateMixin = StateMixin;
