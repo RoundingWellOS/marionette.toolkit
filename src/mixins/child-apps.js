@@ -5,7 +5,7 @@ const ClassOptions = [
   'childAppOptions'
 ];
 
- /**
+/**
  * This provides methods used for "App Manager" functionality - the adding and removing child `App`s. It's not meant to
  * be used directly.
  *

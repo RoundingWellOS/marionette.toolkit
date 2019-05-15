@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import App from '../../src/app';
 
 describe('App-Lifecycle', function() {

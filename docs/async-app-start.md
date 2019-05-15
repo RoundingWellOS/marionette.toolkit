@@ -12,7 +12,7 @@ or perhaps for any other async reason, it is easy to get started.
 Toolkit provides a simple method to override for async injection.
 
 ```js
-triggerStart: function(options) {
+triggerStart(options) {
   this.finallyStart(options);
 }
 ```
@@ -20,8 +20,8 @@ triggerStart: function(options) {
 Simply override this function in a manner such that `this.triggerMethod('start', options);` occurs asynchronously.
 
 ```js
-var MyAsyncApp = Marionette.Toolkit.App.extend({
-  triggerStart: function(options){
+const MyAsyncApp = App.extend({
+  triggerStart(options){
     // Setup a listener for an event triggered by the completion of the async event
     // We trigger an event so that if the app is destroyed during the async request
     // the trigger will not occur, whereas triggerMethod would still call onStart
@@ -29,16 +29,16 @@ var MyAsyncApp = Marionette.Toolkit.App.extend({
 
     $.when(this.beforeStart(options)).then(_.bind(this.trigger, this, 'sync:data'));
   },
-  beforeStart: function(options){
+  beforeStart(options){
     return $.Deferred().resolve();
   }
 });
 
-var MyApp = MyAsyncApp.extend({
-  beforeStart: function(){
+const MyApp = MyAsyncApp.extend({
+  beforeStart(){
     return MyModel.fetch();
   },
-  onStart: function(options, model){
+  onStart(options, model){
     // do something with the loaded model
   }
 });

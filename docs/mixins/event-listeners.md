@@ -13,7 +13,7 @@ When the app [`isRunning`](../app.md#app-isrunning) any event added via
 These registered events are removed when the `App` is [stopped](../app.md#app-stop).
 
 ```js
-var myApp = new Marionette.Toolkit.App();
+const myApp = new App();
 
 myApp.on('do:foo', function(){
   console.log('Foo!');

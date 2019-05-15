@@ -1,15 +1,19 @@
+import _ from 'underscore';
+import { View } from 'backbone.marionette';
+import App from '../../../src/app';
+
 describe('ChildAppMixin', function() {
   beforeEach(function() {
-    this.MyApp = Marionette.Toolkit.App.extend({
+    this.MyApp = App.extend({
       fooOption: 'bar'
     });
 
     this.myApp = new this.MyApp();
 
     this.childApps = {
-      cA1: Marionette.Toolkit.App,
-      cA2: Marionette.Toolkit.App,
-      cA3: Marionette.Toolkit.App
+      cA1: App,
+      cA2: App,
+      cA3: App
     };
   });
 
@@ -52,12 +56,12 @@ describe('ChildAppMixin', function() {
       describe('constructor', function() {
         beforeEach(function() {
           const childApps = {
-            cA1: Marionette.Toolkit.App,
-            cA2: Marionette.Toolkit.App,
-            cA3: Marionette.Toolkit.App
+            cA1: App,
+            cA2: App,
+            cA3: App
           };
 
-          this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+          this.myApp = new App({ childApps: childApps });
         });
 
         it('should create childApps and _childApps attributes with childApps inside', function() {
@@ -69,11 +73,11 @@ describe('ChildAppMixin', function() {
       describe('_initChildApps', function() {
         it('should accept a hash', function() {
           const childApps = {
-            cA1: Marionette.Toolkit.App,
-            cA2: Marionette.Toolkit.App,
-            cA3: Marionette.Toolkit.App
+            cA1: App,
+            cA2: App,
+            cA3: App
           };
-          const MyApp = Marionette.Toolkit.App.extend();
+          const MyApp = App.extend();
 
           this.sinon.spy(MyApp.prototype, '_initChildApps');
           this.myApp = new MyApp({ childApps: childApps });
@@ -86,12 +90,12 @@ describe('ChildAppMixin', function() {
           beforeEach(function() {
             const childApps = function() {
               return {
-                cA1: Marionette.Toolkit.App,
-                cA2: Marionette.Toolkit.App
+                cA1: App,
+                cA2: App
               };
             };
 
-            this.MyApp2 = Marionette.Toolkit.App.extend({
+            this.MyApp2 = App.extend({
               childApps: childApps
             });
           });
@@ -118,7 +122,7 @@ describe('ChildAppMixin', function() {
 
     describe('when passing options using childAppOptions on parent app', function() {
       beforeEach(function() {
-        this.MyApp = Marionette.Toolkit.App;
+        this.MyApp = App;
 
         this.myApp = new this.MyApp({
           childAppOptions: {
@@ -128,9 +132,9 @@ describe('ChildAppMixin', function() {
         });
 
         this.childApps = {
-          cA1: Marionette.Toolkit.App,
+          cA1: App,
           cA2: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             bazOption: true,
             fooOption: true
           }
@@ -154,7 +158,7 @@ describe('ChildAppMixin', function() {
     describe('using addChildApp with an object literal', function() {
       beforeEach(function() {
         this.myApp.addChildApp('newChildApp', {
-          AppClass: Marionette.Toolkit.App,
+          AppClass: App,
           bazOption: true
         });
       });
@@ -189,7 +193,7 @@ describe('ChildAppMixin', function() {
       this.thirdChildAppName = 'cA3';
       this.fourthChildAppName = 'cA4';
       this.errMessage = 'A child App with name "cA3" has already been added.';
-      this.myApp = new Marionette.Toolkit.App();
+      this.myApp = new App();
       this.myApp.addChildApps(this.childApps);
     });
 
@@ -218,12 +222,12 @@ describe('ChildAppMixin', function() {
     });
 
     it('should assign the childApp name to the passed in appName', function() {
-      expect(this.myApp.addChildApp('cA4', Marionette.Toolkit.App)).to.have.property('_name', 'cA4');
+      expect(this.myApp.addChildApp('cA4', App)).to.have.property('_name', 'cA4');
     });
 
     describe('when the child startAfterInitialize', function() {
       it('should remove the child if destroyed', function() {
-        this.myApp.addChildApp('foo', Marionette.Toolkit.App.extend({ startAfterInitialized: true }));
+        this.myApp.addChildApp('foo', App.extend({ startAfterInitialized: true }));
         this.myApp.getChildApp('foo').destroy();
 
         expect(this.myApp.getChildApp('foo')).to.be.undefined;
@@ -257,16 +261,16 @@ describe('ChildAppMixin', function() {
   describe('buildApp', function() {
     describe('when passing an object', function() {
       it('should return and instance of the class', function() {
-        const foo = this.myApp.buildApp(Marionette.Toolkit.App);
+        const foo = this.myApp.buildApp(App);
 
-        expect(foo).to.be.instanceOf(Marionette.Toolkit.App);
+        expect(foo).to.be.instanceOf(App);
       });
     });
   });
 
   describe('getChildApps', function() {
     before(function() {
-      this.myApp = new Marionette.Toolkit.App({ childApps: this.childApps });
+      this.myApp = new App({ childApps: this.childApps });
     });
 
     it('should return are registered childApps', function() {
@@ -278,7 +282,7 @@ describe('ChildAppMixin', function() {
 
   describe('getChildApp', function() {
     beforeEach(function() {
-      this.myApp = new Marionette.Toolkit.App({ childApps: this.childApps });
+      this.myApp = new App({ childApps: this.childApps });
     });
 
     describe('with existing childApp', function() {
@@ -293,7 +297,7 @@ describe('ChildAppMixin', function() {
       it('should not return a childApp object', function() {
         expect(this.myApp.getChildApp('cA4')).to.not.exist;
 
-        this.myApp.addChildApp('cA4', Marionette.Toolkit.App);
+        this.myApp.addChildApp('cA4', App);
 
         expect(this.myApp.getChildApp('cA4')).to.exist;
       });
@@ -302,7 +306,7 @@ describe('ChildAppMixin', function() {
 
   describe('removeChildApps', function() {
     beforeEach(function() {
-      this.myApp = new Marionette.Toolkit.App({ childApps: this.childApps });
+      this.myApp = new App({ childApps: this.childApps });
     });
 
     it('should remove all childApps', function() {
@@ -316,7 +320,7 @@ describe('ChildAppMixin', function() {
 
   describe('removeChildApp', function() {
     beforeEach(function() {
-      this.myApp = new Marionette.Toolkit.App({ childApps: this.childApps });
+      this.myApp = new App({ childApps: this.childApps });
 
       this.spy = sinon.spy(this.myApp, 'removeChildApps');
     });
@@ -329,7 +333,7 @@ describe('ChildAppMixin', function() {
 
     describe('when childApp is present', function() {
       it('should remove childApp and return it', function() {
-        this.myApp.addChildApp('cA4', Marionette.Toolkit.App);
+        this.myApp.addChildApp('cA4', App);
 
         expect(this.myApp.removeChildApp('cA4')).to.not.eql(undefined);
       });
@@ -339,24 +343,24 @@ describe('ChildAppMixin', function() {
   describe('startChildApp', function() {
     before(function() {
       const childApps = {
-        cA1: Marionette.Toolkit.App,
-        cA2: Marionette.Toolkit.App.extend({
+        cA1: App,
+        cA2: App.extend({
           onStart(options) {
             this.mergeOptions(options, ['foo']);
           }
         }),
-        cA3: Marionette.Toolkit.App,
+        cA3: App,
         cA4: {
-          AppClass: Marionette.Toolkit.App,
+          AppClass: App,
           regionName: 'region'
         },
         cA5: {
-          AppClass: Marionette.Toolkit.App,
+          AppClass: App,
           getOptions: ['foo', 'bar']
         }
       };
 
-      this.myApp = new Marionette.Toolkit.App({ childApps });
+      this.myApp = new App({ childApps });
     });
 
     it('should start specified childApp', function() {
@@ -381,7 +385,7 @@ describe('ChildAppMixin', function() {
 
     describe('when regionName is defined', function() {
       it('should set the region from the app view on the child app', function() {
-        const view = new Marionette.View({
+        const view = new View({
           template: _.template('<div id="region"></div>'),
           regions: { region: '#region' }
         });
@@ -415,12 +419,12 @@ describe('ChildAppMixin', function() {
   describe('stopChildApp', function() {
     before(function() {
       const childApps = {
-        cA1: Marionette.Toolkit.App,
-        cA2: Marionette.Toolkit.App,
-        cA3: Marionette.Toolkit.App
+        cA1: App,
+        cA2: App,
+        cA3: App
       };
 
-      this.myApp = new Marionette.Toolkit.App({ childApps: childApps });
+      this.myApp = new App({ childApps: childApps });
       this.myChildApp = this.myApp.startChildApp('cA1');
     });
 
