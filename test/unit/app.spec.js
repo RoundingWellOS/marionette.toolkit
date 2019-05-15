@@ -1,4 +1,7 @@
 import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import { View, Region } from 'backbone.marionette';
 import App from '../../src/app';
 
 describe('App', function() {
@@ -46,7 +49,7 @@ describe('App', function() {
 
     describe('when passing a region to App#start', function() {
       beforeEach(function() {
-        this.region = new Marionette.Region({ el: $('<div>')[0] });
+        this.region = new Region({ el: $('<div>')[0] });
         this.myApp = new this.MyApp();
 
         this.myApp.start({
@@ -61,7 +64,7 @@ describe('App', function() {
 
     describe('when setting a region', function() {
       beforeEach(function() {
-        this.myRegion = new Marionette.Region({ el: $('<div>')[0] });
+        this.myRegion = new Region({ el: $('<div>')[0] });
 
         const MyApp = this.MyApp.extend({
           onBeforeStart: function() {
@@ -86,15 +89,15 @@ describe('App', function() {
       });
 
       it('should return the set region', function() {
-        const region = new Marionette.Region({ el: $('<div>')[0] });
+        const region = new Region({ el: $('<div>')[0] });
         expect(this.myApp.setRegion(region)).to.equal(region);
       });
     });
 
     describe('when setting a region with a view', function() {
       beforeEach(function() {
-        this.myRegion = new Marionette.Region({ el: $('<div>')[0] });
-        this.myRegion.show(new Marionette.View({ template: false }));
+        this.myRegion = new Region({ el: $('<div>')[0] });
+        this.myRegion.show(new View({ template: false }));
 
         this.myApp = new this.MyApp();
 
@@ -109,13 +112,13 @@ describe('App', function() {
 
   describe('#getRegion', function() {
     beforeEach(function() {
-      this.myRegion = new Marionette.Region({ el: $('<div>')[0] });
+      this.myRegion = new Region({ el: $('<div>')[0] });
 
       this.myApp = new App();
 
       this.myApp.setRegion(this.myRegion);
 
-      this.view = new Marionette.View({
+      this.view = new View({
         template: _.template('<div></div>'),
         regions: { region: 'div' }
       });
@@ -145,7 +148,7 @@ describe('App', function() {
 
     describe('when passing a view to App#start', function() {
       beforeEach(function() {
-        this.view = new Marionette.View({ template: _.noop });
+        this.view = new View({ template: _.noop });
         this.myApp = new this.MyApp();
 
         this.myApp.start({
@@ -160,7 +163,7 @@ describe('App', function() {
 
     describe('when setting a view', function() {
       beforeEach(function() {
-        this.myView = new Marionette.View({ template: _.noop });
+        this.myView = new View({ template: _.noop });
 
         const MyApp = this.MyApp.extend({
           onBeforeStart: function() {
@@ -185,7 +188,7 @@ describe('App', function() {
       });
 
       it('should return the set view', function() {
-        const view = new Marionette.View();
+        const view = new View();
         expect(this.myApp.setView(view)).to.equal(view);
       });
     });
@@ -193,9 +196,9 @@ describe('App', function() {
 
   describe('#getView', function() {
     beforeEach(function() {
-      this.view = new Marionette.View({ template: _.noop });
-      this.setView = new Marionette.View({ template: _.noop });
-      this.region = new Marionette.Region({ el: $('<div>')[0] });
+      this.view = new View({ template: _.noop });
+      this.setView = new View({ template: _.noop });
+      this.region = new Region({ el: $('<div>')[0] });
       this.myApp = new App();
 
       this.myApp.start({ view: this.setView });
@@ -235,13 +238,13 @@ describe('App', function() {
 
         this.myApp.setRegion(this.region);
         this.myApp.showView(this.view);
-        this.myApp.stopListening.reset();
+        this.myApp.stopListening.resetHistory();
         this.myApp.getRegion().empty();
         expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
       });
     });
 
-    describe('when a view is detached from the app\s region', function() {
+    describe('when a view is detached from the app\'s region', function() {
       it('should delete the shown view', function() {
         this.myApp.setRegion(this.region);
         this.myApp.showView(this.view);
@@ -254,7 +257,7 @@ describe('App', function() {
 
         this.myApp.setRegion(this.region);
         this.myApp.showView(this.view);
-        this.myApp.stopListening.reset();
+        this.myApp.stopListening.resetHistory();
         this.myApp.getRegion().detachView();
         expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
       });
@@ -273,7 +276,7 @@ describe('App', function() {
 
         this.myApp.setRegion(this.region);
         this.myApp.showView(this.view);
-        this.myApp.stopListening.reset();
+        this.myApp.stopListening.resetHistory();
         this.myApp.getView().destroy();
         expect(this.myApp.stopListening).to.have.been.calledWith(this.view);
       });
@@ -282,9 +285,9 @@ describe('App', function() {
 
   describe('#showView', function() {
     beforeEach(function() {
-      this.view = new Marionette.View({ template: _.noop });
-      this.setView = new Marionette.View({ template: _.noop });
-      this.region = new Marionette.Region({ el: $('<div>')[0] });
+      this.view = new View({ template: _.noop });
+      this.setView = new View({ template: _.noop });
+      this.region = new Region({ el: $('<div>')[0] });
       this.myApp = new App();
 
       this.sinon.spy(this.region, 'show');
@@ -325,10 +328,10 @@ describe('App', function() {
       this.sinon.spy(MyApp.prototype, 'showChildView');
 
       this.myApp = new MyApp({
-        region: new Marionette.Region({ el: $('<div>')[0] })
+        region: new Region({ el: $('<div>')[0] })
       });
 
-      const myView = new Marionette.View({
+      const myView = new View({
         regions: {
           someRegion: 'div'
         },
@@ -339,7 +342,7 @@ describe('App', function() {
 
       this.myApp.showView(myView);
 
-      this.view = new Marionette.View({ template: _.noop });
+      this.view = new View({ template: _.noop });
 
       this.myApp.showChildView('someRegion', this.view, 'foo');
     });
@@ -360,10 +363,10 @@ describe('App', function() {
       this.sinon.spy(MyApp.prototype, 'getChildView');
 
       this.myApp = new MyApp({
-        region: new Marionette.Region({ el: $('<div>')[0] })
+        region: new Region({ el: $('<div>')[0] })
       });
 
-      const myView = new Marionette.View({
+      const myView = new View({
         regions: {
           someRegion: 'div'
         },
@@ -374,7 +377,7 @@ describe('App', function() {
 
       this.myApp.showView(myView);
 
-      this.view = new Marionette.View({ template: _.noop });
+      this.view = new View({ template: _.noop });
 
       this.myApp.showChildView('someRegion', this.view);
 

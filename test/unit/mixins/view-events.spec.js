@@ -1,4 +1,8 @@
 import _ from 'underscore';
+import Backbone from 'backbone';
+import { Region, View } from 'backbone.marionette';
+import App from '../../../src/app';
+import Component from '../../../src/component';
 
 describe('ViewEventsMixin', function() {
   const mergeOptions = {
@@ -11,7 +15,7 @@ describe('ViewEventsMixin', function() {
 
   beforeEach(function() {
     this.setFixtures('<div id="testRegion"></div>');
-    myRegion = new Marionette.Region({
+    myRegion = new Region({
       el: Backbone.$('#testRegion')
     });
   });
@@ -20,7 +24,7 @@ describe('ViewEventsMixin', function() {
     let myApp;
 
     beforeEach(function() {
-      const MyApp = Marionette.Toolkit.App.extend();
+      const MyApp = App.extend();
       this.sinon.spy(MyApp.prototype, '_buildEventProxies');
       myApp = new MyApp(mergeOptions);
       myApp.start();
@@ -41,7 +45,7 @@ describe('ViewEventsMixin', function() {
     let myComponent;
 
     beforeEach(function() {
-      const MyComponent = Marionette.Toolkit.Component.extend();
+      const MyComponent = Component.extend();
       this.sinon.spy(MyComponent.prototype, '_buildEventProxies');
       myComponent = new MyComponent(mergeOptions);
     });
@@ -59,10 +63,10 @@ describe('ViewEventsMixin', function() {
 
   describe('when a view is set to an app', function() {
     it('should proxy view events', function() {
-      const myApp = new Marionette.Toolkit.App();
+      const myApp = new App();
       this.sinon.spy(myApp, '_proxyViewEvents');
 
-      const myView = new Marionette.View();
+      const myView = new View();
       myApp.setView(myView);
 
       myApp.start();
@@ -74,7 +78,7 @@ describe('ViewEventsMixin', function() {
 
   describe('when a view is rendered on a component', function() {
     it('should proxy view events', function() {
-      const myComponent = new Marionette.Toolkit.Component({
+      const myComponent = new Component({
         viewOptions: {
           template: _.template('foo')
         }
@@ -94,7 +98,7 @@ describe('ViewEventsMixin', function() {
       it('should not trigger the action', function() {
         const handlerStub = this.sinon.stub();
 
-        const MyComponent = Marionette.Toolkit.Component.extend({
+        const MyComponent = Component.extend({
           viewOptions: {
             template: _.noop
           }
@@ -113,7 +117,7 @@ describe('ViewEventsMixin', function() {
       it('should trigger the correct action as defined', function() {
         const handlerStub = this.sinon.stub();
 
-        const MyComponent = Marionette.Toolkit.Component.extend({
+        const MyComponent = Component.extend({
           viewEventPrefix: 'some:prefix',
           viewOptions: {
             template: _.noop
@@ -139,7 +143,7 @@ describe('ViewEventsMixin', function() {
       fooStub = this.sinon.stub();
       barStub = this.sinon.stub();
 
-      const MyApp = Marionette.Toolkit.App.extend({
+      const MyApp = App.extend({
         viewEvents: {
           'foo': fooStub,
           'bar': 'onBarStub'
@@ -148,7 +152,7 @@ describe('ViewEventsMixin', function() {
       });
 
       const myApp = new MyApp();
-      myView = new Marionette.View();
+      myView = new View();
 
       myApp.setView(myView);
 
@@ -175,7 +179,7 @@ describe('ViewEventsMixin', function() {
     beforeEach(function() {
       fooStub = this.sinon.stub();
 
-      const MyApp = Marionette.Toolkit.App.extend({
+      const MyApp = App.extend({
         viewTriggers: {
           'foo': 'foo'
         }
@@ -185,7 +189,7 @@ describe('ViewEventsMixin', function() {
 
       myApp.on('foo', fooStub);
 
-      myView = new Marionette.View();
+      myView = new View();
 
       myApp.setView(myView);
 

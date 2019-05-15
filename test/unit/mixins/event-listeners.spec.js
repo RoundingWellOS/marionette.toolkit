@@ -1,8 +1,11 @@
+import Backbone from 'backbone';
+import App from '../../../src/app';
+
 describe('EventListenersMixin', function() {
   beforeEach(function() {
     this.fooStub = this.sinon.stub();
     this.barStub = this.sinon.stub();
-    this.myApp = new Marionette.Toolkit.App();
+    this.myApp = new App();
   });
 
   describe('when starting and stopping an app', function() {

@@ -1,8 +1,10 @@
+import App from '../../src/app';
+
 function createNewApp(startWParent, stopWParent, prevDestroy) {
-  return new Marionette.Toolkit.App({
+  return new App({
     childApps: {
       myChildAppOne: {
-        AppClass: Marionette.Toolkit.App,
+        AppClass: App,
         startWithParent: startWParent,
         stopWithParent: stopWParent,
         preventDestroy: prevDestroy
@@ -14,7 +16,7 @@ function createNewApp(startWParent, stopWParent, prevDestroy) {
 describe('app-lifecycle-options', function() {
   describe('when starting the application', function() {
     it('should start automatically with startAfterInitialized set to true', function() {
-      this.autoStartApp = new Marionette.Toolkit.App({
+      this.autoStartApp = new App({
         'startAfterInitialized': true
       });
       expect(this.autoStartApp._isRunning).to.equal(true);
@@ -22,9 +24,9 @@ describe('app-lifecycle-options', function() {
 
     describe('and adding a childApp with startWithParent = true after parent has started', function() {
       it('should start the childApp', function() {
-        this.myApp = new Marionette.Toolkit.App();
+        this.myApp = new App();
         this.myApp.start();
-        this.myApp.addChildApp('myAddedChild', Marionette.Toolkit.App, {
+        this.myApp.addChildApp('myAddedChild', App, {
           startWithParent: true
         });
 
@@ -117,12 +119,12 @@ describe('app-lifecycle-options', function() {
       it('should stop and start the specific childApp', function() {
         const childApps = {
           cA1: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             restartWithParent: true
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps: childApps });
+        const myApp = new App({ childApps: childApps });
 
         myApp.start();
 
@@ -131,8 +133,8 @@ describe('app-lifecycle-options', function() {
 
         myApp.restart();
 
-        expect(stopSpy).to.be.called.once;
-        expect(startSpy).to.be.called.once;
+        expect(stopSpy).to.be.calledOnce;
+        expect(startSpy).to.be.calledOnce;
       });
     });
 
@@ -140,12 +142,12 @@ describe('app-lifecycle-options', function() {
       it('should not stop or start the specific childApp', function() {
         const childApps = {
           cA1: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             restartWithParent: false
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps });
+        const myApp = new App({ childApps });
 
         myApp.start();
 
@@ -163,12 +165,12 @@ describe('app-lifecycle-options', function() {
       it('should start when startWithParent is true', function() {
         const childApps = {
           cA1: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             startWithParent: true
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps });
+        const myApp = new App({ childApps });
 
         myApp.start();
 
@@ -182,12 +184,12 @@ describe('app-lifecycle-options', function() {
       it('should not start when startWithParent is false', function() {
         const childApps = {
           cA1: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             startWithParent: false
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps });
+        const myApp = new App({ childApps });
 
         myApp.start();
 
@@ -201,12 +203,12 @@ describe('app-lifecycle-options', function() {
       it('should stop when stopWithParent is true', function() {
         const childApps = {
           cA1: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             stopWithParent: true
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps });
+        const myApp = new App({ childApps });
 
         myApp.start();
 
@@ -220,12 +222,12 @@ describe('app-lifecycle-options', function() {
       it('should not stop when stopWithParent is false', function() {
         const childApps = {
           cA1: {
-            AppClass: Marionette.Toolkit.App,
+            AppClass: App,
             stopWithParent: false
           }
         };
 
-        const myApp = new Marionette.Toolkit.App({ childApps });
+        const myApp = new App({ childApps });
 
         myApp.start();
 

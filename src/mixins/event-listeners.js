@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import { MnObject } from 'backbone.marionette';
 
- /**
+/**
  * This provides methods used for registering events while App is running and cleans them up at `onStop`. It's not meant to
  * be used directly.
  *

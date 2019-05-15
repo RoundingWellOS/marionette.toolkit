@@ -24,9 +24,9 @@ Use a `StateMixin` if your object/view needs to maintain information that isn't 
 While `StateMixin` comes pre-mixined with `Marionette.Toolkit.App` and `Marionette.Toolkit.Component`, you can extend your own class with `StateMixin` by calling `initState` in your class's `initialize` passing any desired options.
 
 ```js
-var MyStateModel = Backbone.Model.extend({});
+const MyStateModel = Backbone.Model.extend({});
 
-var myClass = Marionette.Object.extend({
+const myClass = MnObject.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -34,15 +34,15 @@ var myClass = Marionette.Object.extend({
   }
 });
 
-_.extend(myClass.prototype, Marrionette.Toolkit.StateMixin)
+_.extend(myClass.prototype, StateMixin)
 ```
 
 You can also use `Marionette.Toolkit.MixinState` which is a utility to mixin the `StateMixin` into any `Marionette.Object`s or `Marionette.View`s. If there is no `StateModel` definition on your class then the `StateModel` will be defined as a vanilla `Backbone.Model`. However, if you have already defined `StateModel` on your class, your `StateModel` definition **will not be overwritten**.
 
 ```js
-var MyStateModel = Backbone.Model.extend({});
+const MyStateModel = Backbone.Model.extend({});
 
-var myClass = Marionette.Object.extend({
+const myClass = MnObject.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -50,7 +50,7 @@ var myClass = Marionette.Object.extend({
   }
 });
 
-Marionette.Toolkit.MixinState(MyClass);
+MixinState(MyClass);
 ```
 
 ### Setting default state
@@ -58,7 +58,7 @@ Marionette.Toolkit.MixinState(MyClass);
 Because the `StateModel` of the `StateMixin` has to be a `Backbone.Model`, it has access to model `defaults`. `defaults` should be defined on the `StateModel` definition.
 
 ```js
-var MyToolKitApp = Marionette.Toolkit.App.extend({
+const MyToolKitApp = App.extend({
   StateModel: {
     defaults: {
       fooState: 'bar'
@@ -66,7 +66,7 @@ var MyToolKitApp = Marionette.Toolkit.App.extend({
   }
 });
 
-var myToolkitApp = new MyToolKitApp();
+const myToolkitApp = new MyToolKitApp();
 
 myToolkitApp.getState('fooState') === 'bar';
 ```
@@ -79,9 +79,9 @@ specify a `StateModel`, a vanilla `Backbone.Model` definition will be used.
 
 #### Declared on Class
 ```js
-var MyStateModel = Backbone.Model.extend({});
+const MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Object.extend({
+const MyClass = Marionette.Object.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -92,15 +92,15 @@ var MyClass = Marionette.Object.extend({
 
 #### Passed as Option on Initialization
 ```js
-var MyStateModel = Backbone.Model.extend({});
+const MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Object.extend({
+const MyClass = Marionette.Object.extend({
   initialize(options) {
     this.initState(options);
   }
 });
 
-var myClass = new MyClass({
+const myClass = new MyClass({
   StateModel: MyStateModel
 });
 ```
@@ -110,10 +110,10 @@ returned by this method is the `StateModel` class that will be instantiated.
 When defined as a function, it will receive the `options` passed to the `constructor`.
 
 ```js
-var MyStateModel = Backbone.Model.extend({});
+const MyStateModel = Backbone.Model.extend({});
 
-Marionette.Toolkit.App.extend({
-  StateModel: function(options){
+App.extend({
+  StateModel(options){
     if(options.foo){
       return MyStateModel;
     }
@@ -128,7 +128,7 @@ Alternatively, you can specify a `StateModel` in the options for
 the `constructor`:
 
 ```js
-var MyToolKitApp = Marionette.Toolkit.App.extend({...});
+const MyToolKitApp = App.extend({...});
 
 new MyToolKitApp({
   StateModel: MyStateModel
@@ -140,9 +140,9 @@ new MyToolKitApp({
 Optionally define a `state` attributes object on your class initialization or pass as an option when calling `initState(options)`.
 
 ```js
-var MyStateModel = Backbone.Model.extend({});
+const MyStateModel = Backbone.Model.extend({});
 
-var MyClass = Marionette.Object.extend({
+const MyClass = Marionette.Object.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -162,16 +162,16 @@ new MyClass({
 `StateMixin` can bind directly to state events in a declarative manner:
 
 ```js
-var MyToolKitApp = Marionette.Toolkit.App.extend({
+const MyToolKitApp = App.extend({
   stateEvents: {
     'change': 'stateChanged'
   },
-  stateChanged: function(model, options){
+  stateChanged(model, options){
     console.log('Changed!');
   }
 });
 
-var myToolkitApp = new MyToolKitApp();
+const myToolkitApp = new MyToolKitApp();
 
 // will log "Changed!"
 myToolkitApp.setState('foo', 'bar');
@@ -189,11 +189,11 @@ implementations of `modelEvents` and `collectionEvents` in the [Marionette.View]
 for the `StateMixin`'s attached `StateModel`.  Implementation will match [Backbone.Model.set](http://backbonejs.org/#Model-set) documentation.
 
 ```js
-var myToolKitApp = new Marionette.Toolkit.App({
+const myToolKitApp = new App({
     stateEvents: {
       'change:foo': 'alert'
     },
-    alert: function(){
+    alert(){
       console.log('alert!');
     }
 });
@@ -207,13 +207,13 @@ myToolKitApp.setState('foo', 'bar');
 `StateMixin` has a `resetStateDefaults` method that sets the `StateModel` instance attributes back to the [defined defaults](#setting-default-state).  Implementation will match [Backbone.Model.defaults](http://backbonejs.org/#Model-defaults) documentation.
 
 ```js
-var MyStateModel = Backbone.Model.extend({
+const MyStateModel = Backbone.Model.extend({
   defaults: {
     foo: 'bar'
   }
 });
 
-var myToolKitApp = new Marionette.Toolkit.App({
+const myToolKitApp = new App({
   StateModel: MyStateModel
 });
 
@@ -235,13 +235,13 @@ exception that not passing any attribute to "get" will return the state model
 instance.
 
 ```js
-var MyStateModel = Backbone.Model.extend({
+const MyStateModel = Backbone.Model.extend({
   defaults: {
     foo: 'bar'
   }
 });
 
-var myToolKitApp = new Marionette.Toolkit.App({
+const myToolKitApp = new App({
   StateModel: MyStateModel
 });
 
@@ -261,7 +261,7 @@ Attributes that do not exist on the state will be created.
 Not passing in a value will toggle the attribute's current value, while non-boolean values will be coerced to `true` or `false`.
 
 ```js
-var myToolKitApp = new Marionette.Toolkit.App();
+const myToolKitApp = new App();
 
 myToolKitApp.setState('foo', true);
 
@@ -281,7 +281,7 @@ myToolKitApp.toggleState('baz');
 Passing an attribute that does not exist on the state will return `false`.
 
 ```js
-var myToolKitApp = new Marionette.Toolkit.App();
+const myToolKitApp = new App();
 
 // returns false
 myToolKitApp.hasState('foo')
@@ -304,11 +304,11 @@ myToolKitApp.hasState('foo');
 in the `stateEvents` option. Implementation matches [Backbone.View.delegateEvents](http://backbonejs.org/#View-delegateEvents).
 
 ```js
-var myToolKitApp = new Marionette.Toolkit.App({
+const myToolKitApp = new App({
     stateEvents: {
       'change:foo': 'alert'
     },
-    alert: function(){
+    alert(){
       console.log('alert!');
     }
 });
@@ -336,11 +336,11 @@ myToolKitApp.setState('foo', 'bar');
 specified on the `StateModel` option. Implementation matches [Backbone.View.undelegateEvents](http://backbonejs.org/#View-undelegateEvents).
 
 ```js
-var myToolKitApp = new Marionette.Toolkit.App({
+const myToolKitApp = new App({
     stateEvents: {
       'change:foo': 'alert'
     },
-    alert: function(){
+    alert(){
       console.log('alert!');
     }
 });
