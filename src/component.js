@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
-import { MnObject, View } from 'backbone.marionette';
+import { Application, View } from 'backbone.marionette';
 import StateMixin from './mixins/state';
 import ViewEventsMixin from './mixins/view-events';
 
@@ -9,8 +9,7 @@ const ClassOptions = [
   'viewEventPrefix',
   'viewEvents',
   'viewTriggers',
-  'viewOptions',
-  'region'
+  'viewOptions'
 ];
 
 /**
@@ -21,7 +20,7 @@ const ClassOptions = [
  * @memberOf Toolkit
  * @memberOf Marionette
  */
-const Component = MnObject.extend({
+const Component = Application.extend({
 
   /**
    * The view class to be managed.
@@ -54,21 +53,11 @@ const Component = MnObject.extend({
     // StateMixin
     this._initState(options);
 
-    MnObject.call(this, options);
+    Application.call(this, options);
 
     // StateMixin
     this.delegateStateEvents();
   },
-
-  /**
-   * Internal flag to determine if the component should destroy.
-   * Set to false while showing the component's view in the component's region.
-   *
-   * @private
-   * @type {Boolean}
-   * @default true
-   */
-  _shouldDestroy: true,
 
   /**
    * Set the Component's region and then show it.
@@ -81,7 +70,7 @@ const Component = MnObject.extend({
    * @returns {Component}
    */
   showIn(region, viewOptions) {
-    this.region = region;
+    this._region = region;
 
     this.show(viewOptions);
 
@@ -94,48 +83,78 @@ const Component = MnObject.extend({
    * @public
    * @event Component#before:show
    * @event Component#show
-   * @throws ComponentShowError - Thrown if component has already been show.
    * @throws ComponentRegionError - Thrown if component has no defined region.
    * @method show
    * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
+   * @param {Object} [regionOptions] - Options hash passed to the region on show.
    * @memberOf Component
    * @returns {Component}
    */
-  show(viewOptions) {
+  show(viewOptions, regionOptions) {
     const region = this.getRegion();
-
-    if(this._isShown) {
-      throw new Error('Component has already been shown in a region.');
-    }
 
     if(!region) {
       throw new Error('Component has no defined region.');
     }
 
-    this.triggerMethod('before:show');
+    const view = this._getView(viewOptions);
 
-    this.renderView(viewOptions);
-    this._isShown = true;
+    this.stopListening(region.currentView, 'destroy', this.destroy);
 
-    this.triggerMethod('show');
+    this.triggerMethod('before:show', this, view, viewOptions, regionOptions);
 
-    // Destroy the component if the region is emptied because
-    // it destroys the view
-    this.listenTo(region, 'empty', this._destroy);
+    this.showView(view, regionOptions);
+
+    this.listenTo(region.currentView, 'destroy', this.destroy);
+
+    this.triggerMethod('show', this, view, viewOptions, regionOptions);
 
     return this;
   },
 
   /**
-   * Returns component region.
+   * Empty the Components region without destroying it
    *
    * @public
-   * @method getRegion
+   * @throws ComponentRegionError - Thrown if component has no defined region.
+   * @method empty
    * @memberOf Component
-   * @returns Component region
+   * @returns {Component}
    */
-  getRegion() {
-    return this.region;
+  empty() {
+    const region = this.getRegion();
+
+    if(!region) {
+      throw new Error('Component has no defined region.');
+    }
+
+    this.stopListening(region.currentView, 'destroy', this.destroy);
+
+    region.empty();
+
+    return this;
+  },
+
+  /**
+   * Get the Component view instance.
+   *
+   * @private
+   * @method _getView
+   * @memberOf Component
+   * @param {Object} [options] - Options that can be used to determine the ViewClass.
+   * @returns {View}
+   */
+  _getView(options) {
+    const ViewClass = this._getViewClass(options);
+
+    const viewOptions = this.mixinOptions(options);
+
+    const view = this.buildView(ViewClass, viewOptions);
+
+    // ViewEventMixin
+    this._proxyViewEvents(view);
+
+    return view;
   },
 
   /**
@@ -159,58 +178,6 @@ const Component = MnObject.extend({
     }
 
     throw new Error('"ViewClass" must be a view class or a function that returns a view class');
-  },
-
-  /**
-   * Shows or re-shows a newly built view in the component's region
-   *
-   * @public
-   * @event Component#before:render:view
-   * @event Component#render:view
-   * @method renderView
-   * @memberOf Component
-   * @param {Object} [options] - Options hash mixed into the instantiated ViewClass.
-   * @returns {Component}
-   */
-  renderView(options) {
-    const ViewClass = this._getViewClass(options);
-
-    const viewOptions = this.mixinOptions(options);
-
-    const view = this.buildView(ViewClass, viewOptions);
-
-    // Attach current built view to component
-    this.currentView = view;
-
-    // ViewEventMixin
-    this._proxyViewEvents(view);
-
-    this.triggerMethod('before:render:view', view);
-
-    // _shouldDestroy is flag that prevents the Component from being
-    // destroyed if the region is emptied by Component itself.
-    this._shouldDestroy = false;
-
-    this.showView(view);
-
-    this._shouldDestroy = true;
-
-    this.triggerMethod('render:view', view);
-
-    return this;
-  },
-
-  /**
-   * Override this to change how the component's view is shown in the region
-   *
-   * @public
-   * @method showView
-   * @memberOf Component
-   * @param {Object} view - view built from a viewClass and viewOptions
-   */
-  showView(view) {
-    // Show the view in the region
-    this.getRegion().show(view);
   },
 
   /**
@@ -247,51 +214,36 @@ const Component = MnObject.extend({
   },
 
   /**
-   * Destroys Component.
-   *
-   * @private
-   * @method _destroy
-   * @memberOf Component
-   */
-  _destroy() {
-    if(this._shouldDestroy) {
-      MnObject.prototype.destroy.apply(this, arguments);
-    }
-  },
-
-  /**
-   * Empties component's region.
-   *
-   * @private
-   * @method _emptyRegion
-   * @param {Object} [options] - Options passed to `region.empty`
-   * @memberOf Component
-   */
-  _emptyRegion(options) {
-    const region = this.getRegion();
-
-    if(region) {
-      this.stopListening(region, 'empty');
-      region.empty(options);
-    }
-  },
-
-  /**
    * Empty the region and destroy the component.
    *
    * @public
    * @method destroy
-   * @param {Object} [options] - Options passed to `_emptyRegion` and `destroy`
+   * @param {Object} [options] - Options passed to Mn.Application `destroy`
    * @memberOf Component
    */
-  destroy(options) {
-    this._emptyRegion(options);
+  destroy() {
+    if(this._isDestroyed) {
+      return this;
+    }
 
-    this._shouldDestroy = true;
+    const region = this.getRegion();
+    if(region) region.empty();
 
-    this._destroy(options);
+    Application.prototype.destroy.apply(this, arguments);
 
     return this;
+  }
+}, {
+  /**
+   * Sets the region for a Component Class
+   *
+   * @public
+   * @method setRegion
+   * @param {Marionette.Region} - region definition for instantiated components
+   * @memberOf Component.prototype
+   */
+  setRegion(region) {
+    this.prototype.region = region;
   }
 });
 
