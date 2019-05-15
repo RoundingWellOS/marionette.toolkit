@@ -4,26 +4,29 @@
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('underscore'), require('backbone'), require('backbone.marionette')) :
   typeof define === 'function' && define.amd ? define(['exports', 'underscore', 'backbone', 'backbone.marionette'], factory) :
-  (factory((global.Marionette = global.Marionette || {}, global.Marionette.Toolkit = global.Marionette.Toolkit || {}),global._,global.Backbone,global.Marionette));
-}(this, function (exports,_,Backbone,backbone_marionette) { 'use strict';
+  (global = global || self, (function () {
+    var current = global.Toolkit;
+    var exports = global.Toolkit = {};
+    factory(exports, global._, global.Backbone, global.Marionette);
+    exports.noConflict = function () { global.Toolkit = current; return exports; };
+  }()));
+}(this, function (exports, _, Backbone, backbone_marionette) { 'use strict';
 
-  _ = 'default' in _ ? _['default'] : _;
-  Backbone = 'default' in Backbone ? Backbone['default'] : Backbone;
+  _ = _ && _.hasOwnProperty('default') ? _['default'] : _;
+  Backbone = Backbone && Backbone.hasOwnProperty('default') ? Backbone['default'] : Backbone;
 
   var ClassOptions = ['StateModel', 'stateEvents'];
-
   /**
-  * This provides methods used for keeping state using a Backbone.Model. It's meant to
-  * be used with either a Marionette.MnObject or Backbone.View.
-  *
-  * @mixin
-  */
-  var StateMixin = {
+   * This provides methods used for keeping state using a Backbone.Model. It's meant to
+   * be used with either a Marionette.MnObject or Backbone.View.
+   *
+   * @mixin
+   */
 
+  var StateMixin = {
     /**
      * The model class for _stateModel.
      * @type {Backbone.Model}
@@ -42,11 +45,10 @@
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       this._initState(options);
-      this.delegateStateEvents();
 
+      this.delegateStateEvents();
       return this;
     },
-
 
     /**
      * @private
@@ -55,9 +57,8 @@
      */
     _initState: function _initState(options) {
       // Make defaults available to this
-      this.mergeOptions(options, ClassOptions);
+      this.mergeOptions(options, ClassOptions); // Remove event handlers from previous state
 
-      // Remove event handlers from previous state
       this._removeEventHandlers();
 
       var StateModel = this._getStateModel(options);
@@ -66,7 +67,6 @@
 
       this._setEventHandlers();
     },
-
 
     /**
      * Bind events from the _stateModel defined in stateEvents hash
@@ -77,10 +77,8 @@
     delegateStateEvents: function delegateStateEvents() {
       this.undelegateStateEvents();
       this.bindEvents(this._stateModel, _.result(this, 'stateEvents'));
-
       return this;
     },
-
 
     /**
      * Unbind all entity events on _stateModel
@@ -90,10 +88,8 @@
      */
     undelegateStateEvents: function undelegateStateEvents() {
       this.unbindEvents(this._stateModel);
-
       return this;
     },
-
 
     /**
      * Setup destroy event handle
@@ -105,7 +101,6 @@
       this.on('destroy', this._destroyState);
     },
 
-
     /**
      * Clean up destroy event handler, remove any listeners on _stateModel
      *
@@ -114,12 +109,12 @@
      */
     _removeEventHandlers: function _removeEventHandlers() {
       if (!this._stateModel) return;
-
       this.undelegateStateEvents();
+
       this._stateModel.stopListening();
+
       this.off('destroy', this._destroyState);
     },
-
 
     /**
      * Get the StateMixin StateModel class.
@@ -141,7 +136,6 @@
       throw new Error('"StateModel" must be a model class or a function that returns a model class');
     },
 
-
     /**
      * Set a property on the _stateModel.
      *
@@ -156,7 +150,6 @@
       return this._stateModel.set.apply(this._stateModel, arguments);
     },
 
-
     /**
      *  Reset _stateModel to defined defaults
      *
@@ -170,7 +163,6 @@
 
       return this._stateModel.set(defaults);
     },
-
 
     /**
      * Get a property from the _stateModel, or return the _stateModel
@@ -188,7 +180,6 @@
       return this._stateModel.get.apply(this._stateModel, arguments);
     },
 
-
     /**
      * Toggle a property on the _stateModel.
      *
@@ -200,10 +191,8 @@
      */
     toggleState: function toggleState(attr, val) {
       if (arguments.length > 1) return this._stateModel.set(attr, !!val);
-
       return this._stateModel.set(attr, !this._stateModel.get(attr));
     },
-
 
     /**
      * Check if _stateModel has a property
@@ -217,7 +206,6 @@
       return this._stateModel.has(attr);
     },
 
-
     /**
      * Clean up any listeners on the _stateModel.
      *
@@ -229,16 +217,15 @@
     }
   };
 
-  var ClassOptions$2 = ['childApps', 'childAppOptions'];
-
+  var ClassOptions$1 = ['childApps', 'childAppOptions'];
   /**
-  * This provides methods used for "App Manager" functionality - the adding and removing child `App`s. It's not meant to
-  * be used directly.
-  *
-  * @mixin
-  */
-  var ChildAppsMixin = {
+   * This provides methods used for "App Manager" functionality - the adding and removing child `App`s. It's not meant to
+   * be used directly.
+   *
+   * @mixin
+   */
 
+  var ChildAppsMixin = {
     /**
      * @private
      * @method _initChildApps
@@ -260,11 +247,8 @@
      */
     _initChildApps: function _initChildApps() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
       this._childApps = {};
-
-      this.mergeOptions(options, ClassOptions$2);
-
+      this.mergeOptions(options, ClassOptions$1);
       var childApps = this.childApps;
 
       if (childApps) {
@@ -276,7 +260,6 @@
       }
     },
 
-
     /**
      * Finds `regionName` and `getOptions` for the childApp
      *
@@ -287,7 +270,6 @@
       var _this = this;
 
       var tkOpts = childApp._tkOpts || {};
-
       var opts = {
         region: this.getRegion(tkOpts.regionName)
       };
@@ -299,7 +281,6 @@
       return opts;
     },
 
-
     /**
      * Starts a `childApp`
      *
@@ -308,9 +289,9 @@
      */
     _startChildApp: function _startChildApp(childApp, options) {
       var opts = this._getChildStartOpts(childApp);
+
       return childApp.start(_.extend(opts, options));
     },
-
 
     /**
      * Handles explicit boolean values of restartWithParent
@@ -321,11 +302,12 @@
      */
     _shouldActWithRestart: function _shouldActWithRestart(childApp, action) {
       if (!this._isRestarting) return true;
+
       var restartWithParent = _.result(childApp, 'restartWithParent');
+
       if (restartWithParent === true) return true;
       if (restartWithParent !== false && _.result(childApp, action)) return true;
     },
-
 
     /**
      * Starts `childApps` if allowed by child
@@ -337,13 +319,14 @@
       var _this2 = this;
 
       var action = 'startWithParent';
+
       _.each(this._childApps, function (childApp) {
         if (!_this2._shouldActWithRestart(childApp, action)) return;
         if (!_this2._isRestarting && !_.result(childApp, action)) return;
+
         _this2._startChildApp(childApp);
       });
     },
-
 
     /**
      * Stops `childApps` if allowed by child
@@ -355,13 +338,13 @@
       var _this3 = this;
 
       var action = 'stopWithParent';
+
       _.each(this._childApps, function (childApp) {
         if (!_this3._shouldActWithRestart(childApp, action)) return;
         if (!_this3._isRestarting && !_.result(childApp, action)) return;
         childApp.stop();
       });
     },
-
 
     /**
      * Starts `childApp`
@@ -376,7 +359,6 @@
       return this._startChildApp(childApp, options);
     },
 
-
     /**
      * Stops `childApp`
      *
@@ -388,7 +370,6 @@
     stopChildApp: function stopChildApp(appName, options) {
       return this.getChildApp(appName).stop(options);
     },
-
 
     /**
      * Destroys `childApps` if allowed by child
@@ -404,7 +385,6 @@
       });
     },
 
-
     /**
      * Internal helper to instantiate and `App` from on `Object`
      *
@@ -415,15 +395,13 @@
      */
     _buildAppFromObject: function _buildAppFromObject(appConfig) {
       var AppClass = appConfig.AppClass;
+
       var options = _.omit(appConfig, 'AppClass', 'regionName', 'getOptions');
 
       var app = this.buildApp(AppClass, options);
-
       app._tkOpts = _.pick(appConfig, 'regionName', 'getOptions');
-
       return app;
     },
-
 
     /**
      * Helper for building an App and return it
@@ -439,11 +417,11 @@
       if (_.isFunction(AppClass)) {
         return this.buildApp(AppClass, options);
       }
+
       if (_.isObject(AppClass)) {
         return this._buildAppFromObject(AppClass);
       }
     },
-
 
     /**
      * Build an App and return it
@@ -458,10 +436,8 @@
     buildApp: function buildApp(AppClass, options) {
       // options on childApp definition supersede childAppOptions
       options = _.extend({}, this.childAppOptions, options);
-
       return new AppClass(options);
     },
-
 
     /**
      * Internal helper to verify `appName` is unique and not in use
@@ -473,10 +449,9 @@
      */
     _ensureAppIsUnique: function _ensureAppIsUnique(appName) {
       if (this._childApps[appName]) {
-        throw new Error('A child App with name "' + appName + '" has already been added.');
+        throw new Error("A child App with name \"".concat(appName, "\" has already been added."));
       }
     },
-
 
     /**
      * Add child `App`s to this `App`
@@ -490,7 +465,6 @@
         this.addChildApp(appName, childApp);
       }, this));
     },
-
 
     /**
      * Build's childApp and registers it with this App
@@ -515,11 +489,9 @@
       }
 
       childApp._name = appName;
-
-      this._childApps[appName] = childApp;
-
-      // When the app is destroyed remove the cached app.
+      this._childApps[appName] = childApp; // When the app is destroyed remove the cached app.
       // Listener setup relative to the childApp's running state (using _on)
+
       childApp._on('destroy', _.partial(this._removeChildApp, appName), this);
 
       if (this.isRunning() && _.result(childApp, 'startWithParent')) {
@@ -528,7 +500,6 @@
 
       return childApp;
     },
-
 
     /**
      * Returns registered child `App`s name
@@ -541,7 +512,6 @@
       return this._name;
     },
 
-
     /**
      * Returns registered child `App`s array
      *
@@ -552,7 +522,6 @@
     getChildApps: function getChildApps() {
       return _.clone(this._childApps);
     },
-
 
     /**
      * Returns registered child `App`
@@ -566,7 +535,6 @@
       return this._childApps[appName];
     },
 
-
     /**
      * Internal helper.  Unregisters child `App`
      *
@@ -579,7 +547,6 @@
       delete this._childApps[appName]._name;
       delete this._childApps[appName];
     },
-
 
     /**
      * Removes all childApps and returns them.
@@ -599,7 +566,6 @@
       return childApps;
     },
 
-
     /**
      * Destroys or removes registered child `App` by name
      * depending on `preventDestroy`
@@ -612,14 +578,13 @@
      */
     removeChildApp: function removeChildApp(appName, options) {
       options = _.extend({}, options);
-
       var childApp = this.getChildApp(appName);
 
       if (!childApp) {
         return;
-      }
+      } // if preventDestroy simply unregister the child app
 
-      // if preventDestroy simply unregister the child app
+
       if (options.preventDestroy || _.result(childApp, 'preventDestroy')) {
         this._removeChildApp(appName);
       } else {
@@ -631,11 +596,11 @@
   };
 
   /**
-  * This provides methods used for registering events while App is running and cleans them up at `onStop`. It's not meant to
-  * be used directly.
-  *
-  * @mixin
-  */
+   * This provides methods used for registering events while App is running and cleans them up at `onStop`. It's not meant to
+   * be used directly.
+   *
+   * @mixin
+   */
 
   var EventListenersMixin = {
     /**
@@ -650,7 +615,6 @@
       }, this));
     },
 
-
     /**
      * Internal method to stop any registered listeners.
      *
@@ -663,7 +627,6 @@
       }, this));
     },
 
-
     /**
      * Overrides `Backbone.Event.on()`
      * If this `App` is running it will register the event for removal `onStop`
@@ -675,12 +638,12 @@
     on: function on() {
       if (this._isRunning) {
         this._runningEvents = this._runningEvents || [];
+
         this._runningEvents.push(arguments);
       }
 
       return backbone_marionette.MnObject.prototype.on.apply(this, arguments);
     },
-
 
     /**
      * Keep a copy of non-running on for internal use
@@ -702,11 +665,12 @@
     listenTo: function listenTo() {
       if (this._isRunning) {
         this._runningListeningTo = this._runningListeningTo || [];
+
         this._runningListeningTo.push(arguments);
       }
+
       return backbone_marionette.MnObject.prototype.listenTo.apply(this, arguments);
     },
-
 
     /**
      * Keep a copy of non-running on for internal use
@@ -728,6 +692,7 @@
     listenToOnce: function listenToOnce() {
       if (this._isRunning) {
         this._runningListeningTo = this._runningListeningTo || [];
+
         this._runningListeningTo.push(arguments);
       }
 
@@ -757,7 +722,6 @@
       this._viewEventPrefix = _.result(this, 'viewEventPrefix');
     },
 
-
     /**
      * Proxies the ViewClass's viewEvents to the Component itself
      * Similar to CollectionView childEvents
@@ -772,7 +736,6 @@
       this.listenTo(view, 'all', this._childViewEventHandler);
     },
 
-
     /**
      * Event handler for view proxy
      * Similar to CollectionView childEvents
@@ -785,18 +748,17 @@
     _childViewEventHandler: function _childViewEventHandler(eventName) {
       var viewEvents = this._viewEvents;
 
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
 
       if (_.isFunction(viewEvents[eventName])) {
         viewEvents[eventName].apply(this, args);
-      }
+      } // use the parent view's proxyEvent handlers
 
-      // use the parent view's proxyEvent handlers
-      var viewTriggers = this._viewTriggers;
 
-      // Call the event with the proxy name on the parent layout
+      var viewTriggers = this._viewTriggers; // Call the event with the proxy name on the parent layout
+
       if (_.isString(viewTriggers[eventName])) {
         this.triggerMethod.apply(this, [viewTriggers[eventName]].concat(args));
       }
@@ -804,15 +766,13 @@
       var prefix = this._viewEventPrefix;
 
       if (prefix !== false) {
-        var viewEventName = prefix + ':' + eventName;
-
+        var viewEventName = "".concat(prefix, ":").concat(eventName);
         this.triggerMethod.apply(this, [viewEventName].concat(args));
       }
     }
   };
 
-  var ClassOptions$1 = ['startWithParent', 'restartWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel', 'stateEvents', 'viewEventPrefix', 'viewEvents', 'viewTriggers'];
-
+  var ClassOptions$2 = ['startWithParent', 'restartWithParent', 'stopWithParent', 'startAfterInitialized', 'preventDestroy', 'StateModel', 'stateEvents', 'viewEventPrefix', 'viewEvents', 'viewTriggers'];
   /**
    * Marionette.Application with an `initialize` / `start` / `stop` / `destroy` lifecycle.
    *
@@ -821,8 +781,8 @@
    * @memberOf Toolkit
    * @memberOf Marionette
    */
-  var App = backbone_marionette.Application.extend({
 
+  var App = backbone_marionette.Application.extend({
     /**
      * Internal flag indiciate when `App` has started but has not yet stopped.
      *
@@ -895,12 +855,9 @@
      */
     constructor: function constructor() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.mergeOptions(options, ClassOptions$2);
+      this.options = _.extend({}, _.result(this, 'options'), options); // ChildAppsMixin
 
-      this.mergeOptions(options, ClassOptions$1);
-
-      this.options = _.extend({}, _.result(this, 'options'), options);
-
-      // ChildAppsMixin
       this._initChildApps(options);
 
       backbone_marionette.Application.call(this, options);
@@ -909,7 +866,6 @@
         this.start(options);
       }
     },
-
 
     /**
      * Internal helper to verify if `App` has been destroyed
@@ -925,7 +881,6 @@
       }
     },
 
-
     /**
      * Gets the value of internal `_isRunning` flag
      *
@@ -938,7 +893,6 @@
       return this._isRunning;
     },
 
-
     /**
      * Gets the value of internal `_isRestarting` flag
      *
@@ -950,7 +904,6 @@
     isRestarting: function isRestarting() {
       return this._isRestarting;
     },
-
 
     /**
      * Sets the app lifecycle to running.
@@ -977,25 +930,22 @@
 
       if (options.view) {
         this.setView(options.view);
-      }
+      } // StateMixin
 
-      // StateMixin
-      this._initState(options);
 
-      // ViewEventMixin
+      this._initState(options); // ViewEventMixin
+
+
       this._buildEventProxies();
 
       this.triggerMethod('before:start', options);
-
       this._isRunning = true;
 
       this._bindRunningEvents();
 
       this.triggerStart(options);
-
       return this;
     },
-
 
     /**
      * Sets up region, view, and state events.
@@ -1012,12 +962,11 @@
 
       if (this._view) {
         this._proxyViewEvents(this._view);
-      }
+      } // StateMixin
 
-      // StateMixin
+
       this.delegateStateEvents();
     },
-
 
     /**
      * Sets the app lifecycle to not running
@@ -1030,14 +979,13 @@
      */
     restart: function restart() {
       var state = this.getState().attributes;
-
       this._isRestarting = true;
-      this.stop().start({ state: state });
+      this.stop().start({
+        state: state
+      });
       this._isRestarting = false;
-
       return this;
     },
-
 
     /**
      * Starts children and triggers start event
@@ -1051,9 +999,9 @@
      */
     finallyStart: function finallyStart() {
       this._startChildApps();
+
       this.triggerMethod.apply(this, ['start'].concat(Array.prototype.slice.call(arguments)));
     },
-
 
     /**
      * Triggers start event via finallyStart.
@@ -1068,7 +1016,6 @@
     triggerStart: function triggerStart(options) {
       this.finallyStart(options);
     },
-
 
     /**
      * Sets the app lifecycle to not running.
@@ -1092,17 +1039,15 @@
       this._stopChildApps();
 
       this._isRunning = false;
-
-      this.triggerMethod('stop', options);
-
-      // Running events are cleaned up after stop so that
+      this.triggerMethod('stop', options); // Running events are cleaned up after stop so that
       // `stop` event handlers still fire
+
       this._stopRunningListeners();
+
       this._stopRunningEvents();
 
       return this;
     },
-
 
     /**
      * Stops the `App` and sets it destroyed.
@@ -1123,10 +1068,8 @@
       this._destroyChildApps();
 
       backbone_marionette.Application.prototype.destroy.apply(this, arguments);
-
       return this;
     },
-
 
     /**
      * Set the Application's Region
@@ -1155,7 +1098,6 @@
       return region;
     },
 
-
     /**
      * Monitors the apps region before:show event so the region's view
      * is available to the app
@@ -1171,7 +1113,6 @@
       });
     },
 
-
     /**
      * Region monitor handler which sets the app's view to the region's view
      *
@@ -1182,7 +1123,6 @@
     _onBeforeShow: function _onBeforeShow(region, view) {
       this.setView(view);
     },
-
 
     /**
      * Region monitor handler which empties the region's view
@@ -1197,7 +1137,6 @@
       this._removeView();
     },
 
-
     /**
      * Region monitor handler which deletes the region's view and listeners to view
      *
@@ -1211,7 +1150,6 @@
         delete this._view;
       }
     },
-
 
     /**
      * Get the Application's Region or
@@ -1231,7 +1169,6 @@
       return this.getView().getRegion(regionName);
     },
 
-
     /**
      * Set the Application's View
      *
@@ -1250,19 +1187,17 @@
         this.stopListening(this._view);
       }
 
-      this._view = view;
+      this._view = view; // ViewEventsMixin
 
-      // ViewEventsMixin
       if (this._isRunning) {
         this._proxyViewEvents(view);
-      }
+      } // Internal non-running listener
 
-      // Internal non-running listener
+
       this._listenTo(this._view, 'destroy', this._removeView);
 
       return view;
     },
-
 
     /**
      * Get the Application's View
@@ -1276,7 +1211,6 @@
       return this._view || this._region && this._region.currentView;
     },
 
-
     /**
      * Shows a view in the Application's region
      *
@@ -1287,19 +1221,18 @@
      * @returns {View}
      */
     showView: function showView() {
-      var _getRegion;
+      var _this$getRegion;
 
       var view = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._view;
 
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
 
-      (_getRegion = this.getRegion()).show.apply(_getRegion, [view].concat(args));
+      (_this$getRegion = this.getRegion()).show.apply(_this$getRegion, [view].concat(args));
 
       return view;
     },
-
 
     /**
      * Shows a view in the region of the app's view
@@ -1312,17 +1245,16 @@
      * @returns {View} - Child view instance
      */
     showChildView: function showChildView(regionName, view) {
-      var _getView;
+      var _this$getView;
 
-      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
         args[_key2 - 2] = arguments[_key2];
       }
 
-      (_getView = this.getView()).showChildView.apply(_getView, [regionName, view].concat(args));
+      (_this$getView = this.getView()).showChildView.apply(_this$getView, [regionName, view].concat(args));
 
       return view;
     },
-
 
     /**
      * Returns view from the App view by region name.
@@ -1339,8 +1271,7 @@
 
   _.extend(App.prototype, StateMixin, ChildAppsMixin, EventListenersMixin, ViewEventsMixin);
 
-  var ClassOptions$3 = ['ViewClass', 'viewEventPrefix', 'viewEvents', 'viewTriggers', 'viewOptions', 'region'];
-
+  var ClassOptions$3 = ['ViewClass', 'viewEventPrefix', 'viewEvents', 'viewTriggers', 'viewOptions'];
   /**
    * Reusable Marionette.MnObject with View management boilerplate
    *
@@ -1349,8 +1280,8 @@
    * @memberOf Toolkit
    * @memberOf Marionette
    */
-  var Component = backbone_marionette.MnObject.extend({
 
+  var Component = backbone_marionette.Application.extend({
     /**
      * The view class to be managed.
      * @type {Mn.View|Mn.CollectionView}
@@ -1372,34 +1303,19 @@
      */
     constructor: function constructor() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
       // Make defaults available to this
       this.mergeOptions(options, ClassOptions$3);
+      this.options = _.extend({}, _.result(this, 'options'), options); // ViewEventMixin
 
-      this.options = _.extend({}, _.result(this, 'options'), options);
+      this._buildEventProxies(); // StateMixin
 
-      // ViewEventMixin
-      this._buildEventProxies();
 
-      // StateMixin
       this._initState(options);
 
-      backbone_marionette.MnObject.call(this, options);
+      backbone_marionette.Application.call(this, options); // StateMixin
 
-      // StateMixin
       this.delegateStateEvents();
     },
-
-
-    /**
-     * Internal flag to determine if the component should destroy.
-     * Set to false while showing the component's view in the component's region.
-     *
-     * @private
-     * @type {Boolean}
-     * @default true
-     */
-    _shouldDestroy: true,
 
     /**
      * Set the Component's region and then show it.
@@ -1412,13 +1328,10 @@
      * @returns {Component}
      */
     showIn: function showIn(region, viewOptions) {
-      this.region = region;
-
+      this._region = region;
       this.show(viewOptions);
-
       return this;
     },
-
 
     /**
      * Show the Component in its region.
@@ -1426,51 +1339,70 @@
      * @public
      * @event Component#before:show
      * @event Component#show
-     * @throws ComponentShowError - Thrown if component has already been show.
      * @throws ComponentRegionError - Thrown if component has no defined region.
      * @method show
      * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
+     * @param {Object} [regionOptions] - Options hash passed to the region on show.
      * @memberOf Component
      * @returns {Component}
      */
-    show: function show(viewOptions) {
+    show: function show(viewOptions, regionOptions) {
       var region = this.getRegion();
-
-      if (this._isShown) {
-        throw new Error('Component has already been shown in a region.');
-      }
 
       if (!region) {
         throw new Error('Component has no defined region.');
       }
 
-      this.triggerMethod('before:show');
+      var view = this._getView(viewOptions);
 
-      this.renderView(viewOptions);
-      this._isShown = true;
-
-      this.triggerMethod('show');
-
-      // Destroy the component if the region is emptied because
-      // it destroys the view
-      this.listenTo(region, 'empty', this._destroy);
-
+      this.stopListening(region.currentView, 'destroy', this.destroy);
+      this.triggerMethod('before:show', this, view, viewOptions, regionOptions);
+      this.showView(view, regionOptions);
+      this.listenTo(region.currentView, 'destroy', this.destroy);
+      this.triggerMethod('show', this, view, viewOptions, regionOptions);
       return this;
     },
 
-
     /**
-     * Returns component region.
+     * Empty the Components region without destroying it
      *
      * @public
-     * @method getRegion
+     * @throws ComponentRegionError - Thrown if component has no defined region.
+     * @method empty
      * @memberOf Component
-     * @returns Component region
+     * @returns {Component}
      */
-    getRegion: function getRegion() {
-      return this.region;
+    empty: function empty() {
+      var region = this.getRegion();
+
+      if (!region) {
+        throw new Error('Component has no defined region.');
+      }
+
+      this.stopListening(region.currentView, 'destroy', this.destroy);
+      region.empty();
+      return this;
     },
 
+    /**
+     * Get the Component view instance.
+     *
+     * @private
+     * @method _getView
+     * @memberOf Component
+     * @param {Object} [options] - Options that can be used to determine the ViewClass.
+     * @returns {View}
+     */
+    _getView: function _getView(options) {
+      var ViewClass = this._getViewClass(options);
+
+      var viewOptions = this.mixinOptions(options);
+      var view = this.buildView(ViewClass, viewOptions); // ViewEventMixin
+
+      this._proxyViewEvents(view);
+
+      return view;
+    },
 
     /**
      * Get the Component ViewClass class.
@@ -1485,7 +1417,6 @@
      */
     _getViewClass: function _getViewClass() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
       var ViewClass = this.ViewClass;
 
       if (ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
@@ -1496,61 +1427,6 @@
 
       throw new Error('"ViewClass" must be a view class or a function that returns a view class');
     },
-
-
-    /**
-     * Shows or re-shows a newly built view in the component's region
-     *
-     * @public
-     * @event Component#before:render:view
-     * @event Component#render:view
-     * @method renderView
-     * @memberOf Component
-     * @param {Object} [options] - Options hash mixed into the instantiated ViewClass.
-     * @returns {Component}
-     */
-    renderView: function renderView(options) {
-      var ViewClass = this._getViewClass(options);
-
-      var viewOptions = this.mixinOptions(options);
-
-      var view = this.buildView(ViewClass, viewOptions);
-
-      // Attach current built view to component
-      this.currentView = view;
-
-      // ViewEventMixin
-      this._proxyViewEvents(view);
-
-      this.triggerMethod('before:render:view', view);
-
-      // _shouldDestroy is flag that prevents the Component from being
-      // destroyed if the region is emptied by Component itself.
-      this._shouldDestroy = false;
-
-      this.showView(view);
-
-      this._shouldDestroy = true;
-
-      this.triggerMethod('render:view', view);
-
-      return this;
-    },
-
-
-    /**
-     * Override this to change how the component's view is shown in the region
-     *
-     * @public
-     * @method showView
-     * @memberOf Component
-     * @param {Object} view - view built from a viewClass and viewOptions
-     */
-    showView: function showView(view) {
-      // Show the view in the region
-      this.getRegion().show(view);
-    },
-
 
     /**
      * Mixin initial State with any other viewOptions
@@ -1565,9 +1441,10 @@
     mixinOptions: function mixinOptions(options) {
       var viewOptions = _.result(this, 'viewOptions');
 
-      return _.extend({ state: this.getState().attributes }, viewOptions, options);
+      return _.extend({
+        state: this.getState().attributes
+      }, viewOptions, options);
     },
-
 
     /**
      * Builds the view class with options
@@ -1586,65 +1463,45 @@
       return new ViewClass(viewOptions);
     },
 
-
-    /**
-     * Destroys Component.
-     *
-     * @private
-     * @method _destroy
-     * @memberOf Component
-     */
-    _destroy: function _destroy() {
-      if (this._shouldDestroy) {
-        backbone_marionette.MnObject.prototype.destroy.apply(this, arguments);
-      }
-    },
-
-
-    /**
-     * Empties component's region.
-     *
-     * @private
-     * @method _emptyRegion
-     * @param {Object} [options] - Options passed to `region.empty`
-     * @memberOf Component
-     */
-    _emptyRegion: function _emptyRegion(options) {
-      var region = this.getRegion();
-
-      if (region) {
-        this.stopListening(region, 'empty');
-        region.empty(options);
-      }
-    },
-
-
     /**
      * Empty the region and destroy the component.
      *
      * @public
      * @method destroy
-     * @param {Object} [options] - Options passed to `_emptyRegion` and `destroy`
+     * @param {Object} [options] - Options passed to Mn.Application `destroy`
      * @memberOf Component
      */
-    destroy: function destroy(options) {
-      this._emptyRegion(options);
+    destroy: function destroy() {
+      if (this._isDestroyed) {
+        return this;
+      }
 
-      this._shouldDestroy = true;
-
-      this._destroy(options);
-
+      var region = this.getRegion();
+      if (region) region.empty();
+      backbone_marionette.Application.prototype.destroy.apply(this, arguments);
       return this;
+    }
+  }, {
+    /**
+     * Sets the region for a Component Class
+     *
+     * @public
+     * @method setRegion
+     * @param {Marionette.Region} - region definition for instantiated components
+     * @memberOf Component.prototype
+     */
+    setRegion: function setRegion(region) {
+      this.prototype.region = region;
     }
   });
 
   _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
+  var version = "5.1.0";
+
   /**
    * @module Toolkit
    */
-
-  var VERSION = '5.1.0';
 
   function MixinState(classDefinition) {
     var _StateMixin = StateMixin;
@@ -1656,21 +1513,13 @@
     _.extend(classDefinition.prototype, _StateMixin);
   }
 
-  var marionette_toolkit = {
-    MixinState: MixinState,
-    VERSION: VERSION,
-    StateMixin: StateMixin,
-    App: App,
-    Component: Component
-  };
-
-  exports.MixinState = MixinState;
-  exports.VERSION = VERSION;
-  exports.StateMixin = StateMixin;
   exports.App = App;
   exports.Component = Component;
-  exports['default'] = marionette_toolkit;
+  exports.MixinState = MixinState;
+  exports.StateMixin = StateMixin;
+  exports.VERSION = version;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
-
 //# sourceMappingURL=marionette.toolkit.js.map
