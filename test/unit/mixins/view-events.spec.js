@@ -89,7 +89,7 @@ describe('ViewEventsMixin', function() {
 
 
       expect(myComponent._proxyViewEvents)
-        .to.have.been.calledOnce.and.calledWith(myComponent.currentView);
+        .to.have.been.calledOnce.and.calledWith(myComponent.getView());
     });
   });
 
@@ -107,7 +107,7 @@ describe('ViewEventsMixin', function() {
 
         myComponent.showIn(myRegion);
         myComponent.on('some:prefix:render', handlerStub);
-        myComponent.currentView.render();
+        myComponent.getView().render();
 
         expect(handlerStub).to.not.have.been.called;
       });
@@ -127,7 +127,7 @@ describe('ViewEventsMixin', function() {
 
         myComponent.showIn(myRegion);
         myComponent.on('some:prefix:render', handlerStub);
-        myComponent.currentView.render();
+        myComponent.getView().render();
 
         expect(handlerStub).to.have.been.calledOnce;
       });
