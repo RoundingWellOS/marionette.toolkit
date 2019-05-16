@@ -5,7 +5,7 @@ test
 tmp
 _config.yml
 .babelrc
-.condeclimate.yml
+.codeclimate.yml
 .editorconfig
 .eslintrc
 .gitignore
