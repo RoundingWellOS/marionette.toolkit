@@ -1,7 +1,7 @@
 Marionette.Toolkit
 ==================
 
-[![Travis Status](http://img.shields.io/travis/RoundingWellOS/marionette.toolkit/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/RoundingWellOS/marionette.toolkit) [![Coverage](http://img.shields.io/codeclimate/coverage/github/RoundingWellOS/marionette.toolkit.svg?style=flat)](https://codeclimate.com/github/RoundingWellOS/marionette.toolkit)
+[![Travis Status](http://img.shields.io/travis/RoundingWellOS/marionette.toolkit/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/RoundingWellOS/marionette.toolkit) [![Test Coverage](https://api.codeclimate.com/v1/badges/a3e249a26dd7871a0262/test_coverage)](https://codeclimate.com/github/RoundingWellOS/marionette.toolkit/test_coverage)
 
 
 ## About Marionette.Toolkit
