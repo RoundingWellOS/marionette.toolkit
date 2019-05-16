@@ -1,3 +1,19 @@
+#### v6.0.0
+
+* **Breaking Changes**
+  * Replaced `Component` with a simpler API.
+    * `Component` now extends `Marionette.Application
+    * Removes `removeView` for `show`
+    * Adds `empty` for a safe destruction
+    * Adds `regionOptions`
+    * A Component can now be shown multiple times
+    * Adds `setRegion` as a class method
+  * Removed the default export
+  * `MixinState` is now `mixinState`
+
+* **Tooling**
+  * Modernized build/test tooling
+
 #### v5.1.0
 
 * **Features**

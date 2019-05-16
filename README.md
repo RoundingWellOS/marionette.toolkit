@@ -23,7 +23,7 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
   [ChildAppsMixin](./docs/mixins/child-apps.md) - Functionality to add or remove child Apps to a parent App, start apps asynchronously, and connect the child App lifecycle with the parent App lifecycle.
 
   [EventListenersMixin](./docs/mixins/event-listeners.md) - Binds events to the `App` while running and removed (and only those) when the `App` is stopped.
-  
+
   [ViewEventsMixin](./docs/mixins/view-events.md) - Adds `Marionette.View`-like support for view event proxying. The API is analogous to `childViewEventPrefix`, `childViewEvents` and `childViewTriggers`.
 
 
@@ -52,11 +52,6 @@ $ yarn add marionette.toolkit
 $ npm install marionette.toolkit
 ```
 
-**Via [bower](http://bower.io/search/?q=marionette.toolkit)**
-```
-$ bower install marionette.toolkit
-```
-
 
 Currently Marionette.Toolkit is available via npm and bower. If you would like add it to another channel, please
 [open an issue](#github-issues).
@@ -70,7 +65,7 @@ For change logs and release notes, see the [changelog](CHANGELOG.md) file.
 Marionette.Toolkit currently requires and is tested with [Marionette](http://marionettejs.com) 3.0.0+ as it extends
 [`Marionette.Application`](https://github.com/marionettejs/backbone.marionette/blob/next/docs/marionette.application.md)
 
-Marionette.Toolkit supports IE9+ and modern browsers.
+Marionette.Toolkit supports IE10+ and modern browsers.
 
 
 ## How to Contribute
@@ -90,4 +85,4 @@ create summarized and documented feature requests (preferably with the feature i
 
 ===
 
-This library is © 2016 RoundingWell. Distributed under MIT license.
+This library is © 2019 RoundingWell. Distributed under MIT license.

@@ -15,26 +15,15 @@ Make sure [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.org/) are
 [installed](http://nodejs.org/download/).
 
 ```
-$ npm install
+$ yarn install
 ```
 
 ## Running the tests
 
 There are two methods to running the unit test suite, suited
 for your desired workflow and overall developer happiness:
-you can open [runner.html](./test/runner.html) in the browser or run `gulp test`
+you can run `yarn test-browser` in the browser or run `yarn test`
 
-
-### In a browser
-
-  Optionally run `gulp test-browser` to live reload the tests after
-  either the tests or src js change.
-
-  Open [runner.html](./test/runner.html) in your browser.
-
-### Via Gulp
-
-  Running `gulp test`  will run the tests after linting.
 
 ## Documentation Fixes
 
