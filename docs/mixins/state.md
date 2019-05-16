@@ -81,7 +81,7 @@ specify a `StateModel`, a vanilla `Backbone.Model` definition will be used.
 ```js
 const MyStateModel = Backbone.Model.extend({});
 
-const MyClass = Marionette.Object.extend({
+const MyClass = MnObject.extend({
   StateModel: MyStateModel
 
   initialize(options) {
@@ -94,7 +94,7 @@ const MyClass = Marionette.Object.extend({
 ```js
 const MyStateModel = Backbone.Model.extend({});
 
-const MyClass = Marionette.Object.extend({
+const MyClass = MnObject.extend({
   initialize(options) {
     this.initState(options);
   }
@@ -142,7 +142,7 @@ Optionally define a `state` attributes object on your class initialization or pa
 ```js
 const MyStateModel = Backbone.Model.extend({});
 
-const MyClass = Marionette.Object.extend({
+const MyClass = MnObject.extend({
   StateModel: MyStateModel
 
   initialize(options) {

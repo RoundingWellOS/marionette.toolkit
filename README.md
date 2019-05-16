@@ -14,7 +14,7 @@ built from scripts open sourced from [RoundingWell.com](http://roundingwell.com)
 ## Documentation
   [App](./docs/app.md) - An extension of `Marionette.Application`. Its purpose is to provide an object with a `initialize`/`start`/`stop`/`destroy` lifecycle.
 
-  [Component](./docs/component.md) - An extension of `Marionette.Object`. Provides a consistent interface for which to package state-view-logic.
+  [Component](./docs/component.md) - An extension of `Marionette.Application`. Provides a consistent interface for which to package state-view-logic.
 
   [Async App start](./docs/async-app-start.md) - How to easily start apps asynchronously.
 
