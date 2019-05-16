@@ -27,11 +27,3 @@ export {
   App,
   Component
 };
-
-export default {
-  MixinState,
-  VERSION,
-  StateMixin,
-  App,
-  Component
-};
