@@ -39,8 +39,8 @@ export default {
 
     let childApps = this.childApps;
 
-    if(childApps) {
-      if(_.isFunction(childApps)) {
+    if (childApps) {
+      if (_.isFunction(childApps)) {
         childApps = childApps.call(this, options);
       }
 
@@ -87,10 +87,10 @@ export default {
    * @method _shouldStartWithRestart
    */
   _shouldActWithRestart(childApp, action) {
-    if(!this._isRestarting) return true;
+    if (!this._isRestarting) {return true;}
     const restartWithParent = _.result(childApp, 'restartWithParent');
-    if(restartWithParent === true) return true;
-    if(restartWithParent !== false && _.result(childApp, action)) return true;
+    if (restartWithParent === true) {return true;}
+    if (restartWithParent !== false && _.result(childApp, action)) {return true;}
   },
 
   /**
@@ -102,8 +102,8 @@ export default {
   _startChildApps() {
     const action = 'startWithParent';
     _.each(this._childApps, childApp => {
-      if(!this._shouldActWithRestart(childApp, action)) return;
-      if(!this._isRestarting && !_.result(childApp, action)) return;
+      if (!this._shouldActWithRestart(childApp, action)) {return;}
+      if (!this._isRestarting && !_.result(childApp, action)) {return;}
       this._startChildApp(childApp);
     });
   },
@@ -117,8 +117,8 @@ export default {
   _stopChildApps() {
     const action = 'stopWithParent';
     _.each(this._childApps, childApp => {
-      if(!this._shouldActWithRestart(childApp, action)) return;
-      if(!this._isRestarting && !_.result(childApp, action)) return;
+      if (!this._shouldActWithRestart(childApp, action)) {return;}
+      if (!this._isRestarting && !_.result(childApp, action)) {return;}
       childApp.stop();
     });
   },
@@ -156,7 +156,7 @@ export default {
    */
   _destroyChildApps() {
     _.each(this._childApps, function(childApp) {
-      if(!_.result(childApp, 'preventDestroy')) {
+      if (!_.result(childApp, 'preventDestroy')) {
         childApp.destroy();
       }
     });
@@ -192,10 +192,10 @@ export default {
    * @returns {App}
    */
   _buildApp(AppClass, options) {
-    if(_.isFunction(AppClass)) {
+    if (_.isFunction(AppClass)) {
       return this.buildApp(AppClass, options);
     }
-    if(_.isObject(AppClass)) {
+    if (_.isObject(AppClass)) {
       return this._buildAppFromObject(AppClass);
     }
   },
@@ -226,7 +226,7 @@ export default {
    * @throws DuplicateChildAppError - Thrown if `App` already has an `appName` registered
    */
   _ensureAppIsUnique(appName) {
-    if(this._childApps[appName]) {
+    if (this._childApps[appName]) {
       throw new Error(`A child App with name "${ appName }" has already been added.`);
     }
   },
@@ -262,7 +262,7 @@ export default {
 
     const childApp = this._buildApp(AppClass, options);
 
-    if(!childApp) {
+    if (!childApp) {
       throw new Error('App build failed.  Incorrect configuration.');
     }
 
@@ -274,7 +274,7 @@ export default {
     // Listener setup relative to the childApp's running state (using _on)
     childApp._on('destroy', _.partial(this._removeChildApp, appName), this);
 
-    if(this.isRunning() && _.result(childApp, 'startWithParent')) {
+    if (this.isRunning() && _.result(childApp, 'startWithParent')) {
       this._startChildApp(childApp);
     }
 
@@ -362,12 +362,12 @@ export default {
 
     const childApp = this.getChildApp(appName);
 
-    if(!childApp) {
+    if (!childApp) {
       return;
     }
 
     // if preventDestroy simply unregister the child app
-    if(options.preventDestroy || _.result(childApp, 'preventDestroy')) {
+    if (options.preventDestroy || _.result(childApp, 'preventDestroy')) {
       this._removeChildApp(appName);
     } else {
       childApp.destroy();

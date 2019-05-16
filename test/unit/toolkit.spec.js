@@ -1,12 +1,12 @@
 import Backbone from 'backbone';
 import { MnObject } from 'backbone.marionette';
-import { MixinState } from '../../src/marionette.toolkit';
+import { mixinState } from '../../src/marionette.toolkit';
 
-describe('MixinState', function() {
+describe('mixinState', function() {
   describe('when classDefinition has no StateModel definition', function() {
     it('should use the StateModel defined on StateMixin', function() {
       const MyClass = MnObject.extend();
-      MixinState(MyClass);
+      mixinState(MyClass);
 
       const myStateModel = new MyClass.prototype.StateModel();
 
@@ -24,7 +24,7 @@ describe('MixinState', function() {
         StateModel: MyModel
       });
 
-      MixinState(MyClass);
+      mixinState(MyClass);
 
       const myStateModel = new MyClass.prototype.StateModel();
 

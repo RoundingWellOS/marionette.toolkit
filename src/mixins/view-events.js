@@ -48,7 +48,7 @@ export default {
   _childViewEventHandler(eventName, ...args) {
     const viewEvents = this._viewEvents;
 
-    if(_.isFunction(viewEvents[eventName])) {
+    if (_.isFunction(viewEvents[eventName])) {
       viewEvents[eventName].apply(this, args);
     }
 
@@ -56,13 +56,13 @@ export default {
     const viewTriggers = this._viewTriggers;
 
     // Call the event with the proxy name on the parent layout
-    if(_.isString(viewTriggers[eventName])) {
+    if (_.isString(viewTriggers[eventName])) {
       this.triggerMethod(viewTriggers[eventName], ...args);
     }
 
     const prefix = this._viewEventPrefix;
 
-    if(prefix !== false) {
+    if (prefix !== false) {
       const viewEventName = `${ prefix }:${ eventName }`;
 
       this.triggerMethod(viewEventName, ...args);

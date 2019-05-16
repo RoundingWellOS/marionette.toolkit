@@ -37,7 +37,7 @@ const myClass = MnObject.extend({
 _.extend(myClass.prototype, StateMixin)
 ```
 
-You can also use `Marionette.Toolkit.MixinState` which is a utility to mixin the `StateMixin` into any `Marionette.Object`s or `Marionette.View`s. If there is no `StateModel` definition on your class then the `StateModel` will be defined as a vanilla `Backbone.Model`. However, if you have already defined `StateModel` on your class, your `StateModel` definition **will not be overwritten**.
+You can also use `Marionette.Toolkit.mixinState` which is a utility to mixin the `StateMixin` into any `Marionette.MnObject`s or `Marionette.View`s. If there is no `StateModel` definition on your class then the `StateModel` will be defined as a vanilla `Backbone.Model`. However, if you have already defined `StateModel` on your class, your `StateModel` definition **will not be overwritten**.
 
 ```js
 const MyStateModel = Backbone.Model.extend({});
@@ -50,7 +50,7 @@ const myClass = MnObject.extend({
   }
 });
 
-MixinState(MyClass);
+mixinState(MyClass);
 ```
 
 ### Setting default state

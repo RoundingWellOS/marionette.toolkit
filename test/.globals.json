@@ -1,11 +1,6 @@
 {
   "globals": {
     "sinon": true,
-    "expect": true,
-    "$": true,
-    "jQuery": true,
-    "_": true,
-    "Backbone": true,
-    "Marionette": true
+    "expect": true
   }
 }

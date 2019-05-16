@@ -94,7 +94,7 @@ const Component = Application.extend({
   show(viewOptions, regionOptions) {
     const region = this.getRegion();
 
-    if(!region) {
+    if (!region) {
       throw new Error('Component has no defined region.');
     }
 
@@ -125,7 +125,7 @@ const Component = Application.extend({
   empty() {
     const region = this.getRegion();
 
-    if(!region) {
+    if (!region) {
       throw new Error('Component has no defined region.');
     }
 
@@ -188,9 +188,9 @@ const Component = Application.extend({
   _getViewClass(options = {}) {
     const ViewClass = this.ViewClass;
 
-    if(ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
+    if (ViewClass.prototype instanceof Backbone.View || ViewClass === Backbone.View) {
       return ViewClass;
-    } else if(_.isFunction(ViewClass)) {
+    } else if (_.isFunction(ViewClass)) {
       return ViewClass.call(this, options);
     }
 
@@ -239,12 +239,12 @@ const Component = Application.extend({
    * @memberOf Component
    */
   destroy() {
-    if(this._isDestroyed) {
+    if (this._isDestroyed) {
       return this;
     }
 
     const region = this.getRegion();
-    if(region) region.empty();
+    if (region) {region.empty();}
 
     Application.prototype.destroy.apply(this, arguments);
 

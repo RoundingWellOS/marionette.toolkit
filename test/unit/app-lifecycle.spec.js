@@ -141,13 +141,13 @@ describe('App-Lifecycle', function() {
     });
 
     it('should set isRestarting() during restart process', function() {
-      const newApp = App.extend({
+      const NewApp = App.extend({
         onBeforeStop() {
           expect(this.isRestarting()).to.equal(true);
         }
       });
 
-      this.myApp = new newApp();
+      this.myApp = new NewApp();
       this.myApp.start();
       this.myApp.restart();
 

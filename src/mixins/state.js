@@ -96,7 +96,7 @@ export default {
    * @method _removeEventHandlers
    */
   _removeEventHandlers() {
-    if(!this._stateModel) return;
+    if (!this._stateModel) {return;}
 
     this.undelegateStateEvents();
     this._stateModel.stopListening();
@@ -115,9 +115,9 @@ export default {
    * @returns {Backbone.Model}
    */
   _getStateModel(options) {
-    if(this.StateModel.prototype instanceof Backbone.Model || this.StateModel === Backbone.Model) {
+    if (this.StateModel.prototype instanceof Backbone.Model || this.StateModel === Backbone.Model) {
       return this.StateModel;
-    } else if(_.isFunction(this.StateModel)) {
+    } else if (_.isFunction(this.StateModel)) {
       return this.StateModel.call(this, options);
     }
 
@@ -162,7 +162,7 @@ export default {
    * @returns {Backbone.Model|*} - The _stateModel or the attribute value of the _stateModel
    */
   getState(attr) {
-    if(!attr) {
+    if (!attr) {
       return this._stateModel;
     }
 
@@ -179,7 +179,7 @@ export default {
    * @returns {Backbone.Model} - The _stateModel or attribute value.
    */
   toggleState(attr, val) {
-    if(arguments.length > 1) return this._stateModel.set(attr, !!val);
+    if (arguments.length > 1) {return this._stateModel.set(attr, !!val);}
 
     return this._stateModel.set(attr, !this._stateModel.get(attr));
   },

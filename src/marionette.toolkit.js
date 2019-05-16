@@ -10,10 +10,10 @@ import { version as VERSION } from '../package.json';
  * @module Toolkit
  */
 
-function MixinState(classDefinition) {
+function mixinState(classDefinition) {
   let _StateMixin = StateMixin;
 
-  if(classDefinition.prototype.StateModel) {
+  if (classDefinition.prototype.StateModel) {
     _StateMixin = _.omit(StateMixin, 'StateModel');
   }
 
@@ -21,9 +21,9 @@ function MixinState(classDefinition) {
 }
 
 export {
-  MixinState,
-  VERSION,
-  StateMixin,
   App,
-  Component
+  Component,
+  mixinState,
+  StateMixin,
+  VERSION
 };

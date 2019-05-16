@@ -119,8 +119,8 @@ describe('Component', function() {
     beforeEach(function() {
       this.MyComponent = Component.extend({
         region: this.myRegion,
-        ViewClass: function(options) {
-          if(options.foo) {
+        ViewClass(options) {
+          if (options.foo) {
             return View.extend({
               customViewOption: 'bar',
               template: _.template('<div></div>')
@@ -180,7 +180,7 @@ describe('Component', function() {
     describe('with defined viewOptions', function() {
       beforeEach(function() {
         this.MyView = View.extend({
-          initialize: function(options) {
+          initialize(options) {
             this.test = options.foo;
           }
         });
