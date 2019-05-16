@@ -21,7 +21,7 @@ describe('StateMixin', function() {
         'change': 'stateChanged'
       },
       StateModel: this.MyModel,
-      stateChanged: function() {}
+      stateChanged() {}
     });
 
     this.myStateClass = new this.MyStateClass({
@@ -180,8 +180,8 @@ describe('StateMixin', function() {
         initialize(options) {
           this.initState(options);
         },
-        StateModel: function(options) {
-          if(options.foo) {
+        StateModel(options) {
+          if (options.foo) {
             return Backbone.Model.extend({
               customAttr: 'bar'
             });

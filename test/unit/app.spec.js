@@ -67,7 +67,7 @@ describe('App', function() {
         this.myRegion = new Region({ el: $('<div>')[0] });
 
         const MyApp = this.MyApp.extend({
-          onBeforeStart: function() {
+          onBeforeStart() {
             return this.getRegion();
           }
         });
@@ -166,7 +166,7 @@ describe('App', function() {
         this.myView = new View({ template: _.noop });
 
         const MyApp = this.MyApp.extend({
-          onBeforeStart: function() {
+          onBeforeStart() {
             return this.getView();
           }
         });

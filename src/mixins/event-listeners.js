@@ -42,7 +42,7 @@ export default {
    * @returns {EventListeners}
    */
   on() {
-    if(this._isRunning) {
+    if (this._isRunning) {
       this._runningEvents = (this._runningEvents || []);
       this._runningEvents.push(arguments);
     }
@@ -68,7 +68,7 @@ export default {
    * @returns {EventListeners}
    */
   listenTo() {
-    if(this._isRunning) {
+    if (this._isRunning) {
       this._runningListeningTo = (this._runningListeningTo || []);
       this._runningListeningTo.push(arguments);
     }
@@ -93,7 +93,7 @@ export default {
    * @returns {EventListeners}
    */
   listenToOnce() {
-    if(this._isRunning) {
+    if (this._isRunning) {
       this._runningListeningTo = (this._runningListeningTo || []);
       this._runningListeningTo.push(arguments);
     }
