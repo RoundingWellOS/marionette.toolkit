@@ -91,12 +91,12 @@ in the constructor function call, to get a component instance.
 
 You can also manage the state of the ViewClass by mixing in the [`StateMixin`](./mixins/state.md) into your view.
 
-This can be done by using the `Marionette.Toolkit.MixinState` Utility.
+This can be done by using the `Marionette.Toolkit.mixinState` Utility.
 
 ```js
 const MyViewClass = View.extend({});
 
-MixinState(MyViewClass);
+mixinState(MyViewClass);
 
 Component.extend({
   ViewClass: MyViewClass

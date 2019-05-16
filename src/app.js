@@ -109,7 +109,7 @@ const App = Application.extend({
 
     Application.call(this, options);
 
-    if(_.result(this, 'startAfterInitialized')) {
+    if (_.result(this, 'startAfterInitialized')) {
       this.start(options);
     }
   },
@@ -123,7 +123,7 @@ const App = Application.extend({
    * @throws AppDestroyedError - Thrown if `App` has already been destroyed
    */
   _ensureAppIsIntact() {
-    if(this._isDestroyed) {
+    if (this._isDestroyed) {
       throw new Error('App has already been destroyed and cannot be used.');
     }
   },
@@ -165,15 +165,15 @@ const App = Application.extend({
   start(options = {}) {
     this._ensureAppIsIntact();
 
-    if(this._isRunning) {
+    if (this._isRunning) {
       return this;
     }
 
-    if(options.region) {
+    if (options.region) {
       this.setRegion(options.region);
     }
 
-    if(options.view) {
+    if (options.view) {
       this.setView(options.view);
     }
 
@@ -203,11 +203,11 @@ const App = Application.extend({
    * @memberOf App
    */
   _bindRunningEvents() {
-    if(this._region) {
+    if (this._region) {
       this._regionEventMonitor();
     }
 
-    if(this._view) {
+    if (this._view) {
       this._proxyViewEvents(this._view);
     }
 
@@ -276,7 +276,7 @@ const App = Application.extend({
    * @returns {App}
    */
   stop(options) {
-    if(!this._isRunning) {
+    if (!this._isRunning) {
       return this;
     }
 
@@ -304,7 +304,7 @@ const App = Application.extend({
    * @memberOf App
    */
   destroy() {
-    if(this._isDestroyed) {
+    if (this._isDestroyed) {
       return this;
     }
 
@@ -329,17 +329,17 @@ const App = Application.extend({
    * @returns {Region}
    */
   setRegion(region) {
-    if(this._region) {
+    if (this._region) {
       this.stopListening(this._region);
     }
 
     this._region = region;
 
-    if(region.currentView) {
+    if (region.currentView) {
       this.setView(region.currentView);
     }
 
-    if(this._isRunning) {
+    if (this._isRunning) {
       this._regionEventMonitor();
     }
 
@@ -380,7 +380,7 @@ const App = Application.extend({
    * @memberOf App
    */
   _onEmpty(region, view) {
-    if(view !== this._view) return;
+    if (view !== this._view) {return;}
 
     this._removeView();
   },
@@ -393,7 +393,7 @@ const App = Application.extend({
    * @memberOf App
    */
   _removeView() {
-    if(this._view) {
+    if (this._view) {
       this.stopListening(this._view);
       delete this._view;
     }
@@ -410,7 +410,7 @@ const App = Application.extend({
    * @returns {Region}
    */
   getRegion(regionName) {
-    if(!regionName) {
+    if (!regionName) {
       return this._region;
     }
 
@@ -427,18 +427,18 @@ const App = Application.extend({
    * @returns {View}
    */
   setView(view) {
-    if(this._view === view) {
+    if (this._view === view) {
       return view;
     }
 
-    if(this._view) {
+    if (this._view) {
       this.stopListening(this._view);
     }
 
     this._view = view;
 
     // ViewEventsMixin
-    if(this._isRunning) {
+    if (this._isRunning) {
       this._proxyViewEvents(view);
     }
 
