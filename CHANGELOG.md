@@ -1,3 +1,8 @@
+#### v6.0.1
+
+* Add .npmignore
+* Fix the build
+
 #### v6.0.0
 
 * **Breaking Changes**
