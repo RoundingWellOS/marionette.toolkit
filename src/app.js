@@ -470,7 +470,11 @@ const App = Application.extend({
    * @returns {View}
    */
   showView(view = this._view, ...args) {
-    this.getRegion().show(view, ...args);
+    const region = this.getRegion();
+
+    region.show(view, ...args);
+
+    if (!this.isRunning()) {this.setView(region.currentView);}
 
     return view;
   },
