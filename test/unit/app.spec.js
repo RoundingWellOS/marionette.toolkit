@@ -192,6 +192,31 @@ describe('App', function() {
         expect(this.myApp.setView(view)).to.equal(view);
       });
     });
+
+    describe('when setting a view during onBeforeStart', function() {
+      beforeEach(function() {
+        const myView = new View({ template: _.noop });
+        const region = new Region({ el: $('<div>')[0] });
+        this.viewEventStub = this.sinon.stub();
+        const MyApp = this.MyApp.extend({
+          onBeforeStart() {
+            this.showView(myView);
+          },
+          viewEvents: {
+            'foo': this.viewEventStub
+          }
+        });
+
+        this.myApp = new MyApp();
+        this.myApp.setRegion(region);
+      });
+
+      it('should trigger view event set in onBeforeStart', function() {
+        this.myApp.start();
+        this.myApp.getView().trigger('foo');
+        expect(this.viewEventStub).to.have.been.calledOnce;
+      })
+    });
   });
 
   describe('#getView', function() {
