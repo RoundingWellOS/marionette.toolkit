@@ -28,6 +28,7 @@ describe('EventListenersMixin', function() {
       this.myApp.trigger('bar');
       expect(this.fooStub).to.have.been.calledOnce;
       expect(this.barStub).to.have.not.been.calledOnce;
+      expect(this.myApp._runningEvents).to.be.empty;
     });
   });
 
@@ -62,6 +63,7 @@ describe('EventListenersMixin', function() {
       this.myModel.trigger('bar');
       expect(this.fooStub).to.have.been.calledOnce;
       expect(this.barStub).to.have.not.been.calledOnce;
+      expect(this.myApp._runningListeningTo).to.be.empty;
     });
   });
 
