@@ -19,6 +19,7 @@ export default {
     _.each(this._runningEvents, _.bind(function(args) {
       this.off.apply(this, args);
     }, this));
+    this._runningEvents = [];
   },
 
   /**
@@ -31,6 +32,7 @@ export default {
     _.each(this._runningListeningTo, _.bind(function(args) {
       this.stopListening.apply(this, args);
     }, this));
+    this._runningListeningTo = [];
   },
 
   /**
