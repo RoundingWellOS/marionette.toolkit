@@ -31,8 +31,15 @@ describe('Component', function() {
 
     describe('in a specified region "showIn()"', function() {
       it('should show the component', function() {
-        this.myComponent.showIn(this.myRegion);
+        this.myComponent.showIn(this.myRegion, { viewOption: 'foo' });
         expect(this.myComponent.getRegion().currentView).to.not.be.null;
+        expect(this.myRegion.currentView.getOption('viewOption')).to.equal('foo');
+      });
+
+      it('should accept regionOptions', function() {
+        const regionOptions = { regionOption: 'foo' };
+        this.myComponent.showIn(this.myRegion, null, regionOptions);
+        expect(this.showStub.getCall(0).args[3]).to.equal(regionOptions);
       });
 
       it('should fire the before:show methods', function() {

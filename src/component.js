@@ -68,12 +68,13 @@ const Component = Application.extend({
    * @memberOf Component
    * @param {Marionette.Region} region - The region for the component
    * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
+   * @param {Object} [regionOptions] - Options hash mixed into the instantiated region.
    * @returns {Component}
    */
-  showIn(region, viewOptions) {
+  showIn(region, viewOptions, regionOptions) {
     this._region = region;
 
-    this.show(viewOptions);
+    this.show(viewOptions, regionOptions);
 
     return this;
   },
