@@ -264,7 +264,11 @@ const viewOptions = {
   className: 'my-component-class'
 };
 
-myComponent.showIn(someRegion, viewOptions);
+const regionOptions = {
+  replaceElement: true
+};
+
+myComponent.showIn(someRegion, viewOptions, regionOptions);
 ```
 ### Component `show`
 
