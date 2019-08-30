@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v6.0.1
+ * @version v6.1.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -637,6 +637,8 @@
       _.each(this._runningEvents, _.bind(function (args) {
         this.off.apply(this, args);
       }, this));
+
+      this._runningEvents = [];
     },
 
     /**
@@ -649,6 +651,8 @@
       _.each(this._runningListeningTo, _.bind(function (args) {
         this.stopListening.apply(this, args);
       }, this));
+
+      this._runningListeningTo = [];
     },
 
     /**
@@ -1247,15 +1251,18 @@
      * @returns {View}
      */
     showView: function showView() {
-      var _this$getRegion;
-
       var view = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._view;
+      var region = this.getRegion();
 
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
 
-      (_this$getRegion = this.getRegion()).show.apply(_this$getRegion, [view].concat(args));
+      region.show.apply(region, [view].concat(args));
+
+      if (!this.isRunning()) {
+        this.setView(region.currentView);
+      }
 
       return view;
     },
@@ -1351,11 +1358,12 @@
      * @memberOf Component
      * @param {Marionette.Region} region - The region for the component
      * @param {Object} [viewOptions] - Options hash mixed into the instantiated ViewClass.
+     * @param {Object} [regionOptions] - Options hash mixed into the instantiated region.
      * @returns {Component}
      */
-    showIn: function showIn(region, viewOptions) {
+    showIn: function showIn(region, viewOptions, regionOptions) {
       this._region = region;
-      this.show(viewOptions);
+      this.show(viewOptions, regionOptions);
       return this;
     },
 
@@ -1543,7 +1551,7 @@
 
   _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
-  var version = "6.0.1";
+  var version = "6.1.0";
 
   /**
    * @module Toolkit

@@ -1,3 +1,12 @@
+#### v6.1.0
+
+* **Features**
+  * `Component.showIn` now supports passing `regionOptions`
+
+* **Fixes**
+  * When an app is stopped, the running events cache is now cleared correctly
+  * `viewEvents` now works if a view is shown during `onBeforeShow`
+
 #### v6.0.1
 
 * Add .npmignore
