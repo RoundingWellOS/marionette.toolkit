@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v6.1.0
+ * @version v6.2.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -380,6 +380,11 @@
      */
     startChildApp: function startChildApp(appName, options) {
       var childApp = this.getChildApp(appName);
+
+      if (!childApp) {
+        throw new Error("A child app with the name ".concat(appName, " does not exist."));
+      }
+
       return this._startChildApp(childApp, options);
     },
 
@@ -1551,7 +1556,7 @@
 
   _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
-  var version = "6.1.0";
+  var version = "6.2.0";
 
   /**
    * @module Toolkit

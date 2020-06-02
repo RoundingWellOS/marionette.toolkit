@@ -364,6 +364,11 @@ var ChildAppsMixin = {
    */
   startChildApp: function startChildApp(appName, options) {
     var childApp = this.getChildApp(appName);
+
+    if (!childApp) {
+      throw new Error("A child app with the name ".concat(appName, " does not exist."));
+    }
+
     return this._startChildApp(childApp, options);
   },
 
@@ -1535,7 +1540,7 @@ var Component = Application.extend({
 
 _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
-var version = "6.1.0";
+var version = "6.2.0";
 
 /**
  * @module Toolkit

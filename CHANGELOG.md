@@ -1,3 +1,9 @@
+#### v6.2.0
+
+* **Features**
+  * Updated underscore peer dependency version
+  * Throw a "Child app does not exist." error on startChild app when child app undefined
+
 #### v6.1.0
 
 * **Features**
