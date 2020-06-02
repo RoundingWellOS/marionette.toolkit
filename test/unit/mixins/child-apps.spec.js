@@ -369,6 +369,14 @@ describe('ChildAppMixin', function() {
       expect(this.myChildApp.isRunning()).to.be.true;
     });
 
+    it('should throw an error if childApp does not exist', function() {
+      try {
+        this.myApp.startChildApp('cA0');
+      } catch (e) {
+        expect(e.message).to.equal('A child app with the name cA0 does not exist.');
+      }
+    });
+
     it('should start childApp with options', function() {
       this.myChildApp = this.myApp.startChildApp('cA2', { foo: 'bar' });
 

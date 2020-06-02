@@ -133,6 +133,11 @@ export default {
    */
   startChildApp(appName, options) {
     const childApp = this.getChildApp(appName);
+
+    if (!childApp) {
+      throw new Error(`A child app with the name ${ appName } does not exist.`);
+    }
+
     return this._startChildApp(childApp, options);
   },
 
