@@ -140,6 +140,16 @@ describe('App-Lifecycle', function() {
       expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'baz' } });
     });
 
+    it('should maintain the app\'s previous state with options data', function() {
+      expect(this.beforeStartStub).to.be.calledWith({ state: { foo: 'bar' } });
+
+      this.myApp.setState('foo', 'baz');
+
+      this.myApp.restart({ options: { foo: 'bar' } });
+
+      expect(this.beforeStartStub).to.be.calledWith({state: { foo: 'baz' }, options: { foo: 'bar' }});
+    });
+
     it('should set isRestarting() during restart process', function() {
       const NewApp = App.extend({
         onBeforeStop() {

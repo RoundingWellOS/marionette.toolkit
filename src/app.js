@@ -224,11 +224,11 @@ const App = Application.extend({
    * @memberOf App
    * @returns {App}
    */
-  restart() {
+  restart(options) {
     const state = this.getState().attributes;
 
     this._isRestarting = true;
-    this.stop().start({ state });
+    this.stop().start(_.extend({ state }, options));
     this._isRestarting = false;
 
     return this;
