@@ -1,3 +1,8 @@
+#### v6.3.0
+
+* **Features**
+  * Allow for the passing of options to `app.restart()`
+
 #### v6.2.0
 
 * **Features**

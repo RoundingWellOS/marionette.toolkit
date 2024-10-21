@@ -1,6 +1,6 @@
 /**
  * marionette.toolkit - A collection of opinionated Backbone.Marionette extensions for large scale application architecture.
- * @version v6.2.0
+ * @version v6.3.0
  * @link https://github.com/RoundingWellOS/marionette.toolkit
  * @license MIT
  */
@@ -1010,12 +1010,12 @@
      * @memberOf App
      * @returns {App}
      */
-    restart: function restart() {
+    restart: function restart(options) {
       var state = this.getState().attributes;
       this._isRestarting = true;
-      this.stop().start({
+      this.stop().start(_.extend({
         state: state
-      });
+      }, options));
       this._isRestarting = false;
       return this;
     },
@@ -1556,7 +1556,7 @@
 
   _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
-  var version = "6.2.0";
+  var version = "6.3.0";
 
   /**
    * @module Toolkit
