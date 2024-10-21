@@ -242,27 +242,32 @@ myApp.start();
 
 This method saves the current state of the app before stopping it.
 It then starts the app again with the preserved state attributes.
+If an options object parameter is provided, that will also be preserved alongside the state attributes.
 
 ```js
 const myApp = new App();
 
-myApp.on('before:start', function(options) {
-    console.log(options.state);
+myApp.on('before:start', function(data) {
+  console.log(data);
 });
 
 const initialState = {
   foo: 'bar'
 };
 
-// logs { foo: 'bar' }
+// logs { state: { foo: 'bar' } }
 myApp.start({
   state: initialState
 });
 
 myApp.setState('foo', 'baz');
 
-// logs { foo: 'baz' }
-myApp.restart();
+const options = {
+  foo: 'bar'
+};
+
+// logs { state: { foo: 'baz' }, options: { foo: 'bar' } }
+myApp.restart(options);
 ```
 
 ### App `stop`
