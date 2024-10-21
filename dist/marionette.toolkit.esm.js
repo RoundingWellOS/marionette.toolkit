@@ -994,12 +994,12 @@ var App = Application.extend({
    * @memberOf App
    * @returns {App}
    */
-  restart: function restart() {
+  restart: function restart(options) {
     var state = this.getState().attributes;
     this._isRestarting = true;
-    this.stop().start({
+    this.stop().start(_.extend({
       state: state
-    });
+    }, options));
     this._isRestarting = false;
     return this;
   },
@@ -1540,7 +1540,7 @@ var Component = Application.extend({
 
 _.extend(Component.prototype, StateMixin, ViewEventsMixin);
 
-var version = "6.2.0";
+var version = "6.3.0";
 
 /**
  * @module Toolkit
